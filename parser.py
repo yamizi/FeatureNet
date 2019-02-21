@@ -1,6 +1,6 @@
 from __future__ import division, print_function
-from Feature_tree import FeatureTree
-from Products_tree import ProductSet
+from feature_tree import FeatureTree
+from products_tree import ProductSet
 import random
 import pdb
 
@@ -30,12 +30,10 @@ def loadProducts():
   rand_product = productSet.format_product(2)#random.randrange(0, productSet.nbProducts-1))
   print((rand_product))
 
-"""
   products = productSet.format_products()
   for i, prd in enumerate(products):
     if len(prd) < 10:
       print("{0}:{1}".format(i, len(prd)))
-"""
   
 if __name__ == '__main__':
   loadProducts()
