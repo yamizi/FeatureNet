@@ -15,6 +15,14 @@ class KerasFeatureModel(Sequential):
     def __init__(self, layers=None, name=None):
         super(KerasFeatureModel, self).__init__(layers=None, name=None)
 
+    def get_custom_parameters(self):
+        params = {}
+               
+        for block in self.blocks:
+            params = {**params, **block.get_custom_parameters()}
+
+        return params
+
     @staticmethod
     def parse_feature_model(feature_model, name=None):
 
@@ -24,3 +32,8 @@ class KerasFeatureModel(Sequential):
         for block_dict in feature_model:
             block = Block.parse_feature_model(block_dict)
             model.blocks.append(block)
+
+        model.blocks.sort(key = lambda a : a.get_name())
+
+        print(model.get_custom_parameters())
+            

@@ -19,6 +19,15 @@ class Cell(Node):
     def build_tensorflow_model(self, model, source1, source2):
         pass
 
+    def get_custom_parameters(self):
+        my_params = self.customizable_parameters
+        params = {}
+        if len(my_params.keys()):
+            params = {self.get_name():(self, my_params)}
+
+        params = {**params, **self.input1.get_custom_parameters(), **self.input2.get_custom_parameters() , **self.operation1.get_custom_parameters(), **self.operation2.get_custom_parameters() , **self.combination.get_custom_parameters()}
+        return params
+
     @staticmethod
     def parse_feature_model(feature_model):
         cell = Cell(raw_dict=feature_model)
@@ -45,7 +54,8 @@ class Cell(Node):
             elif(element_type=="output"):
                 element = Output.parse_feature_model(cell_element_dict)
                 
-            setattr(cell, element_type, element)    
+            setattr(cell, element_type, element)   
+            print("settings {0}".format(element_type)) 
   
 
         return cell

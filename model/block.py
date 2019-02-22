@@ -18,6 +18,16 @@ class Block(Node):
     def append_cell(self, cell):
         self.cells.append(cell)
 
+    def get_custom_parameters(self):
+        params = {}
+        my_params = self.customizable_parameters
+        if len(my_params.keys()):
+            params = {self.get_name():(self, my_params)}
+        
+        for cell in self.cells:
+            params = {**params, **cell.get_custom_parameters()}
+
+        return params
 
     def build_tensorflow_model(self, model):
         pass
