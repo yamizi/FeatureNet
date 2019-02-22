@@ -28,7 +28,7 @@ class Operation(Node):
                 if(element_type == "value"):
                     if(len(child.get("children"))):
                         _value = Node.get_type(child.get("children")[0])
-            operation_element = Dropout(_value=_value, operation)
+            operation_element = Dropout(_value=_value, raw_dict=operation)
 
         elif operation_type=="padding":
             _fillValue = None
@@ -47,7 +47,7 @@ class Operation(Node):
                             _fillSize = tuple(_fillSize)
                         else:
                             _fillSize = None
-            operation_element = Padding(_fillValue=_fillValue,_fillSize=_fillSize, operation)
+            operation_element = Padding(_fillValue=_fillValue,_fillSize=_fillSize, raw_dict=operation)
 
         elif operation_type=="batchnormalization":
             _axis = None
@@ -57,7 +57,7 @@ class Operation(Node):
                     if(len(child.get("children"))):
                         _axis = Node.get_type(child.get("children")[0])
 
-            operation_element = BatchNormalization(_axis=_axis, operation)
+            operation_element = BatchNormalization(_axis=_axis, raw_dict=operation)
 
         elif operation_type=="activation":
             operation_element = Activation(operation)
@@ -126,7 +126,8 @@ class Combination(Node):
     def parse_feature_model(feature_model):
         operation = feature_model.get("children")[0] 
         operation_type = Node.get_type(operation)
-        
+        operation_element = None
+
         if operation_type=="sum":
             operation_element = Sum(operation)
         elif operation_type=="product":
@@ -139,7 +140,9 @@ class Combination(Node):
                     if(len(child.get("children"))):
                         _axis = Node.get_type(child.get("children")[0])
 
-            operation_element = Concat(_axis=_axis, operation)
+            operation_element = Concat(_axis=_axis, raw_dict=operation)
+        
+        return operation_element 
 
 
 class Sum(Combination):

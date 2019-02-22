@@ -37,20 +37,31 @@ class Output(Node):
                     if(len(child.get("children"))):
                         _relativeCellIndex = Node.get_type(child.get("children")[0])
             output_element = OutCell(_relativeCellIndex=_relativeCellIndex, raw_dict=output)
+        
+        return output_element
 
 
 class Out(Output):
     def __init__(self,  raw_dict=None):
-        super(Sum, self).__init__(raw_dict=raw_dict)
+        super(Out, self).__init__(raw_dict=raw_dict)
         
 class OutBlock(Output):
     def __init__(self, _relativeBlockIndex=None, _relativeCellIndex=None, raw_dict=None):
-        super(Concat, self).__init__(raw_dict=raw_dict)
-        if not _axis:
-            self.append_parameter("_axis","__int__")
+        super(OutBlock, self).__init__(raw_dict=raw_dict)
+        if not _relativeBlockIndex:
+            self.append_parameter("_relativeBlockIndex","__int__")
         else:
-            self._axis = int(_axis)
+            self._relativeBlockIndex = int(_relativeBlockIndex)
+
+        if not _relativeCellIndex:
+            self.append_parameter("_relativeCellIndex","__int__")
+        else:
+            self._relativeCellIndex = int(_relativeCellIndex)
 
 class OutCell(Output):
     def __init__(self, _relativeCellIndex=None, raw_dict=None):
-        super(Product, self).__init__(raw_dict=raw_dict)
+        super(OutCell, self).__init__(raw_dict=raw_dict)
+        if not _relativeCellIndex:
+            self.append_parameter("_relativeCellIndex","__int__")
+        else:
+            self._relativeCellIndex = int(_relativeCellIndex)
