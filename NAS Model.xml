@@ -47,7 +47,7 @@
 													: Block1_Element1_Cell_Input1_Dense_activation_softmax(Block1_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block1_Element1_Cell_Input1_Dense_activation_relu(Block1_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block1_Element1_Cell_Input1_Pooling(Block1_Element1_Cell_Input1_Pooling)
-											:m Block1_Element1_Cell_Input1_Pooling_features(Block1_Element1_Cell_Input1_Pooling_features)
+											:m Block1_Element1_Cell_Input1_Pooling_kernel(Block1_Element1_Cell_Input1_Pooling_kernel)
 											:m Block1_Element1_Cell_Input1_Pooling_stride(Block1_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block1_Element1_Cell_Input1_Pooling_stride_1x1(Block1_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -101,7 +101,7 @@
 													: Block1_Element1_Cell_Input2_Dense_activation_softmax(Block1_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block1_Element1_Cell_Input2_Dense_activation_relu(Block1_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block1_Element1_Cell_Input2_Pooling(Block1_Element1_Cell_Input2_Pooling)
-											:m Block1_Element1_Cell_Input2_Pooling_features(Block1_Element1_Cell_Input2_Pooling_features)
+											:m Block1_Element1_Cell_Input2_Pooling_kernel(Block1_Element1_Cell_Input2_Pooling_kernel)
 											:m Block1_Element1_Cell_Input2_Pooling_stride(Block1_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block1_Element1_Cell_Input2_Pooling_stride_1x1(Block1_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -136,9 +136,9 @@
 										: Block1_Element1_Cell_Operation1_Dropout(Block1_Element1_Cell_Operation1_Dropout)
 											:o Block1_Element1_Cell_Operation1_Dropout_value(Block1_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block1_Element1_Cell_Operation1_Dropout_0_4(Block1_Element1_Cell_Operation1_Dropout_0_4)
-													: Block1_Element1_Cell_Operation1_Dropout_0_5(Block1_Element1_Cell_Operation1_Dropout_0_5)
-													: Block1_Element1_Cell_Operation1_Dropout_0_7(Block1_Element1_Cell_Operation1_Dropout_0_7)
+													: Block1_Element1_Cell_Operation1_Dropout_040(Block1_Element1_Cell_Operation1_Dropout_040)
+													: Block1_Element1_Cell_Operation1_Dropout_050(Block1_Element1_Cell_Operation1_Dropout_050)
+													: Block1_Element1_Cell_Operation1_Dropout_070(Block1_Element1_Cell_Operation1_Dropout_070)
 								:m Block1_Element1_Cell_Operation2(Block1_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block1_Element1_Cell_Operation2_Flatten(Block1_Element1_Cell_Operation2_Flatten)
@@ -156,9 +156,9 @@
 										: Block1_Element1_Cell_Operation2_Dropout(Block1_Element1_Cell_Operation2_Dropout)
 											:o Block1_Element1_Cell_Operation2_Dropout_value(Block1_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block1_Element1_Cell_Operation2_Dropout_0_4(Block1_Element1_Cell_Operation2_Dropout_0_4)
-													: Block1_Element1_Cell_Operation2_Dropout_0_5(Block1_Element1_Cell_Operation2_Dropout_0_5)
-													: Block1_Element1_Cell_Operation2_Dropout_0_7(Block1_Element1_Cell_Operation2_Dropout_0_7)
+													: Block1_Element1_Cell_Operation2_Dropout_040(Block1_Element1_Cell_Operation2_Dropout_040)
+													: Block1_Element1_Cell_Operation2_Dropout_050(Block1_Element1_Cell_Operation2_Dropout_050)
+													: Block1_Element1_Cell_Operation2_Dropout_070(Block1_Element1_Cell_Operation2_Dropout_070)
 								:m Block1_Element1_Cell_Combination(Block1_Element1_Cell_Combination)
 									:g [1,1]
 										: Block1_Element1_Cell_Combination_Concat(Block1_Element1_Cell_Combination_Concat)
@@ -209,7 +209,7 @@
 													: Block1_Element2_Cell_Input1_Dense_activation_softmax(Block1_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block1_Element2_Cell_Input1_Dense_activation_relu(Block1_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block1_Element2_Cell_Input1_Pooling(Block1_Element2_Cell_Input1_Pooling)
-											:m Block1_Element2_Cell_Input1_Pooling_features(Block1_Element2_Cell_Input1_Pooling_features)
+											:m Block1_Element2_Cell_Input1_Pooling_kernel(Block1_Element2_Cell_Input1_Pooling_kernel)
 											:m Block1_Element2_Cell_Input1_Pooling_stride(Block1_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block1_Element2_Cell_Input1_Pooling_stride_1x1(Block1_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -263,7 +263,7 @@
 													: Block1_Element2_Cell_Input2_Dense_activation_softmax(Block1_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block1_Element2_Cell_Input2_Dense_activation_relu(Block1_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block1_Element2_Cell_Input2_Pooling(Block1_Element2_Cell_Input2_Pooling)
-											:m Block1_Element2_Cell_Input2_Pooling_features(Block1_Element2_Cell_Input2_Pooling_features)
+											:m Block1_Element2_Cell_Input2_Pooling_kernel(Block1_Element2_Cell_Input2_Pooling_kernel)
 											:m Block1_Element2_Cell_Input2_Pooling_stride(Block1_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block1_Element2_Cell_Input2_Pooling_stride_1x1(Block1_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -298,9 +298,9 @@
 										: Block1_Element2_Cell_Operation1_Dropout(Block1_Element2_Cell_Operation1_Dropout)
 											:o Block1_Element2_Cell_Operation1_Dropout_value(Block1_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block1_Element2_Cell_Operation1_Dropout_0_4(Block1_Element2_Cell_Operation1_Dropout_0_4)
-													: Block1_Element2_Cell_Operation1_Dropout_0_5(Block1_Element2_Cell_Operation1_Dropout_0_5)
-													: Block1_Element2_Cell_Operation1_Dropout_0_7(Block1_Element2_Cell_Operation1_Dropout_0_7)
+													: Block1_Element2_Cell_Operation1_Dropout_040(Block1_Element2_Cell_Operation1_Dropout_040)
+													: Block1_Element2_Cell_Operation1_Dropout_050(Block1_Element2_Cell_Operation1_Dropout_050)
+													: Block1_Element2_Cell_Operation1_Dropout_070(Block1_Element2_Cell_Operation1_Dropout_070)
 								:m Block1_Element2_Cell_Operation2(Block1_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block1_Element2_Cell_Operation2_Flatten(Block1_Element2_Cell_Operation2_Flatten)
@@ -318,9 +318,9 @@
 										: Block1_Element2_Cell_Operation2_Dropout(Block1_Element2_Cell_Operation2_Dropout)
 											:o Block1_Element2_Cell_Operation2_Dropout_value(Block1_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block1_Element2_Cell_Operation2_Dropout_0_4(Block1_Element2_Cell_Operation2_Dropout_0_4)
-													: Block1_Element2_Cell_Operation2_Dropout_0_5(Block1_Element2_Cell_Operation2_Dropout_0_5)
-													: Block1_Element2_Cell_Operation2_Dropout_0_7(Block1_Element2_Cell_Operation2_Dropout_0_7)
+													: Block1_Element2_Cell_Operation2_Dropout_040(Block1_Element2_Cell_Operation2_Dropout_040)
+													: Block1_Element2_Cell_Operation2_Dropout_050(Block1_Element2_Cell_Operation2_Dropout_050)
+													: Block1_Element2_Cell_Operation2_Dropout_070(Block1_Element2_Cell_Operation2_Dropout_070)
 								:m Block1_Element2_Cell_Combination(Block1_Element2_Cell_Combination)
 									:g [1,1]
 										: Block1_Element2_Cell_Combination_Concat(Block1_Element2_Cell_Combination_Concat)
@@ -371,7 +371,7 @@
 													: Block1_Element3_Cell_Input1_Dense_activation_softmax(Block1_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block1_Element3_Cell_Input1_Dense_activation_relu(Block1_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block1_Element3_Cell_Input1_Pooling(Block1_Element3_Cell_Input1_Pooling)
-											:m Block1_Element3_Cell_Input1_Pooling_features(Block1_Element3_Cell_Input1_Pooling_features)
+											:m Block1_Element3_Cell_Input1_Pooling_kernel(Block1_Element3_Cell_Input1_Pooling_kernel)
 											:m Block1_Element3_Cell_Input1_Pooling_stride(Block1_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block1_Element3_Cell_Input1_Pooling_stride_1x1(Block1_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -425,7 +425,7 @@
 													: Block1_Element3_Cell_Input2_Dense_activation_softmax(Block1_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block1_Element3_Cell_Input2_Dense_activation_relu(Block1_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block1_Element3_Cell_Input2_Pooling(Block1_Element3_Cell_Input2_Pooling)
-											:m Block1_Element3_Cell_Input2_Pooling_features(Block1_Element3_Cell_Input2_Pooling_features)
+											:m Block1_Element3_Cell_Input2_Pooling_kernel(Block1_Element3_Cell_Input2_Pooling_kernel)
 											:m Block1_Element3_Cell_Input2_Pooling_stride(Block1_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block1_Element3_Cell_Input2_Pooling_stride_1x1(Block1_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -460,9 +460,9 @@
 										: Block1_Element3_Cell_Operation1_Dropout(Block1_Element3_Cell_Operation1_Dropout)
 											:o Block1_Element3_Cell_Operation1_Dropout_value(Block1_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block1_Element3_Cell_Operation1_Dropout_0_4(Block1_Element3_Cell_Operation1_Dropout_0_4)
-													: Block1_Element3_Cell_Operation1_Dropout_0_5(Block1_Element3_Cell_Operation1_Dropout_0_5)
-													: Block1_Element3_Cell_Operation1_Dropout_0_7(Block1_Element3_Cell_Operation1_Dropout_0_7)
+													: Block1_Element3_Cell_Operation1_Dropout_040(Block1_Element3_Cell_Operation1_Dropout_040)
+													: Block1_Element3_Cell_Operation1_Dropout_050(Block1_Element3_Cell_Operation1_Dropout_050)
+													: Block1_Element3_Cell_Operation1_Dropout_070(Block1_Element3_Cell_Operation1_Dropout_070)
 								:m Block1_Element3_Cell_Operation2(Block1_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block1_Element3_Cell_Operation2_Flatten(Block1_Element3_Cell_Operation2_Flatten)
@@ -480,9 +480,9 @@
 										: Block1_Element3_Cell_Operation2_Dropout(Block1_Element3_Cell_Operation2_Dropout)
 											:o Block1_Element3_Cell_Operation2_Dropout_value(Block1_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block1_Element3_Cell_Operation2_Dropout_0_4(Block1_Element3_Cell_Operation2_Dropout_0_4)
-													: Block1_Element3_Cell_Operation2_Dropout_0_5(Block1_Element3_Cell_Operation2_Dropout_0_5)
-													: Block1_Element3_Cell_Operation2_Dropout_0_7(Block1_Element3_Cell_Operation2_Dropout_0_7)
+													: Block1_Element3_Cell_Operation2_Dropout_040(Block1_Element3_Cell_Operation2_Dropout_040)
+													: Block1_Element3_Cell_Operation2_Dropout_050(Block1_Element3_Cell_Operation2_Dropout_050)
+													: Block1_Element3_Cell_Operation2_Dropout_070(Block1_Element3_Cell_Operation2_Dropout_070)
 								:m Block1_Element3_Cell_Combination(Block1_Element3_Cell_Combination)
 									:g [1,1]
 										: Block1_Element3_Cell_Combination_Concat(Block1_Element3_Cell_Combination_Concat)
@@ -533,7 +533,7 @@
 													: Block1_Element4_Cell_Input1_Dense_activation_softmax(Block1_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block1_Element4_Cell_Input1_Dense_activation_relu(Block1_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block1_Element4_Cell_Input1_Pooling(Block1_Element4_Cell_Input1_Pooling)
-											:m Block1_Element4_Cell_Input1_Pooling_features(Block1_Element4_Cell_Input1_Pooling_features)
+											:m Block1_Element4_Cell_Input1_Pooling_kernel(Block1_Element4_Cell_Input1_Pooling_kernel)
 											:m Block1_Element4_Cell_Input1_Pooling_stride(Block1_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block1_Element4_Cell_Input1_Pooling_stride_1x1(Block1_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -587,7 +587,7 @@
 													: Block1_Element4_Cell_Input2_Dense_activation_softmax(Block1_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block1_Element4_Cell_Input2_Dense_activation_relu(Block1_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block1_Element4_Cell_Input2_Pooling(Block1_Element4_Cell_Input2_Pooling)
-											:m Block1_Element4_Cell_Input2_Pooling_features(Block1_Element4_Cell_Input2_Pooling_features)
+											:m Block1_Element4_Cell_Input2_Pooling_kernel(Block1_Element4_Cell_Input2_Pooling_kernel)
 											:m Block1_Element4_Cell_Input2_Pooling_stride(Block1_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block1_Element4_Cell_Input2_Pooling_stride_1x1(Block1_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -622,9 +622,9 @@
 										: Block1_Element4_Cell_Operation1_Dropout(Block1_Element4_Cell_Operation1_Dropout)
 											:o Block1_Element4_Cell_Operation1_Dropout_value(Block1_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block1_Element4_Cell_Operation1_Dropout_0_4(Block1_Element4_Cell_Operation1_Dropout_0_4)
-													: Block1_Element4_Cell_Operation1_Dropout_0_5(Block1_Element4_Cell_Operation1_Dropout_0_5)
-													: Block1_Element4_Cell_Operation1_Dropout_0_7(Block1_Element4_Cell_Operation1_Dropout_0_7)
+													: Block1_Element4_Cell_Operation1_Dropout_040(Block1_Element4_Cell_Operation1_Dropout_040)
+													: Block1_Element4_Cell_Operation1_Dropout_050(Block1_Element4_Cell_Operation1_Dropout_050)
+													: Block1_Element4_Cell_Operation1_Dropout_070(Block1_Element4_Cell_Operation1_Dropout_070)
 								:m Block1_Element4_Cell_Operation2(Block1_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block1_Element4_Cell_Operation2_Flatten(Block1_Element4_Cell_Operation2_Flatten)
@@ -642,9 +642,9 @@
 										: Block1_Element4_Cell_Operation2_Dropout(Block1_Element4_Cell_Operation2_Dropout)
 											:o Block1_Element4_Cell_Operation2_Dropout_value(Block1_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block1_Element4_Cell_Operation2_Dropout_0_4(Block1_Element4_Cell_Operation2_Dropout_0_4)
-													: Block1_Element4_Cell_Operation2_Dropout_0_5(Block1_Element4_Cell_Operation2_Dropout_0_5)
-													: Block1_Element4_Cell_Operation2_Dropout_0_7(Block1_Element4_Cell_Operation2_Dropout_0_7)
+													: Block1_Element4_Cell_Operation2_Dropout_040(Block1_Element4_Cell_Operation2_Dropout_040)
+													: Block1_Element4_Cell_Operation2_Dropout_050(Block1_Element4_Cell_Operation2_Dropout_050)
+													: Block1_Element4_Cell_Operation2_Dropout_070(Block1_Element4_Cell_Operation2_Dropout_070)
 								:m Block1_Element4_Cell_Combination(Block1_Element4_Cell_Combination)
 									:g [1,1]
 										: Block1_Element4_Cell_Combination_Concat(Block1_Element4_Cell_Combination_Concat)
@@ -695,7 +695,7 @@
 													: Block1_Element5_Cell_Input1_Dense_activation_softmax(Block1_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block1_Element5_Cell_Input1_Dense_activation_relu(Block1_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block1_Element5_Cell_Input1_Pooling(Block1_Element5_Cell_Input1_Pooling)
-											:m Block1_Element5_Cell_Input1_Pooling_features(Block1_Element5_Cell_Input1_Pooling_features)
+											:m Block1_Element5_Cell_Input1_Pooling_kernel(Block1_Element5_Cell_Input1_Pooling_kernel)
 											:m Block1_Element5_Cell_Input1_Pooling_stride(Block1_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block1_Element5_Cell_Input1_Pooling_stride_1x1(Block1_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -749,7 +749,7 @@
 													: Block1_Element5_Cell_Input2_Dense_activation_softmax(Block1_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block1_Element5_Cell_Input2_Dense_activation_relu(Block1_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block1_Element5_Cell_Input2_Pooling(Block1_Element5_Cell_Input2_Pooling)
-											:m Block1_Element5_Cell_Input2_Pooling_features(Block1_Element5_Cell_Input2_Pooling_features)
+											:m Block1_Element5_Cell_Input2_Pooling_kernel(Block1_Element5_Cell_Input2_Pooling_kernel)
 											:m Block1_Element5_Cell_Input2_Pooling_stride(Block1_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block1_Element5_Cell_Input2_Pooling_stride_1x1(Block1_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -784,9 +784,9 @@
 										: Block1_Element5_Cell_Operation1_Dropout(Block1_Element5_Cell_Operation1_Dropout)
 											:o Block1_Element5_Cell_Operation1_Dropout_value(Block1_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block1_Element5_Cell_Operation1_Dropout_0_4(Block1_Element5_Cell_Operation1_Dropout_0_4)
-													: Block1_Element5_Cell_Operation1_Dropout_0_5(Block1_Element5_Cell_Operation1_Dropout_0_5)
-													: Block1_Element5_Cell_Operation1_Dropout_0_7(Block1_Element5_Cell_Operation1_Dropout_0_7)
+													: Block1_Element5_Cell_Operation1_Dropout_040(Block1_Element5_Cell_Operation1_Dropout_040)
+													: Block1_Element5_Cell_Operation1_Dropout_050(Block1_Element5_Cell_Operation1_Dropout_050)
+													: Block1_Element5_Cell_Operation1_Dropout_070(Block1_Element5_Cell_Operation1_Dropout_070)
 								:m Block1_Element5_Cell_Operation2(Block1_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block1_Element5_Cell_Operation2_Flatten(Block1_Element5_Cell_Operation2_Flatten)
@@ -804,9 +804,9 @@
 										: Block1_Element5_Cell_Operation2_Dropout(Block1_Element5_Cell_Operation2_Dropout)
 											:o Block1_Element5_Cell_Operation2_Dropout_value(Block1_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block1_Element5_Cell_Operation2_Dropout_0_4(Block1_Element5_Cell_Operation2_Dropout_0_4)
-													: Block1_Element5_Cell_Operation2_Dropout_0_5(Block1_Element5_Cell_Operation2_Dropout_0_5)
-													: Block1_Element5_Cell_Operation2_Dropout_0_7(Block1_Element5_Cell_Operation2_Dropout_0_7)
+													: Block1_Element5_Cell_Operation2_Dropout_040(Block1_Element5_Cell_Operation2_Dropout_040)
+													: Block1_Element5_Cell_Operation2_Dropout_050(Block1_Element5_Cell_Operation2_Dropout_050)
+													: Block1_Element5_Cell_Operation2_Dropout_070(Block1_Element5_Cell_Operation2_Dropout_070)
 								:m Block1_Element5_Cell_Combination(Block1_Element5_Cell_Combination)
 									:g [1,1]
 										: Block1_Element5_Cell_Combination_Concat(Block1_Element5_Cell_Combination_Concat)
@@ -858,7 +858,7 @@
 													: Block2_Element1_Cell_Input1_Dense_activation_softmax(Block2_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block2_Element1_Cell_Input1_Dense_activation_relu(Block2_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block2_Element1_Cell_Input1_Pooling(Block2_Element1_Cell_Input1_Pooling)
-											:m Block2_Element1_Cell_Input1_Pooling_features(Block2_Element1_Cell_Input1_Pooling_features)
+											:m Block2_Element1_Cell_Input1_Pooling_kernel(Block2_Element1_Cell_Input1_Pooling_kernel)
 											:m Block2_Element1_Cell_Input1_Pooling_stride(Block2_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block2_Element1_Cell_Input1_Pooling_stride_1x1(Block2_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -912,7 +912,7 @@
 													: Block2_Element1_Cell_Input2_Dense_activation_softmax(Block2_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block2_Element1_Cell_Input2_Dense_activation_relu(Block2_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block2_Element1_Cell_Input2_Pooling(Block2_Element1_Cell_Input2_Pooling)
-											:m Block2_Element1_Cell_Input2_Pooling_features(Block2_Element1_Cell_Input2_Pooling_features)
+											:m Block2_Element1_Cell_Input2_Pooling_kernel(Block2_Element1_Cell_Input2_Pooling_kernel)
 											:m Block2_Element1_Cell_Input2_Pooling_stride(Block2_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block2_Element1_Cell_Input2_Pooling_stride_1x1(Block2_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -947,9 +947,9 @@
 										: Block2_Element1_Cell_Operation1_Dropout(Block2_Element1_Cell_Operation1_Dropout)
 											:o Block2_Element1_Cell_Operation1_Dropout_value(Block2_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block2_Element1_Cell_Operation1_Dropout_0_4(Block2_Element1_Cell_Operation1_Dropout_0_4)
-													: Block2_Element1_Cell_Operation1_Dropout_0_5(Block2_Element1_Cell_Operation1_Dropout_0_5)
-													: Block2_Element1_Cell_Operation1_Dropout_0_7(Block2_Element1_Cell_Operation1_Dropout_0_7)
+													: Block2_Element1_Cell_Operation1_Dropout_040(Block2_Element1_Cell_Operation1_Dropout_040)
+													: Block2_Element1_Cell_Operation1_Dropout_050(Block2_Element1_Cell_Operation1_Dropout_050)
+													: Block2_Element1_Cell_Operation1_Dropout_070(Block2_Element1_Cell_Operation1_Dropout_070)
 								:m Block2_Element1_Cell_Operation2(Block2_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block2_Element1_Cell_Operation2_Flatten(Block2_Element1_Cell_Operation2_Flatten)
@@ -967,9 +967,9 @@
 										: Block2_Element1_Cell_Operation2_Dropout(Block2_Element1_Cell_Operation2_Dropout)
 											:o Block2_Element1_Cell_Operation2_Dropout_value(Block2_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block2_Element1_Cell_Operation2_Dropout_0_4(Block2_Element1_Cell_Operation2_Dropout_0_4)
-													: Block2_Element1_Cell_Operation2_Dropout_0_5(Block2_Element1_Cell_Operation2_Dropout_0_5)
-													: Block2_Element1_Cell_Operation2_Dropout_0_7(Block2_Element1_Cell_Operation2_Dropout_0_7)
+													: Block2_Element1_Cell_Operation2_Dropout_040(Block2_Element1_Cell_Operation2_Dropout_040)
+													: Block2_Element1_Cell_Operation2_Dropout_050(Block2_Element1_Cell_Operation2_Dropout_050)
+													: Block2_Element1_Cell_Operation2_Dropout_070(Block2_Element1_Cell_Operation2_Dropout_070)
 								:m Block2_Element1_Cell_Combination(Block2_Element1_Cell_Combination)
 									:g [1,1]
 										: Block2_Element1_Cell_Combination_Concat(Block2_Element1_Cell_Combination_Concat)
@@ -1020,7 +1020,7 @@
 													: Block2_Element2_Cell_Input1_Dense_activation_softmax(Block2_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block2_Element2_Cell_Input1_Dense_activation_relu(Block2_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block2_Element2_Cell_Input1_Pooling(Block2_Element2_Cell_Input1_Pooling)
-											:m Block2_Element2_Cell_Input1_Pooling_features(Block2_Element2_Cell_Input1_Pooling_features)
+											:m Block2_Element2_Cell_Input1_Pooling_kernel(Block2_Element2_Cell_Input1_Pooling_kernel)
 											:m Block2_Element2_Cell_Input1_Pooling_stride(Block2_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block2_Element2_Cell_Input1_Pooling_stride_1x1(Block2_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -1074,7 +1074,7 @@
 													: Block2_Element2_Cell_Input2_Dense_activation_softmax(Block2_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block2_Element2_Cell_Input2_Dense_activation_relu(Block2_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block2_Element2_Cell_Input2_Pooling(Block2_Element2_Cell_Input2_Pooling)
-											:m Block2_Element2_Cell_Input2_Pooling_features(Block2_Element2_Cell_Input2_Pooling_features)
+											:m Block2_Element2_Cell_Input2_Pooling_kernel(Block2_Element2_Cell_Input2_Pooling_kernel)
 											:m Block2_Element2_Cell_Input2_Pooling_stride(Block2_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block2_Element2_Cell_Input2_Pooling_stride_1x1(Block2_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -1109,9 +1109,9 @@
 										: Block2_Element2_Cell_Operation1_Dropout(Block2_Element2_Cell_Operation1_Dropout)
 											:o Block2_Element2_Cell_Operation1_Dropout_value(Block2_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block2_Element2_Cell_Operation1_Dropout_0_4(Block2_Element2_Cell_Operation1_Dropout_0_4)
-													: Block2_Element2_Cell_Operation1_Dropout_0_5(Block2_Element2_Cell_Operation1_Dropout_0_5)
-													: Block2_Element2_Cell_Operation1_Dropout_0_7(Block2_Element2_Cell_Operation1_Dropout_0_7)
+													: Block2_Element2_Cell_Operation1_Dropout_040(Block2_Element2_Cell_Operation1_Dropout_040)
+													: Block2_Element2_Cell_Operation1_Dropout_050(Block2_Element2_Cell_Operation1_Dropout_050)
+													: Block2_Element2_Cell_Operation1_Dropout_070(Block2_Element2_Cell_Operation1_Dropout_070)
 								:m Block2_Element2_Cell_Operation2(Block2_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block2_Element2_Cell_Operation2_Flatten(Block2_Element2_Cell_Operation2_Flatten)
@@ -1129,9 +1129,9 @@
 										: Block2_Element2_Cell_Operation2_Dropout(Block2_Element2_Cell_Operation2_Dropout)
 											:o Block2_Element2_Cell_Operation2_Dropout_value(Block2_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block2_Element2_Cell_Operation2_Dropout_0_4(Block2_Element2_Cell_Operation2_Dropout_0_4)
-													: Block2_Element2_Cell_Operation2_Dropout_0_5(Block2_Element2_Cell_Operation2_Dropout_0_5)
-													: Block2_Element2_Cell_Operation2_Dropout_0_7(Block2_Element2_Cell_Operation2_Dropout_0_7)
+													: Block2_Element2_Cell_Operation2_Dropout_040(Block2_Element2_Cell_Operation2_Dropout_040)
+													: Block2_Element2_Cell_Operation2_Dropout_050(Block2_Element2_Cell_Operation2_Dropout_050)
+													: Block2_Element2_Cell_Operation2_Dropout_070(Block2_Element2_Cell_Operation2_Dropout_070)
 								:m Block2_Element2_Cell_Combination(Block2_Element2_Cell_Combination)
 									:g [1,1]
 										: Block2_Element2_Cell_Combination_Concat(Block2_Element2_Cell_Combination_Concat)
@@ -1182,7 +1182,7 @@
 													: Block2_Element3_Cell_Input1_Dense_activation_softmax(Block2_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block2_Element3_Cell_Input1_Dense_activation_relu(Block2_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block2_Element3_Cell_Input1_Pooling(Block2_Element3_Cell_Input1_Pooling)
-											:m Block2_Element3_Cell_Input1_Pooling_features(Block2_Element3_Cell_Input1_Pooling_features)
+											:m Block2_Element3_Cell_Input1_Pooling_kernel(Block2_Element3_Cell_Input1_Pooling_kernel)
 											:m Block2_Element3_Cell_Input1_Pooling_stride(Block2_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block2_Element3_Cell_Input1_Pooling_stride_1x1(Block2_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -1236,7 +1236,7 @@
 													: Block2_Element3_Cell_Input2_Dense_activation_softmax(Block2_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block2_Element3_Cell_Input2_Dense_activation_relu(Block2_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block2_Element3_Cell_Input2_Pooling(Block2_Element3_Cell_Input2_Pooling)
-											:m Block2_Element3_Cell_Input2_Pooling_features(Block2_Element3_Cell_Input2_Pooling_features)
+											:m Block2_Element3_Cell_Input2_Pooling_kernel(Block2_Element3_Cell_Input2_Pooling_kernel)
 											:m Block2_Element3_Cell_Input2_Pooling_stride(Block2_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block2_Element3_Cell_Input2_Pooling_stride_1x1(Block2_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -1271,9 +1271,9 @@
 										: Block2_Element3_Cell_Operation1_Dropout(Block2_Element3_Cell_Operation1_Dropout)
 											:o Block2_Element3_Cell_Operation1_Dropout_value(Block2_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block2_Element3_Cell_Operation1_Dropout_0_4(Block2_Element3_Cell_Operation1_Dropout_0_4)
-													: Block2_Element3_Cell_Operation1_Dropout_0_5(Block2_Element3_Cell_Operation1_Dropout_0_5)
-													: Block2_Element3_Cell_Operation1_Dropout_0_7(Block2_Element3_Cell_Operation1_Dropout_0_7)
+													: Block2_Element3_Cell_Operation1_Dropout_040(Block2_Element3_Cell_Operation1_Dropout_040)
+													: Block2_Element3_Cell_Operation1_Dropout_050(Block2_Element3_Cell_Operation1_Dropout_050)
+													: Block2_Element3_Cell_Operation1_Dropout_070(Block2_Element3_Cell_Operation1_Dropout_070)
 								:m Block2_Element3_Cell_Operation2(Block2_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block2_Element3_Cell_Operation2_Flatten(Block2_Element3_Cell_Operation2_Flatten)
@@ -1291,9 +1291,9 @@
 										: Block2_Element3_Cell_Operation2_Dropout(Block2_Element3_Cell_Operation2_Dropout)
 											:o Block2_Element3_Cell_Operation2_Dropout_value(Block2_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block2_Element3_Cell_Operation2_Dropout_0_4(Block2_Element3_Cell_Operation2_Dropout_0_4)
-													: Block2_Element3_Cell_Operation2_Dropout_0_5(Block2_Element3_Cell_Operation2_Dropout_0_5)
-													: Block2_Element3_Cell_Operation2_Dropout_0_7(Block2_Element3_Cell_Operation2_Dropout_0_7)
+													: Block2_Element3_Cell_Operation2_Dropout_040(Block2_Element3_Cell_Operation2_Dropout_040)
+													: Block2_Element3_Cell_Operation2_Dropout_050(Block2_Element3_Cell_Operation2_Dropout_050)
+													: Block2_Element3_Cell_Operation2_Dropout_070(Block2_Element3_Cell_Operation2_Dropout_070)
 								:m Block2_Element3_Cell_Combination(Block2_Element3_Cell_Combination)
 									:g [1,1]
 										: Block2_Element3_Cell_Combination_Concat(Block2_Element3_Cell_Combination_Concat)
@@ -1344,7 +1344,7 @@
 													: Block2_Element4_Cell_Input1_Dense_activation_softmax(Block2_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block2_Element4_Cell_Input1_Dense_activation_relu(Block2_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block2_Element4_Cell_Input1_Pooling(Block2_Element4_Cell_Input1_Pooling)
-											:m Block2_Element4_Cell_Input1_Pooling_features(Block2_Element4_Cell_Input1_Pooling_features)
+											:m Block2_Element4_Cell_Input1_Pooling_kernel(Block2_Element4_Cell_Input1_Pooling_kernel)
 											:m Block2_Element4_Cell_Input1_Pooling_stride(Block2_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block2_Element4_Cell_Input1_Pooling_stride_1x1(Block2_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -1398,7 +1398,7 @@
 													: Block2_Element4_Cell_Input2_Dense_activation_softmax(Block2_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block2_Element4_Cell_Input2_Dense_activation_relu(Block2_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block2_Element4_Cell_Input2_Pooling(Block2_Element4_Cell_Input2_Pooling)
-											:m Block2_Element4_Cell_Input2_Pooling_features(Block2_Element4_Cell_Input2_Pooling_features)
+											:m Block2_Element4_Cell_Input2_Pooling_kernel(Block2_Element4_Cell_Input2_Pooling_kernel)
 											:m Block2_Element4_Cell_Input2_Pooling_stride(Block2_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block2_Element4_Cell_Input2_Pooling_stride_1x1(Block2_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -1433,9 +1433,9 @@
 										: Block2_Element4_Cell_Operation1_Dropout(Block2_Element4_Cell_Operation1_Dropout)
 											:o Block2_Element4_Cell_Operation1_Dropout_value(Block2_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block2_Element4_Cell_Operation1_Dropout_0_4(Block2_Element4_Cell_Operation1_Dropout_0_4)
-													: Block2_Element4_Cell_Operation1_Dropout_0_5(Block2_Element4_Cell_Operation1_Dropout_0_5)
-													: Block2_Element4_Cell_Operation1_Dropout_0_7(Block2_Element4_Cell_Operation1_Dropout_0_7)
+													: Block2_Element4_Cell_Operation1_Dropout_040(Block2_Element4_Cell_Operation1_Dropout_040)
+													: Block2_Element4_Cell_Operation1_Dropout_050(Block2_Element4_Cell_Operation1_Dropout_050)
+													: Block2_Element4_Cell_Operation1_Dropout_070(Block2_Element4_Cell_Operation1_Dropout_070)
 								:m Block2_Element4_Cell_Operation2(Block2_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block2_Element4_Cell_Operation2_Flatten(Block2_Element4_Cell_Operation2_Flatten)
@@ -1453,9 +1453,9 @@
 										: Block2_Element4_Cell_Operation2_Dropout(Block2_Element4_Cell_Operation2_Dropout)
 											:o Block2_Element4_Cell_Operation2_Dropout_value(Block2_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block2_Element4_Cell_Operation2_Dropout_0_4(Block2_Element4_Cell_Operation2_Dropout_0_4)
-													: Block2_Element4_Cell_Operation2_Dropout_0_5(Block2_Element4_Cell_Operation2_Dropout_0_5)
-													: Block2_Element4_Cell_Operation2_Dropout_0_7(Block2_Element4_Cell_Operation2_Dropout_0_7)
+													: Block2_Element4_Cell_Operation2_Dropout_040(Block2_Element4_Cell_Operation2_Dropout_040)
+													: Block2_Element4_Cell_Operation2_Dropout_050(Block2_Element4_Cell_Operation2_Dropout_050)
+													: Block2_Element4_Cell_Operation2_Dropout_070(Block2_Element4_Cell_Operation2_Dropout_070)
 								:m Block2_Element4_Cell_Combination(Block2_Element4_Cell_Combination)
 									:g [1,1]
 										: Block2_Element4_Cell_Combination_Concat(Block2_Element4_Cell_Combination_Concat)
@@ -1506,7 +1506,7 @@
 													: Block2_Element5_Cell_Input1_Dense_activation_softmax(Block2_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block2_Element5_Cell_Input1_Dense_activation_relu(Block2_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block2_Element5_Cell_Input1_Pooling(Block2_Element5_Cell_Input1_Pooling)
-											:m Block2_Element5_Cell_Input1_Pooling_features(Block2_Element5_Cell_Input1_Pooling_features)
+											:m Block2_Element5_Cell_Input1_Pooling_kernel(Block2_Element5_Cell_Input1_Pooling_kernel)
 											:m Block2_Element5_Cell_Input1_Pooling_stride(Block2_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block2_Element5_Cell_Input1_Pooling_stride_1x1(Block2_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -1560,7 +1560,7 @@
 													: Block2_Element5_Cell_Input2_Dense_activation_softmax(Block2_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block2_Element5_Cell_Input2_Dense_activation_relu(Block2_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block2_Element5_Cell_Input2_Pooling(Block2_Element5_Cell_Input2_Pooling)
-											:m Block2_Element5_Cell_Input2_Pooling_features(Block2_Element5_Cell_Input2_Pooling_features)
+											:m Block2_Element5_Cell_Input2_Pooling_kernel(Block2_Element5_Cell_Input2_Pooling_kernel)
 											:m Block2_Element5_Cell_Input2_Pooling_stride(Block2_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block2_Element5_Cell_Input2_Pooling_stride_1x1(Block2_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -1595,9 +1595,9 @@
 										: Block2_Element5_Cell_Operation1_Dropout(Block2_Element5_Cell_Operation1_Dropout)
 											:o Block2_Element5_Cell_Operation1_Dropout_value(Block2_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block2_Element5_Cell_Operation1_Dropout_0_4(Block2_Element5_Cell_Operation1_Dropout_0_4)
-													: Block2_Element5_Cell_Operation1_Dropout_0_5(Block2_Element5_Cell_Operation1_Dropout_0_5)
-													: Block2_Element5_Cell_Operation1_Dropout_0_7(Block2_Element5_Cell_Operation1_Dropout_0_7)
+													: Block2_Element5_Cell_Operation1_Dropout_040(Block2_Element5_Cell_Operation1_Dropout_040)
+													: Block2_Element5_Cell_Operation1_Dropout_050(Block2_Element5_Cell_Operation1_Dropout_050)
+													: Block2_Element5_Cell_Operation1_Dropout_070(Block2_Element5_Cell_Operation1_Dropout_070)
 								:m Block2_Element5_Cell_Operation2(Block2_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block2_Element5_Cell_Operation2_Flatten(Block2_Element5_Cell_Operation2_Flatten)
@@ -1615,9 +1615,9 @@
 										: Block2_Element5_Cell_Operation2_Dropout(Block2_Element5_Cell_Operation2_Dropout)
 											:o Block2_Element5_Cell_Operation2_Dropout_value(Block2_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block2_Element5_Cell_Operation2_Dropout_0_4(Block2_Element5_Cell_Operation2_Dropout_0_4)
-													: Block2_Element5_Cell_Operation2_Dropout_0_5(Block2_Element5_Cell_Operation2_Dropout_0_5)
-													: Block2_Element5_Cell_Operation2_Dropout_0_7(Block2_Element5_Cell_Operation2_Dropout_0_7)
+													: Block2_Element5_Cell_Operation2_Dropout_040(Block2_Element5_Cell_Operation2_Dropout_040)
+													: Block2_Element5_Cell_Operation2_Dropout_050(Block2_Element5_Cell_Operation2_Dropout_050)
+													: Block2_Element5_Cell_Operation2_Dropout_070(Block2_Element5_Cell_Operation2_Dropout_070)
 								:m Block2_Element5_Cell_Combination(Block2_Element5_Cell_Combination)
 									:g [1,1]
 										: Block2_Element5_Cell_Combination_Concat(Block2_Element5_Cell_Combination_Concat)
@@ -1669,7 +1669,7 @@
 													: Block3_Element1_Cell_Input1_Dense_activation_softmax(Block3_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block3_Element1_Cell_Input1_Dense_activation_relu(Block3_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block3_Element1_Cell_Input1_Pooling(Block3_Element1_Cell_Input1_Pooling)
-											:m Block3_Element1_Cell_Input1_Pooling_features(Block3_Element1_Cell_Input1_Pooling_features)
+											:m Block3_Element1_Cell_Input1_Pooling_kernel(Block3_Element1_Cell_Input1_Pooling_kernel)
 											:m Block3_Element1_Cell_Input1_Pooling_stride(Block3_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block3_Element1_Cell_Input1_Pooling_stride_1x1(Block3_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -1723,7 +1723,7 @@
 													: Block3_Element1_Cell_Input2_Dense_activation_softmax(Block3_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block3_Element1_Cell_Input2_Dense_activation_relu(Block3_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block3_Element1_Cell_Input2_Pooling(Block3_Element1_Cell_Input2_Pooling)
-											:m Block3_Element1_Cell_Input2_Pooling_features(Block3_Element1_Cell_Input2_Pooling_features)
+											:m Block3_Element1_Cell_Input2_Pooling_kernel(Block3_Element1_Cell_Input2_Pooling_kernel)
 											:m Block3_Element1_Cell_Input2_Pooling_stride(Block3_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block3_Element1_Cell_Input2_Pooling_stride_1x1(Block3_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -1758,9 +1758,9 @@
 										: Block3_Element1_Cell_Operation1_Dropout(Block3_Element1_Cell_Operation1_Dropout)
 											:o Block3_Element1_Cell_Operation1_Dropout_value(Block3_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block3_Element1_Cell_Operation1_Dropout_0_4(Block3_Element1_Cell_Operation1_Dropout_0_4)
-													: Block3_Element1_Cell_Operation1_Dropout_0_5(Block3_Element1_Cell_Operation1_Dropout_0_5)
-													: Block3_Element1_Cell_Operation1_Dropout_0_7(Block3_Element1_Cell_Operation1_Dropout_0_7)
+													: Block3_Element1_Cell_Operation1_Dropout_040(Block3_Element1_Cell_Operation1_Dropout_040)
+													: Block3_Element1_Cell_Operation1_Dropout_050(Block3_Element1_Cell_Operation1_Dropout_050)
+													: Block3_Element1_Cell_Operation1_Dropout_070(Block3_Element1_Cell_Operation1_Dropout_070)
 								:m Block3_Element1_Cell_Operation2(Block3_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block3_Element1_Cell_Operation2_Flatten(Block3_Element1_Cell_Operation2_Flatten)
@@ -1778,9 +1778,9 @@
 										: Block3_Element1_Cell_Operation2_Dropout(Block3_Element1_Cell_Operation2_Dropout)
 											:o Block3_Element1_Cell_Operation2_Dropout_value(Block3_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block3_Element1_Cell_Operation2_Dropout_0_4(Block3_Element1_Cell_Operation2_Dropout_0_4)
-													: Block3_Element1_Cell_Operation2_Dropout_0_5(Block3_Element1_Cell_Operation2_Dropout_0_5)
-													: Block3_Element1_Cell_Operation2_Dropout_0_7(Block3_Element1_Cell_Operation2_Dropout_0_7)
+													: Block3_Element1_Cell_Operation2_Dropout_040(Block3_Element1_Cell_Operation2_Dropout_040)
+													: Block3_Element1_Cell_Operation2_Dropout_050(Block3_Element1_Cell_Operation2_Dropout_050)
+													: Block3_Element1_Cell_Operation2_Dropout_070(Block3_Element1_Cell_Operation2_Dropout_070)
 								:m Block3_Element1_Cell_Combination(Block3_Element1_Cell_Combination)
 									:g [1,1]
 										: Block3_Element1_Cell_Combination_Concat(Block3_Element1_Cell_Combination_Concat)
@@ -1831,7 +1831,7 @@
 													: Block3_Element2_Cell_Input1_Dense_activation_softmax(Block3_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block3_Element2_Cell_Input1_Dense_activation_relu(Block3_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block3_Element2_Cell_Input1_Pooling(Block3_Element2_Cell_Input1_Pooling)
-											:m Block3_Element2_Cell_Input1_Pooling_features(Block3_Element2_Cell_Input1_Pooling_features)
+											:m Block3_Element2_Cell_Input1_Pooling_kernel(Block3_Element2_Cell_Input1_Pooling_kernel)
 											:m Block3_Element2_Cell_Input1_Pooling_stride(Block3_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block3_Element2_Cell_Input1_Pooling_stride_1x1(Block3_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -1885,7 +1885,7 @@
 													: Block3_Element2_Cell_Input2_Dense_activation_softmax(Block3_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block3_Element2_Cell_Input2_Dense_activation_relu(Block3_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block3_Element2_Cell_Input2_Pooling(Block3_Element2_Cell_Input2_Pooling)
-											:m Block3_Element2_Cell_Input2_Pooling_features(Block3_Element2_Cell_Input2_Pooling_features)
+											:m Block3_Element2_Cell_Input2_Pooling_kernel(Block3_Element2_Cell_Input2_Pooling_kernel)
 											:m Block3_Element2_Cell_Input2_Pooling_stride(Block3_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block3_Element2_Cell_Input2_Pooling_stride_1x1(Block3_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -1920,9 +1920,9 @@
 										: Block3_Element2_Cell_Operation1_Dropout(Block3_Element2_Cell_Operation1_Dropout)
 											:o Block3_Element2_Cell_Operation1_Dropout_value(Block3_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block3_Element2_Cell_Operation1_Dropout_0_4(Block3_Element2_Cell_Operation1_Dropout_0_4)
-													: Block3_Element2_Cell_Operation1_Dropout_0_5(Block3_Element2_Cell_Operation1_Dropout_0_5)
-													: Block3_Element2_Cell_Operation1_Dropout_0_7(Block3_Element2_Cell_Operation1_Dropout_0_7)
+													: Block3_Element2_Cell_Operation1_Dropout_040(Block3_Element2_Cell_Operation1_Dropout_040)
+													: Block3_Element2_Cell_Operation1_Dropout_050(Block3_Element2_Cell_Operation1_Dropout_050)
+													: Block3_Element2_Cell_Operation1_Dropout_070(Block3_Element2_Cell_Operation1_Dropout_070)
 								:m Block3_Element2_Cell_Operation2(Block3_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block3_Element2_Cell_Operation2_Flatten(Block3_Element2_Cell_Operation2_Flatten)
@@ -1940,9 +1940,9 @@
 										: Block3_Element2_Cell_Operation2_Dropout(Block3_Element2_Cell_Operation2_Dropout)
 											:o Block3_Element2_Cell_Operation2_Dropout_value(Block3_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block3_Element2_Cell_Operation2_Dropout_0_4(Block3_Element2_Cell_Operation2_Dropout_0_4)
-													: Block3_Element2_Cell_Operation2_Dropout_0_5(Block3_Element2_Cell_Operation2_Dropout_0_5)
-													: Block3_Element2_Cell_Operation2_Dropout_0_7(Block3_Element2_Cell_Operation2_Dropout_0_7)
+													: Block3_Element2_Cell_Operation2_Dropout_040(Block3_Element2_Cell_Operation2_Dropout_040)
+													: Block3_Element2_Cell_Operation2_Dropout_050(Block3_Element2_Cell_Operation2_Dropout_050)
+													: Block3_Element2_Cell_Operation2_Dropout_070(Block3_Element2_Cell_Operation2_Dropout_070)
 								:m Block3_Element2_Cell_Combination(Block3_Element2_Cell_Combination)
 									:g [1,1]
 										: Block3_Element2_Cell_Combination_Concat(Block3_Element2_Cell_Combination_Concat)
@@ -1993,7 +1993,7 @@
 													: Block3_Element3_Cell_Input1_Dense_activation_softmax(Block3_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block3_Element3_Cell_Input1_Dense_activation_relu(Block3_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block3_Element3_Cell_Input1_Pooling(Block3_Element3_Cell_Input1_Pooling)
-											:m Block3_Element3_Cell_Input1_Pooling_features(Block3_Element3_Cell_Input1_Pooling_features)
+											:m Block3_Element3_Cell_Input1_Pooling_kernel(Block3_Element3_Cell_Input1_Pooling_kernel)
 											:m Block3_Element3_Cell_Input1_Pooling_stride(Block3_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block3_Element3_Cell_Input1_Pooling_stride_1x1(Block3_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -2047,7 +2047,7 @@
 													: Block3_Element3_Cell_Input2_Dense_activation_softmax(Block3_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block3_Element3_Cell_Input2_Dense_activation_relu(Block3_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block3_Element3_Cell_Input2_Pooling(Block3_Element3_Cell_Input2_Pooling)
-											:m Block3_Element3_Cell_Input2_Pooling_features(Block3_Element3_Cell_Input2_Pooling_features)
+											:m Block3_Element3_Cell_Input2_Pooling_kernel(Block3_Element3_Cell_Input2_Pooling_kernel)
 											:m Block3_Element3_Cell_Input2_Pooling_stride(Block3_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block3_Element3_Cell_Input2_Pooling_stride_1x1(Block3_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -2082,9 +2082,9 @@
 										: Block3_Element3_Cell_Operation1_Dropout(Block3_Element3_Cell_Operation1_Dropout)
 											:o Block3_Element3_Cell_Operation1_Dropout_value(Block3_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block3_Element3_Cell_Operation1_Dropout_0_4(Block3_Element3_Cell_Operation1_Dropout_0_4)
-													: Block3_Element3_Cell_Operation1_Dropout_0_5(Block3_Element3_Cell_Operation1_Dropout_0_5)
-													: Block3_Element3_Cell_Operation1_Dropout_0_7(Block3_Element3_Cell_Operation1_Dropout_0_7)
+													: Block3_Element3_Cell_Operation1_Dropout_040(Block3_Element3_Cell_Operation1_Dropout_040)
+													: Block3_Element3_Cell_Operation1_Dropout_050(Block3_Element3_Cell_Operation1_Dropout_050)
+													: Block3_Element3_Cell_Operation1_Dropout_070(Block3_Element3_Cell_Operation1_Dropout_070)
 								:m Block3_Element3_Cell_Operation2(Block3_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block3_Element3_Cell_Operation2_Flatten(Block3_Element3_Cell_Operation2_Flatten)
@@ -2102,9 +2102,9 @@
 										: Block3_Element3_Cell_Operation2_Dropout(Block3_Element3_Cell_Operation2_Dropout)
 											:o Block3_Element3_Cell_Operation2_Dropout_value(Block3_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block3_Element3_Cell_Operation2_Dropout_0_4(Block3_Element3_Cell_Operation2_Dropout_0_4)
-													: Block3_Element3_Cell_Operation2_Dropout_0_5(Block3_Element3_Cell_Operation2_Dropout_0_5)
-													: Block3_Element3_Cell_Operation2_Dropout_0_7(Block3_Element3_Cell_Operation2_Dropout_0_7)
+													: Block3_Element3_Cell_Operation2_Dropout_040(Block3_Element3_Cell_Operation2_Dropout_040)
+													: Block3_Element3_Cell_Operation2_Dropout_050(Block3_Element3_Cell_Operation2_Dropout_050)
+													: Block3_Element3_Cell_Operation2_Dropout_070(Block3_Element3_Cell_Operation2_Dropout_070)
 								:m Block3_Element3_Cell_Combination(Block3_Element3_Cell_Combination)
 									:g [1,1]
 										: Block3_Element3_Cell_Combination_Concat(Block3_Element3_Cell_Combination_Concat)
@@ -2155,7 +2155,7 @@
 													: Block3_Element4_Cell_Input1_Dense_activation_softmax(Block3_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block3_Element4_Cell_Input1_Dense_activation_relu(Block3_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block3_Element4_Cell_Input1_Pooling(Block3_Element4_Cell_Input1_Pooling)
-											:m Block3_Element4_Cell_Input1_Pooling_features(Block3_Element4_Cell_Input1_Pooling_features)
+											:m Block3_Element4_Cell_Input1_Pooling_kernel(Block3_Element4_Cell_Input1_Pooling_kernel)
 											:m Block3_Element4_Cell_Input1_Pooling_stride(Block3_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block3_Element4_Cell_Input1_Pooling_stride_1x1(Block3_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -2209,7 +2209,7 @@
 													: Block3_Element4_Cell_Input2_Dense_activation_softmax(Block3_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block3_Element4_Cell_Input2_Dense_activation_relu(Block3_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block3_Element4_Cell_Input2_Pooling(Block3_Element4_Cell_Input2_Pooling)
-											:m Block3_Element4_Cell_Input2_Pooling_features(Block3_Element4_Cell_Input2_Pooling_features)
+											:m Block3_Element4_Cell_Input2_Pooling_kernel(Block3_Element4_Cell_Input2_Pooling_kernel)
 											:m Block3_Element4_Cell_Input2_Pooling_stride(Block3_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block3_Element4_Cell_Input2_Pooling_stride_1x1(Block3_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -2244,9 +2244,9 @@
 										: Block3_Element4_Cell_Operation1_Dropout(Block3_Element4_Cell_Operation1_Dropout)
 											:o Block3_Element4_Cell_Operation1_Dropout_value(Block3_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block3_Element4_Cell_Operation1_Dropout_0_4(Block3_Element4_Cell_Operation1_Dropout_0_4)
-													: Block3_Element4_Cell_Operation1_Dropout_0_5(Block3_Element4_Cell_Operation1_Dropout_0_5)
-													: Block3_Element4_Cell_Operation1_Dropout_0_7(Block3_Element4_Cell_Operation1_Dropout_0_7)
+													: Block3_Element4_Cell_Operation1_Dropout_040(Block3_Element4_Cell_Operation1_Dropout_040)
+													: Block3_Element4_Cell_Operation1_Dropout_050(Block3_Element4_Cell_Operation1_Dropout_050)
+													: Block3_Element4_Cell_Operation1_Dropout_070(Block3_Element4_Cell_Operation1_Dropout_070)
 								:m Block3_Element4_Cell_Operation2(Block3_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block3_Element4_Cell_Operation2_Flatten(Block3_Element4_Cell_Operation2_Flatten)
@@ -2264,9 +2264,9 @@
 										: Block3_Element4_Cell_Operation2_Dropout(Block3_Element4_Cell_Operation2_Dropout)
 											:o Block3_Element4_Cell_Operation2_Dropout_value(Block3_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block3_Element4_Cell_Operation2_Dropout_0_4(Block3_Element4_Cell_Operation2_Dropout_0_4)
-													: Block3_Element4_Cell_Operation2_Dropout_0_5(Block3_Element4_Cell_Operation2_Dropout_0_5)
-													: Block3_Element4_Cell_Operation2_Dropout_0_7(Block3_Element4_Cell_Operation2_Dropout_0_7)
+													: Block3_Element4_Cell_Operation2_Dropout_040(Block3_Element4_Cell_Operation2_Dropout_040)
+													: Block3_Element4_Cell_Operation2_Dropout_050(Block3_Element4_Cell_Operation2_Dropout_050)
+													: Block3_Element4_Cell_Operation2_Dropout_070(Block3_Element4_Cell_Operation2_Dropout_070)
 								:m Block3_Element4_Cell_Combination(Block3_Element4_Cell_Combination)
 									:g [1,1]
 										: Block3_Element4_Cell_Combination_Concat(Block3_Element4_Cell_Combination_Concat)
@@ -2317,7 +2317,7 @@
 													: Block3_Element5_Cell_Input1_Dense_activation_softmax(Block3_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block3_Element5_Cell_Input1_Dense_activation_relu(Block3_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block3_Element5_Cell_Input1_Pooling(Block3_Element5_Cell_Input1_Pooling)
-											:m Block3_Element5_Cell_Input1_Pooling_features(Block3_Element5_Cell_Input1_Pooling_features)
+											:m Block3_Element5_Cell_Input1_Pooling_kernel(Block3_Element5_Cell_Input1_Pooling_kernel)
 											:m Block3_Element5_Cell_Input1_Pooling_stride(Block3_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block3_Element5_Cell_Input1_Pooling_stride_1x1(Block3_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -2371,7 +2371,7 @@
 													: Block3_Element5_Cell_Input2_Dense_activation_softmax(Block3_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block3_Element5_Cell_Input2_Dense_activation_relu(Block3_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block3_Element5_Cell_Input2_Pooling(Block3_Element5_Cell_Input2_Pooling)
-											:m Block3_Element5_Cell_Input2_Pooling_features(Block3_Element5_Cell_Input2_Pooling_features)
+											:m Block3_Element5_Cell_Input2_Pooling_kernel(Block3_Element5_Cell_Input2_Pooling_kernel)
 											:m Block3_Element5_Cell_Input2_Pooling_stride(Block3_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block3_Element5_Cell_Input2_Pooling_stride_1x1(Block3_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -2406,9 +2406,9 @@
 										: Block3_Element5_Cell_Operation1_Dropout(Block3_Element5_Cell_Operation1_Dropout)
 											:o Block3_Element5_Cell_Operation1_Dropout_value(Block3_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block3_Element5_Cell_Operation1_Dropout_0_4(Block3_Element5_Cell_Operation1_Dropout_0_4)
-													: Block3_Element5_Cell_Operation1_Dropout_0_5(Block3_Element5_Cell_Operation1_Dropout_0_5)
-													: Block3_Element5_Cell_Operation1_Dropout_0_7(Block3_Element5_Cell_Operation1_Dropout_0_7)
+													: Block3_Element5_Cell_Operation1_Dropout_040(Block3_Element5_Cell_Operation1_Dropout_040)
+													: Block3_Element5_Cell_Operation1_Dropout_050(Block3_Element5_Cell_Operation1_Dropout_050)
+													: Block3_Element5_Cell_Operation1_Dropout_070(Block3_Element5_Cell_Operation1_Dropout_070)
 								:m Block3_Element5_Cell_Operation2(Block3_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block3_Element5_Cell_Operation2_Flatten(Block3_Element5_Cell_Operation2_Flatten)
@@ -2426,9 +2426,9 @@
 										: Block3_Element5_Cell_Operation2_Dropout(Block3_Element5_Cell_Operation2_Dropout)
 											:o Block3_Element5_Cell_Operation2_Dropout_value(Block3_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block3_Element5_Cell_Operation2_Dropout_0_4(Block3_Element5_Cell_Operation2_Dropout_0_4)
-													: Block3_Element5_Cell_Operation2_Dropout_0_5(Block3_Element5_Cell_Operation2_Dropout_0_5)
-													: Block3_Element5_Cell_Operation2_Dropout_0_7(Block3_Element5_Cell_Operation2_Dropout_0_7)
+													: Block3_Element5_Cell_Operation2_Dropout_040(Block3_Element5_Cell_Operation2_Dropout_040)
+													: Block3_Element5_Cell_Operation2_Dropout_050(Block3_Element5_Cell_Operation2_Dropout_050)
+													: Block3_Element5_Cell_Operation2_Dropout_070(Block3_Element5_Cell_Operation2_Dropout_070)
 								:m Block3_Element5_Cell_Combination(Block3_Element5_Cell_Combination)
 									:g [1,1]
 										: Block3_Element5_Cell_Combination_Concat(Block3_Element5_Cell_Combination_Concat)
@@ -2480,7 +2480,7 @@
 													: Block4_Element1_Cell_Input1_Dense_activation_softmax(Block4_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block4_Element1_Cell_Input1_Dense_activation_relu(Block4_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block4_Element1_Cell_Input1_Pooling(Block4_Element1_Cell_Input1_Pooling)
-											:m Block4_Element1_Cell_Input1_Pooling_features(Block4_Element1_Cell_Input1_Pooling_features)
+											:m Block4_Element1_Cell_Input1_Pooling_kernel(Block4_Element1_Cell_Input1_Pooling_kernel)
 											:m Block4_Element1_Cell_Input1_Pooling_stride(Block4_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block4_Element1_Cell_Input1_Pooling_stride_1x1(Block4_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -2534,7 +2534,7 @@
 													: Block4_Element1_Cell_Input2_Dense_activation_softmax(Block4_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block4_Element1_Cell_Input2_Dense_activation_relu(Block4_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block4_Element1_Cell_Input2_Pooling(Block4_Element1_Cell_Input2_Pooling)
-											:m Block4_Element1_Cell_Input2_Pooling_features(Block4_Element1_Cell_Input2_Pooling_features)
+											:m Block4_Element1_Cell_Input2_Pooling_kernel(Block4_Element1_Cell_Input2_Pooling_kernel)
 											:m Block4_Element1_Cell_Input2_Pooling_stride(Block4_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block4_Element1_Cell_Input2_Pooling_stride_1x1(Block4_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -2569,9 +2569,9 @@
 										: Block4_Element1_Cell_Operation1_Dropout(Block4_Element1_Cell_Operation1_Dropout)
 											:o Block4_Element1_Cell_Operation1_Dropout_value(Block4_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block4_Element1_Cell_Operation1_Dropout_0_4(Block4_Element1_Cell_Operation1_Dropout_0_4)
-													: Block4_Element1_Cell_Operation1_Dropout_0_5(Block4_Element1_Cell_Operation1_Dropout_0_5)
-													: Block4_Element1_Cell_Operation1_Dropout_0_7(Block4_Element1_Cell_Operation1_Dropout_0_7)
+													: Block4_Element1_Cell_Operation1_Dropout_040(Block4_Element1_Cell_Operation1_Dropout_040)
+													: Block4_Element1_Cell_Operation1_Dropout_050(Block4_Element1_Cell_Operation1_Dropout_050)
+													: Block4_Element1_Cell_Operation1_Dropout_070(Block4_Element1_Cell_Operation1_Dropout_070)
 								:m Block4_Element1_Cell_Operation2(Block4_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block4_Element1_Cell_Operation2_Flatten(Block4_Element1_Cell_Operation2_Flatten)
@@ -2589,9 +2589,9 @@
 										: Block4_Element1_Cell_Operation2_Dropout(Block4_Element1_Cell_Operation2_Dropout)
 											:o Block4_Element1_Cell_Operation2_Dropout_value(Block4_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block4_Element1_Cell_Operation2_Dropout_0_4(Block4_Element1_Cell_Operation2_Dropout_0_4)
-													: Block4_Element1_Cell_Operation2_Dropout_0_5(Block4_Element1_Cell_Operation2_Dropout_0_5)
-													: Block4_Element1_Cell_Operation2_Dropout_0_7(Block4_Element1_Cell_Operation2_Dropout_0_7)
+													: Block4_Element1_Cell_Operation2_Dropout_040(Block4_Element1_Cell_Operation2_Dropout_040)
+													: Block4_Element1_Cell_Operation2_Dropout_050(Block4_Element1_Cell_Operation2_Dropout_050)
+													: Block4_Element1_Cell_Operation2_Dropout_070(Block4_Element1_Cell_Operation2_Dropout_070)
 								:m Block4_Element1_Cell_Combination(Block4_Element1_Cell_Combination)
 									:g [1,1]
 										: Block4_Element1_Cell_Combination_Concat(Block4_Element1_Cell_Combination_Concat)
@@ -2642,7 +2642,7 @@
 													: Block4_Element2_Cell_Input1_Dense_activation_softmax(Block4_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block4_Element2_Cell_Input1_Dense_activation_relu(Block4_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block4_Element2_Cell_Input1_Pooling(Block4_Element2_Cell_Input1_Pooling)
-											:m Block4_Element2_Cell_Input1_Pooling_features(Block4_Element2_Cell_Input1_Pooling_features)
+											:m Block4_Element2_Cell_Input1_Pooling_kernel(Block4_Element2_Cell_Input1_Pooling_kernel)
 											:m Block4_Element2_Cell_Input1_Pooling_stride(Block4_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block4_Element2_Cell_Input1_Pooling_stride_1x1(Block4_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -2696,7 +2696,7 @@
 													: Block4_Element2_Cell_Input2_Dense_activation_softmax(Block4_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block4_Element2_Cell_Input2_Dense_activation_relu(Block4_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block4_Element2_Cell_Input2_Pooling(Block4_Element2_Cell_Input2_Pooling)
-											:m Block4_Element2_Cell_Input2_Pooling_features(Block4_Element2_Cell_Input2_Pooling_features)
+											:m Block4_Element2_Cell_Input2_Pooling_kernel(Block4_Element2_Cell_Input2_Pooling_kernel)
 											:m Block4_Element2_Cell_Input2_Pooling_stride(Block4_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block4_Element2_Cell_Input2_Pooling_stride_1x1(Block4_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -2731,9 +2731,9 @@
 										: Block4_Element2_Cell_Operation1_Dropout(Block4_Element2_Cell_Operation1_Dropout)
 											:o Block4_Element2_Cell_Operation1_Dropout_value(Block4_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block4_Element2_Cell_Operation1_Dropout_0_4(Block4_Element2_Cell_Operation1_Dropout_0_4)
-													: Block4_Element2_Cell_Operation1_Dropout_0_5(Block4_Element2_Cell_Operation1_Dropout_0_5)
-													: Block4_Element2_Cell_Operation1_Dropout_0_7(Block4_Element2_Cell_Operation1_Dropout_0_7)
+													: Block4_Element2_Cell_Operation1_Dropout_040(Block4_Element2_Cell_Operation1_Dropout_040)
+													: Block4_Element2_Cell_Operation1_Dropout_050(Block4_Element2_Cell_Operation1_Dropout_050)
+													: Block4_Element2_Cell_Operation1_Dropout_070(Block4_Element2_Cell_Operation1_Dropout_070)
 								:m Block4_Element2_Cell_Operation2(Block4_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block4_Element2_Cell_Operation2_Flatten(Block4_Element2_Cell_Operation2_Flatten)
@@ -2751,9 +2751,9 @@
 										: Block4_Element2_Cell_Operation2_Dropout(Block4_Element2_Cell_Operation2_Dropout)
 											:o Block4_Element2_Cell_Operation2_Dropout_value(Block4_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block4_Element2_Cell_Operation2_Dropout_0_4(Block4_Element2_Cell_Operation2_Dropout_0_4)
-													: Block4_Element2_Cell_Operation2_Dropout_0_5(Block4_Element2_Cell_Operation2_Dropout_0_5)
-													: Block4_Element2_Cell_Operation2_Dropout_0_7(Block4_Element2_Cell_Operation2_Dropout_0_7)
+													: Block4_Element2_Cell_Operation2_Dropout_040(Block4_Element2_Cell_Operation2_Dropout_040)
+													: Block4_Element2_Cell_Operation2_Dropout_050(Block4_Element2_Cell_Operation2_Dropout_050)
+													: Block4_Element2_Cell_Operation2_Dropout_070(Block4_Element2_Cell_Operation2_Dropout_070)
 								:m Block4_Element2_Cell_Combination(Block4_Element2_Cell_Combination)
 									:g [1,1]
 										: Block4_Element2_Cell_Combination_Concat(Block4_Element2_Cell_Combination_Concat)
@@ -2804,7 +2804,7 @@
 													: Block4_Element3_Cell_Input1_Dense_activation_softmax(Block4_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block4_Element3_Cell_Input1_Dense_activation_relu(Block4_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block4_Element3_Cell_Input1_Pooling(Block4_Element3_Cell_Input1_Pooling)
-											:m Block4_Element3_Cell_Input1_Pooling_features(Block4_Element3_Cell_Input1_Pooling_features)
+											:m Block4_Element3_Cell_Input1_Pooling_kernel(Block4_Element3_Cell_Input1_Pooling_kernel)
 											:m Block4_Element3_Cell_Input1_Pooling_stride(Block4_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block4_Element3_Cell_Input1_Pooling_stride_1x1(Block4_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -2858,7 +2858,7 @@
 													: Block4_Element3_Cell_Input2_Dense_activation_softmax(Block4_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block4_Element3_Cell_Input2_Dense_activation_relu(Block4_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block4_Element3_Cell_Input2_Pooling(Block4_Element3_Cell_Input2_Pooling)
-											:m Block4_Element3_Cell_Input2_Pooling_features(Block4_Element3_Cell_Input2_Pooling_features)
+											:m Block4_Element3_Cell_Input2_Pooling_kernel(Block4_Element3_Cell_Input2_Pooling_kernel)
 											:m Block4_Element3_Cell_Input2_Pooling_stride(Block4_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block4_Element3_Cell_Input2_Pooling_stride_1x1(Block4_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -2893,9 +2893,9 @@
 										: Block4_Element3_Cell_Operation1_Dropout(Block4_Element3_Cell_Operation1_Dropout)
 											:o Block4_Element3_Cell_Operation1_Dropout_value(Block4_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block4_Element3_Cell_Operation1_Dropout_0_4(Block4_Element3_Cell_Operation1_Dropout_0_4)
-													: Block4_Element3_Cell_Operation1_Dropout_0_5(Block4_Element3_Cell_Operation1_Dropout_0_5)
-													: Block4_Element3_Cell_Operation1_Dropout_0_7(Block4_Element3_Cell_Operation1_Dropout_0_7)
+													: Block4_Element3_Cell_Operation1_Dropout_040(Block4_Element3_Cell_Operation1_Dropout_040)
+													: Block4_Element3_Cell_Operation1_Dropout_050(Block4_Element3_Cell_Operation1_Dropout_050)
+													: Block4_Element3_Cell_Operation1_Dropout_070(Block4_Element3_Cell_Operation1_Dropout_070)
 								:m Block4_Element3_Cell_Operation2(Block4_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block4_Element3_Cell_Operation2_Flatten(Block4_Element3_Cell_Operation2_Flatten)
@@ -2913,9 +2913,9 @@
 										: Block4_Element3_Cell_Operation2_Dropout(Block4_Element3_Cell_Operation2_Dropout)
 											:o Block4_Element3_Cell_Operation2_Dropout_value(Block4_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block4_Element3_Cell_Operation2_Dropout_0_4(Block4_Element3_Cell_Operation2_Dropout_0_4)
-													: Block4_Element3_Cell_Operation2_Dropout_0_5(Block4_Element3_Cell_Operation2_Dropout_0_5)
-													: Block4_Element3_Cell_Operation2_Dropout_0_7(Block4_Element3_Cell_Operation2_Dropout_0_7)
+													: Block4_Element3_Cell_Operation2_Dropout_040(Block4_Element3_Cell_Operation2_Dropout_040)
+													: Block4_Element3_Cell_Operation2_Dropout_050(Block4_Element3_Cell_Operation2_Dropout_050)
+													: Block4_Element3_Cell_Operation2_Dropout_070(Block4_Element3_Cell_Operation2_Dropout_070)
 								:m Block4_Element3_Cell_Combination(Block4_Element3_Cell_Combination)
 									:g [1,1]
 										: Block4_Element3_Cell_Combination_Concat(Block4_Element3_Cell_Combination_Concat)
@@ -2966,7 +2966,7 @@
 													: Block4_Element4_Cell_Input1_Dense_activation_softmax(Block4_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block4_Element4_Cell_Input1_Dense_activation_relu(Block4_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block4_Element4_Cell_Input1_Pooling(Block4_Element4_Cell_Input1_Pooling)
-											:m Block4_Element4_Cell_Input1_Pooling_features(Block4_Element4_Cell_Input1_Pooling_features)
+											:m Block4_Element4_Cell_Input1_Pooling_kernel(Block4_Element4_Cell_Input1_Pooling_kernel)
 											:m Block4_Element4_Cell_Input1_Pooling_stride(Block4_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block4_Element4_Cell_Input1_Pooling_stride_1x1(Block4_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -3020,7 +3020,7 @@
 													: Block4_Element4_Cell_Input2_Dense_activation_softmax(Block4_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block4_Element4_Cell_Input2_Dense_activation_relu(Block4_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block4_Element4_Cell_Input2_Pooling(Block4_Element4_Cell_Input2_Pooling)
-											:m Block4_Element4_Cell_Input2_Pooling_features(Block4_Element4_Cell_Input2_Pooling_features)
+											:m Block4_Element4_Cell_Input2_Pooling_kernel(Block4_Element4_Cell_Input2_Pooling_kernel)
 											:m Block4_Element4_Cell_Input2_Pooling_stride(Block4_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block4_Element4_Cell_Input2_Pooling_stride_1x1(Block4_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -3055,9 +3055,9 @@
 										: Block4_Element4_Cell_Operation1_Dropout(Block4_Element4_Cell_Operation1_Dropout)
 											:o Block4_Element4_Cell_Operation1_Dropout_value(Block4_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block4_Element4_Cell_Operation1_Dropout_0_4(Block4_Element4_Cell_Operation1_Dropout_0_4)
-													: Block4_Element4_Cell_Operation1_Dropout_0_5(Block4_Element4_Cell_Operation1_Dropout_0_5)
-													: Block4_Element4_Cell_Operation1_Dropout_0_7(Block4_Element4_Cell_Operation1_Dropout_0_7)
+													: Block4_Element4_Cell_Operation1_Dropout_040(Block4_Element4_Cell_Operation1_Dropout_040)
+													: Block4_Element4_Cell_Operation1_Dropout_050(Block4_Element4_Cell_Operation1_Dropout_050)
+													: Block4_Element4_Cell_Operation1_Dropout_070(Block4_Element4_Cell_Operation1_Dropout_070)
 								:m Block4_Element4_Cell_Operation2(Block4_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block4_Element4_Cell_Operation2_Flatten(Block4_Element4_Cell_Operation2_Flatten)
@@ -3075,9 +3075,9 @@
 										: Block4_Element4_Cell_Operation2_Dropout(Block4_Element4_Cell_Operation2_Dropout)
 											:o Block4_Element4_Cell_Operation2_Dropout_value(Block4_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block4_Element4_Cell_Operation2_Dropout_0_4(Block4_Element4_Cell_Operation2_Dropout_0_4)
-													: Block4_Element4_Cell_Operation2_Dropout_0_5(Block4_Element4_Cell_Operation2_Dropout_0_5)
-													: Block4_Element4_Cell_Operation2_Dropout_0_7(Block4_Element4_Cell_Operation2_Dropout_0_7)
+													: Block4_Element4_Cell_Operation2_Dropout_040(Block4_Element4_Cell_Operation2_Dropout_040)
+													: Block4_Element4_Cell_Operation2_Dropout_050(Block4_Element4_Cell_Operation2_Dropout_050)
+													: Block4_Element4_Cell_Operation2_Dropout_070(Block4_Element4_Cell_Operation2_Dropout_070)
 								:m Block4_Element4_Cell_Combination(Block4_Element4_Cell_Combination)
 									:g [1,1]
 										: Block4_Element4_Cell_Combination_Concat(Block4_Element4_Cell_Combination_Concat)
@@ -3128,7 +3128,7 @@
 													: Block4_Element5_Cell_Input1_Dense_activation_softmax(Block4_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block4_Element5_Cell_Input1_Dense_activation_relu(Block4_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block4_Element5_Cell_Input1_Pooling(Block4_Element5_Cell_Input1_Pooling)
-											:m Block4_Element5_Cell_Input1_Pooling_features(Block4_Element5_Cell_Input1_Pooling_features)
+											:m Block4_Element5_Cell_Input1_Pooling_kernel(Block4_Element5_Cell_Input1_Pooling_kernel)
 											:m Block4_Element5_Cell_Input1_Pooling_stride(Block4_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block4_Element5_Cell_Input1_Pooling_stride_1x1(Block4_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -3182,7 +3182,7 @@
 													: Block4_Element5_Cell_Input2_Dense_activation_softmax(Block4_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block4_Element5_Cell_Input2_Dense_activation_relu(Block4_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block4_Element5_Cell_Input2_Pooling(Block4_Element5_Cell_Input2_Pooling)
-											:m Block4_Element5_Cell_Input2_Pooling_features(Block4_Element5_Cell_Input2_Pooling_features)
+											:m Block4_Element5_Cell_Input2_Pooling_kernel(Block4_Element5_Cell_Input2_Pooling_kernel)
 											:m Block4_Element5_Cell_Input2_Pooling_stride(Block4_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block4_Element5_Cell_Input2_Pooling_stride_1x1(Block4_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -3217,9 +3217,9 @@
 										: Block4_Element5_Cell_Operation1_Dropout(Block4_Element5_Cell_Operation1_Dropout)
 											:o Block4_Element5_Cell_Operation1_Dropout_value(Block4_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block4_Element5_Cell_Operation1_Dropout_0_4(Block4_Element5_Cell_Operation1_Dropout_0_4)
-													: Block4_Element5_Cell_Operation1_Dropout_0_5(Block4_Element5_Cell_Operation1_Dropout_0_5)
-													: Block4_Element5_Cell_Operation1_Dropout_0_7(Block4_Element5_Cell_Operation1_Dropout_0_7)
+													: Block4_Element5_Cell_Operation1_Dropout_040(Block4_Element5_Cell_Operation1_Dropout_040)
+													: Block4_Element5_Cell_Operation1_Dropout_050(Block4_Element5_Cell_Operation1_Dropout_050)
+													: Block4_Element5_Cell_Operation1_Dropout_070(Block4_Element5_Cell_Operation1_Dropout_070)
 								:m Block4_Element5_Cell_Operation2(Block4_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block4_Element5_Cell_Operation2_Flatten(Block4_Element5_Cell_Operation2_Flatten)
@@ -3237,9 +3237,9 @@
 										: Block4_Element5_Cell_Operation2_Dropout(Block4_Element5_Cell_Operation2_Dropout)
 											:o Block4_Element5_Cell_Operation2_Dropout_value(Block4_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block4_Element5_Cell_Operation2_Dropout_0_4(Block4_Element5_Cell_Operation2_Dropout_0_4)
-													: Block4_Element5_Cell_Operation2_Dropout_0_5(Block4_Element5_Cell_Operation2_Dropout_0_5)
-													: Block4_Element5_Cell_Operation2_Dropout_0_7(Block4_Element5_Cell_Operation2_Dropout_0_7)
+													: Block4_Element5_Cell_Operation2_Dropout_040(Block4_Element5_Cell_Operation2_Dropout_040)
+													: Block4_Element5_Cell_Operation2_Dropout_050(Block4_Element5_Cell_Operation2_Dropout_050)
+													: Block4_Element5_Cell_Operation2_Dropout_070(Block4_Element5_Cell_Operation2_Dropout_070)
 								:m Block4_Element5_Cell_Combination(Block4_Element5_Cell_Combination)
 									:g [1,1]
 										: Block4_Element5_Cell_Combination_Concat(Block4_Element5_Cell_Combination_Concat)
@@ -3291,7 +3291,7 @@
 													: Block5_Element1_Cell_Input1_Dense_activation_softmax(Block5_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block5_Element1_Cell_Input1_Dense_activation_relu(Block5_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block5_Element1_Cell_Input1_Pooling(Block5_Element1_Cell_Input1_Pooling)
-											:m Block5_Element1_Cell_Input1_Pooling_features(Block5_Element1_Cell_Input1_Pooling_features)
+											:m Block5_Element1_Cell_Input1_Pooling_kernel(Block5_Element1_Cell_Input1_Pooling_kernel)
 											:m Block5_Element1_Cell_Input1_Pooling_stride(Block5_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block5_Element1_Cell_Input1_Pooling_stride_1x1(Block5_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -3345,7 +3345,7 @@
 													: Block5_Element1_Cell_Input2_Dense_activation_softmax(Block5_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block5_Element1_Cell_Input2_Dense_activation_relu(Block5_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block5_Element1_Cell_Input2_Pooling(Block5_Element1_Cell_Input2_Pooling)
-											:m Block5_Element1_Cell_Input2_Pooling_features(Block5_Element1_Cell_Input2_Pooling_features)
+											:m Block5_Element1_Cell_Input2_Pooling_kernel(Block5_Element1_Cell_Input2_Pooling_kernel)
 											:m Block5_Element1_Cell_Input2_Pooling_stride(Block5_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block5_Element1_Cell_Input2_Pooling_stride_1x1(Block5_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -3380,9 +3380,9 @@
 										: Block5_Element1_Cell_Operation1_Dropout(Block5_Element1_Cell_Operation1_Dropout)
 											:o Block5_Element1_Cell_Operation1_Dropout_value(Block5_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block5_Element1_Cell_Operation1_Dropout_0_4(Block5_Element1_Cell_Operation1_Dropout_0_4)
-													: Block5_Element1_Cell_Operation1_Dropout_0_5(Block5_Element1_Cell_Operation1_Dropout_0_5)
-													: Block5_Element1_Cell_Operation1_Dropout_0_7(Block5_Element1_Cell_Operation1_Dropout_0_7)
+													: Block5_Element1_Cell_Operation1_Dropout_040(Block5_Element1_Cell_Operation1_Dropout_040)
+													: Block5_Element1_Cell_Operation1_Dropout_050(Block5_Element1_Cell_Operation1_Dropout_050)
+													: Block5_Element1_Cell_Operation1_Dropout_070(Block5_Element1_Cell_Operation1_Dropout_070)
 								:m Block5_Element1_Cell_Operation2(Block5_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block5_Element1_Cell_Operation2_Flatten(Block5_Element1_Cell_Operation2_Flatten)
@@ -3400,9 +3400,9 @@
 										: Block5_Element1_Cell_Operation2_Dropout(Block5_Element1_Cell_Operation2_Dropout)
 											:o Block5_Element1_Cell_Operation2_Dropout_value(Block5_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block5_Element1_Cell_Operation2_Dropout_0_4(Block5_Element1_Cell_Operation2_Dropout_0_4)
-													: Block5_Element1_Cell_Operation2_Dropout_0_5(Block5_Element1_Cell_Operation2_Dropout_0_5)
-													: Block5_Element1_Cell_Operation2_Dropout_0_7(Block5_Element1_Cell_Operation2_Dropout_0_7)
+													: Block5_Element1_Cell_Operation2_Dropout_040(Block5_Element1_Cell_Operation2_Dropout_040)
+													: Block5_Element1_Cell_Operation2_Dropout_050(Block5_Element1_Cell_Operation2_Dropout_050)
+													: Block5_Element1_Cell_Operation2_Dropout_070(Block5_Element1_Cell_Operation2_Dropout_070)
 								:m Block5_Element1_Cell_Combination(Block5_Element1_Cell_Combination)
 									:g [1,1]
 										: Block5_Element1_Cell_Combination_Concat(Block5_Element1_Cell_Combination_Concat)
@@ -3453,7 +3453,7 @@
 													: Block5_Element2_Cell_Input1_Dense_activation_softmax(Block5_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block5_Element2_Cell_Input1_Dense_activation_relu(Block5_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block5_Element2_Cell_Input1_Pooling(Block5_Element2_Cell_Input1_Pooling)
-											:m Block5_Element2_Cell_Input1_Pooling_features(Block5_Element2_Cell_Input1_Pooling_features)
+											:m Block5_Element2_Cell_Input1_Pooling_kernel(Block5_Element2_Cell_Input1_Pooling_kernel)
 											:m Block5_Element2_Cell_Input1_Pooling_stride(Block5_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block5_Element2_Cell_Input1_Pooling_stride_1x1(Block5_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -3507,7 +3507,7 @@
 													: Block5_Element2_Cell_Input2_Dense_activation_softmax(Block5_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block5_Element2_Cell_Input2_Dense_activation_relu(Block5_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block5_Element2_Cell_Input2_Pooling(Block5_Element2_Cell_Input2_Pooling)
-											:m Block5_Element2_Cell_Input2_Pooling_features(Block5_Element2_Cell_Input2_Pooling_features)
+											:m Block5_Element2_Cell_Input2_Pooling_kernel(Block5_Element2_Cell_Input2_Pooling_kernel)
 											:m Block5_Element2_Cell_Input2_Pooling_stride(Block5_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block5_Element2_Cell_Input2_Pooling_stride_1x1(Block5_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -3542,9 +3542,9 @@
 										: Block5_Element2_Cell_Operation1_Dropout(Block5_Element2_Cell_Operation1_Dropout)
 											:o Block5_Element2_Cell_Operation1_Dropout_value(Block5_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block5_Element2_Cell_Operation1_Dropout_0_4(Block5_Element2_Cell_Operation1_Dropout_0_4)
-													: Block5_Element2_Cell_Operation1_Dropout_0_5(Block5_Element2_Cell_Operation1_Dropout_0_5)
-													: Block5_Element2_Cell_Operation1_Dropout_0_7(Block5_Element2_Cell_Operation1_Dropout_0_7)
+													: Block5_Element2_Cell_Operation1_Dropout_040(Block5_Element2_Cell_Operation1_Dropout_040)
+													: Block5_Element2_Cell_Operation1_Dropout_050(Block5_Element2_Cell_Operation1_Dropout_050)
+													: Block5_Element2_Cell_Operation1_Dropout_070(Block5_Element2_Cell_Operation1_Dropout_070)
 								:m Block5_Element2_Cell_Operation2(Block5_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block5_Element2_Cell_Operation2_Flatten(Block5_Element2_Cell_Operation2_Flatten)
@@ -3562,9 +3562,9 @@
 										: Block5_Element2_Cell_Operation2_Dropout(Block5_Element2_Cell_Operation2_Dropout)
 											:o Block5_Element2_Cell_Operation2_Dropout_value(Block5_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block5_Element2_Cell_Operation2_Dropout_0_4(Block5_Element2_Cell_Operation2_Dropout_0_4)
-													: Block5_Element2_Cell_Operation2_Dropout_0_5(Block5_Element2_Cell_Operation2_Dropout_0_5)
-													: Block5_Element2_Cell_Operation2_Dropout_0_7(Block5_Element2_Cell_Operation2_Dropout_0_7)
+													: Block5_Element2_Cell_Operation2_Dropout_040(Block5_Element2_Cell_Operation2_Dropout_040)
+													: Block5_Element2_Cell_Operation2_Dropout_050(Block5_Element2_Cell_Operation2_Dropout_050)
+													: Block5_Element2_Cell_Operation2_Dropout_070(Block5_Element2_Cell_Operation2_Dropout_070)
 								:m Block5_Element2_Cell_Combination(Block5_Element2_Cell_Combination)
 									:g [1,1]
 										: Block5_Element2_Cell_Combination_Concat(Block5_Element2_Cell_Combination_Concat)
@@ -3615,7 +3615,7 @@
 													: Block5_Element3_Cell_Input1_Dense_activation_softmax(Block5_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block5_Element3_Cell_Input1_Dense_activation_relu(Block5_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block5_Element3_Cell_Input1_Pooling(Block5_Element3_Cell_Input1_Pooling)
-											:m Block5_Element3_Cell_Input1_Pooling_features(Block5_Element3_Cell_Input1_Pooling_features)
+											:m Block5_Element3_Cell_Input1_Pooling_kernel(Block5_Element3_Cell_Input1_Pooling_kernel)
 											:m Block5_Element3_Cell_Input1_Pooling_stride(Block5_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block5_Element3_Cell_Input1_Pooling_stride_1x1(Block5_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -3669,7 +3669,7 @@
 													: Block5_Element3_Cell_Input2_Dense_activation_softmax(Block5_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block5_Element3_Cell_Input2_Dense_activation_relu(Block5_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block5_Element3_Cell_Input2_Pooling(Block5_Element3_Cell_Input2_Pooling)
-											:m Block5_Element3_Cell_Input2_Pooling_features(Block5_Element3_Cell_Input2_Pooling_features)
+											:m Block5_Element3_Cell_Input2_Pooling_kernel(Block5_Element3_Cell_Input2_Pooling_kernel)
 											:m Block5_Element3_Cell_Input2_Pooling_stride(Block5_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block5_Element3_Cell_Input2_Pooling_stride_1x1(Block5_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -3704,9 +3704,9 @@
 										: Block5_Element3_Cell_Operation1_Dropout(Block5_Element3_Cell_Operation1_Dropout)
 											:o Block5_Element3_Cell_Operation1_Dropout_value(Block5_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block5_Element3_Cell_Operation1_Dropout_0_4(Block5_Element3_Cell_Operation1_Dropout_0_4)
-													: Block5_Element3_Cell_Operation1_Dropout_0_5(Block5_Element3_Cell_Operation1_Dropout_0_5)
-													: Block5_Element3_Cell_Operation1_Dropout_0_7(Block5_Element3_Cell_Operation1_Dropout_0_7)
+													: Block5_Element3_Cell_Operation1_Dropout_040(Block5_Element3_Cell_Operation1_Dropout_040)
+													: Block5_Element3_Cell_Operation1_Dropout_050(Block5_Element3_Cell_Operation1_Dropout_050)
+													: Block5_Element3_Cell_Operation1_Dropout_070(Block5_Element3_Cell_Operation1_Dropout_070)
 								:m Block5_Element3_Cell_Operation2(Block5_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block5_Element3_Cell_Operation2_Flatten(Block5_Element3_Cell_Operation2_Flatten)
@@ -3724,9 +3724,9 @@
 										: Block5_Element3_Cell_Operation2_Dropout(Block5_Element3_Cell_Operation2_Dropout)
 											:o Block5_Element3_Cell_Operation2_Dropout_value(Block5_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block5_Element3_Cell_Operation2_Dropout_0_4(Block5_Element3_Cell_Operation2_Dropout_0_4)
-													: Block5_Element3_Cell_Operation2_Dropout_0_5(Block5_Element3_Cell_Operation2_Dropout_0_5)
-													: Block5_Element3_Cell_Operation2_Dropout_0_7(Block5_Element3_Cell_Operation2_Dropout_0_7)
+													: Block5_Element3_Cell_Operation2_Dropout_040(Block5_Element3_Cell_Operation2_Dropout_040)
+													: Block5_Element3_Cell_Operation2_Dropout_050(Block5_Element3_Cell_Operation2_Dropout_050)
+													: Block5_Element3_Cell_Operation2_Dropout_070(Block5_Element3_Cell_Operation2_Dropout_070)
 								:m Block5_Element3_Cell_Combination(Block5_Element3_Cell_Combination)
 									:g [1,1]
 										: Block5_Element3_Cell_Combination_Concat(Block5_Element3_Cell_Combination_Concat)
@@ -3777,7 +3777,7 @@
 													: Block5_Element4_Cell_Input1_Dense_activation_softmax(Block5_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block5_Element4_Cell_Input1_Dense_activation_relu(Block5_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block5_Element4_Cell_Input1_Pooling(Block5_Element4_Cell_Input1_Pooling)
-											:m Block5_Element4_Cell_Input1_Pooling_features(Block5_Element4_Cell_Input1_Pooling_features)
+											:m Block5_Element4_Cell_Input1_Pooling_kernel(Block5_Element4_Cell_Input1_Pooling_kernel)
 											:m Block5_Element4_Cell_Input1_Pooling_stride(Block5_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block5_Element4_Cell_Input1_Pooling_stride_1x1(Block5_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -3831,7 +3831,7 @@
 													: Block5_Element4_Cell_Input2_Dense_activation_softmax(Block5_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block5_Element4_Cell_Input2_Dense_activation_relu(Block5_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block5_Element4_Cell_Input2_Pooling(Block5_Element4_Cell_Input2_Pooling)
-											:m Block5_Element4_Cell_Input2_Pooling_features(Block5_Element4_Cell_Input2_Pooling_features)
+											:m Block5_Element4_Cell_Input2_Pooling_kernel(Block5_Element4_Cell_Input2_Pooling_kernel)
 											:m Block5_Element4_Cell_Input2_Pooling_stride(Block5_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block5_Element4_Cell_Input2_Pooling_stride_1x1(Block5_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -3866,9 +3866,9 @@
 										: Block5_Element4_Cell_Operation1_Dropout(Block5_Element4_Cell_Operation1_Dropout)
 											:o Block5_Element4_Cell_Operation1_Dropout_value(Block5_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block5_Element4_Cell_Operation1_Dropout_0_4(Block5_Element4_Cell_Operation1_Dropout_0_4)
-													: Block5_Element4_Cell_Operation1_Dropout_0_5(Block5_Element4_Cell_Operation1_Dropout_0_5)
-													: Block5_Element4_Cell_Operation1_Dropout_0_7(Block5_Element4_Cell_Operation1_Dropout_0_7)
+													: Block5_Element4_Cell_Operation1_Dropout_040(Block5_Element4_Cell_Operation1_Dropout_040)
+													: Block5_Element4_Cell_Operation1_Dropout_050(Block5_Element4_Cell_Operation1_Dropout_050)
+													: Block5_Element4_Cell_Operation1_Dropout_070(Block5_Element4_Cell_Operation1_Dropout_070)
 								:m Block5_Element4_Cell_Operation2(Block5_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block5_Element4_Cell_Operation2_Flatten(Block5_Element4_Cell_Operation2_Flatten)
@@ -3886,9 +3886,9 @@
 										: Block5_Element4_Cell_Operation2_Dropout(Block5_Element4_Cell_Operation2_Dropout)
 											:o Block5_Element4_Cell_Operation2_Dropout_value(Block5_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block5_Element4_Cell_Operation2_Dropout_0_4(Block5_Element4_Cell_Operation2_Dropout_0_4)
-													: Block5_Element4_Cell_Operation2_Dropout_0_5(Block5_Element4_Cell_Operation2_Dropout_0_5)
-													: Block5_Element4_Cell_Operation2_Dropout_0_7(Block5_Element4_Cell_Operation2_Dropout_0_7)
+													: Block5_Element4_Cell_Operation2_Dropout_040(Block5_Element4_Cell_Operation2_Dropout_040)
+													: Block5_Element4_Cell_Operation2_Dropout_050(Block5_Element4_Cell_Operation2_Dropout_050)
+													: Block5_Element4_Cell_Operation2_Dropout_070(Block5_Element4_Cell_Operation2_Dropout_070)
 								:m Block5_Element4_Cell_Combination(Block5_Element4_Cell_Combination)
 									:g [1,1]
 										: Block5_Element4_Cell_Combination_Concat(Block5_Element4_Cell_Combination_Concat)
@@ -3939,7 +3939,7 @@
 													: Block5_Element5_Cell_Input1_Dense_activation_softmax(Block5_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block5_Element5_Cell_Input1_Dense_activation_relu(Block5_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block5_Element5_Cell_Input1_Pooling(Block5_Element5_Cell_Input1_Pooling)
-											:m Block5_Element5_Cell_Input1_Pooling_features(Block5_Element5_Cell_Input1_Pooling_features)
+											:m Block5_Element5_Cell_Input1_Pooling_kernel(Block5_Element5_Cell_Input1_Pooling_kernel)
 											:m Block5_Element5_Cell_Input1_Pooling_stride(Block5_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block5_Element5_Cell_Input1_Pooling_stride_1x1(Block5_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -3993,7 +3993,7 @@
 													: Block5_Element5_Cell_Input2_Dense_activation_softmax(Block5_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block5_Element5_Cell_Input2_Dense_activation_relu(Block5_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block5_Element5_Cell_Input2_Pooling(Block5_Element5_Cell_Input2_Pooling)
-											:m Block5_Element5_Cell_Input2_Pooling_features(Block5_Element5_Cell_Input2_Pooling_features)
+											:m Block5_Element5_Cell_Input2_Pooling_kernel(Block5_Element5_Cell_Input2_Pooling_kernel)
 											:m Block5_Element5_Cell_Input2_Pooling_stride(Block5_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block5_Element5_Cell_Input2_Pooling_stride_1x1(Block5_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -4028,9 +4028,9 @@
 										: Block5_Element5_Cell_Operation1_Dropout(Block5_Element5_Cell_Operation1_Dropout)
 											:o Block5_Element5_Cell_Operation1_Dropout_value(Block5_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block5_Element5_Cell_Operation1_Dropout_0_4(Block5_Element5_Cell_Operation1_Dropout_0_4)
-													: Block5_Element5_Cell_Operation1_Dropout_0_5(Block5_Element5_Cell_Operation1_Dropout_0_5)
-													: Block5_Element5_Cell_Operation1_Dropout_0_7(Block5_Element5_Cell_Operation1_Dropout_0_7)
+													: Block5_Element5_Cell_Operation1_Dropout_040(Block5_Element5_Cell_Operation1_Dropout_040)
+													: Block5_Element5_Cell_Operation1_Dropout_050(Block5_Element5_Cell_Operation1_Dropout_050)
+													: Block5_Element5_Cell_Operation1_Dropout_070(Block5_Element5_Cell_Operation1_Dropout_070)
 								:m Block5_Element5_Cell_Operation2(Block5_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block5_Element5_Cell_Operation2_Flatten(Block5_Element5_Cell_Operation2_Flatten)
@@ -4048,9 +4048,9 @@
 										: Block5_Element5_Cell_Operation2_Dropout(Block5_Element5_Cell_Operation2_Dropout)
 											:o Block5_Element5_Cell_Operation2_Dropout_value(Block5_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block5_Element5_Cell_Operation2_Dropout_0_4(Block5_Element5_Cell_Operation2_Dropout_0_4)
-													: Block5_Element5_Cell_Operation2_Dropout_0_5(Block5_Element5_Cell_Operation2_Dropout_0_5)
-													: Block5_Element5_Cell_Operation2_Dropout_0_7(Block5_Element5_Cell_Operation2_Dropout_0_7)
+													: Block5_Element5_Cell_Operation2_Dropout_040(Block5_Element5_Cell_Operation2_Dropout_040)
+													: Block5_Element5_Cell_Operation2_Dropout_050(Block5_Element5_Cell_Operation2_Dropout_050)
+													: Block5_Element5_Cell_Operation2_Dropout_070(Block5_Element5_Cell_Operation2_Dropout_070)
 								:m Block5_Element5_Cell_Combination(Block5_Element5_Cell_Combination)
 									:g [1,1]
 										: Block5_Element5_Cell_Combination_Concat(Block5_Element5_Cell_Combination_Concat)
@@ -4102,7 +4102,7 @@
 													: Block6_Element1_Cell_Input1_Dense_activation_softmax(Block6_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block6_Element1_Cell_Input1_Dense_activation_relu(Block6_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block6_Element1_Cell_Input1_Pooling(Block6_Element1_Cell_Input1_Pooling)
-											:m Block6_Element1_Cell_Input1_Pooling_features(Block6_Element1_Cell_Input1_Pooling_features)
+											:m Block6_Element1_Cell_Input1_Pooling_kernel(Block6_Element1_Cell_Input1_Pooling_kernel)
 											:m Block6_Element1_Cell_Input1_Pooling_stride(Block6_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block6_Element1_Cell_Input1_Pooling_stride_1x1(Block6_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -4156,7 +4156,7 @@
 													: Block6_Element1_Cell_Input2_Dense_activation_softmax(Block6_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block6_Element1_Cell_Input2_Dense_activation_relu(Block6_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block6_Element1_Cell_Input2_Pooling(Block6_Element1_Cell_Input2_Pooling)
-											:m Block6_Element1_Cell_Input2_Pooling_features(Block6_Element1_Cell_Input2_Pooling_features)
+											:m Block6_Element1_Cell_Input2_Pooling_kernel(Block6_Element1_Cell_Input2_Pooling_kernel)
 											:m Block6_Element1_Cell_Input2_Pooling_stride(Block6_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block6_Element1_Cell_Input2_Pooling_stride_1x1(Block6_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -4191,9 +4191,9 @@
 										: Block6_Element1_Cell_Operation1_Dropout(Block6_Element1_Cell_Operation1_Dropout)
 											:o Block6_Element1_Cell_Operation1_Dropout_value(Block6_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block6_Element1_Cell_Operation1_Dropout_0_4(Block6_Element1_Cell_Operation1_Dropout_0_4)
-													: Block6_Element1_Cell_Operation1_Dropout_0_5(Block6_Element1_Cell_Operation1_Dropout_0_5)
-													: Block6_Element1_Cell_Operation1_Dropout_0_7(Block6_Element1_Cell_Operation1_Dropout_0_7)
+													: Block6_Element1_Cell_Operation1_Dropout_040(Block6_Element1_Cell_Operation1_Dropout_040)
+													: Block6_Element1_Cell_Operation1_Dropout_050(Block6_Element1_Cell_Operation1_Dropout_050)
+													: Block6_Element1_Cell_Operation1_Dropout_070(Block6_Element1_Cell_Operation1_Dropout_070)
 								:m Block6_Element1_Cell_Operation2(Block6_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block6_Element1_Cell_Operation2_Flatten(Block6_Element1_Cell_Operation2_Flatten)
@@ -4211,9 +4211,9 @@
 										: Block6_Element1_Cell_Operation2_Dropout(Block6_Element1_Cell_Operation2_Dropout)
 											:o Block6_Element1_Cell_Operation2_Dropout_value(Block6_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block6_Element1_Cell_Operation2_Dropout_0_4(Block6_Element1_Cell_Operation2_Dropout_0_4)
-													: Block6_Element1_Cell_Operation2_Dropout_0_5(Block6_Element1_Cell_Operation2_Dropout_0_5)
-													: Block6_Element1_Cell_Operation2_Dropout_0_7(Block6_Element1_Cell_Operation2_Dropout_0_7)
+													: Block6_Element1_Cell_Operation2_Dropout_040(Block6_Element1_Cell_Operation2_Dropout_040)
+													: Block6_Element1_Cell_Operation2_Dropout_050(Block6_Element1_Cell_Operation2_Dropout_050)
+													: Block6_Element1_Cell_Operation2_Dropout_070(Block6_Element1_Cell_Operation2_Dropout_070)
 								:m Block6_Element1_Cell_Combination(Block6_Element1_Cell_Combination)
 									:g [1,1]
 										: Block6_Element1_Cell_Combination_Concat(Block6_Element1_Cell_Combination_Concat)
@@ -4264,7 +4264,7 @@
 													: Block6_Element2_Cell_Input1_Dense_activation_softmax(Block6_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block6_Element2_Cell_Input1_Dense_activation_relu(Block6_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block6_Element2_Cell_Input1_Pooling(Block6_Element2_Cell_Input1_Pooling)
-											:m Block6_Element2_Cell_Input1_Pooling_features(Block6_Element2_Cell_Input1_Pooling_features)
+											:m Block6_Element2_Cell_Input1_Pooling_kernel(Block6_Element2_Cell_Input1_Pooling_kernel)
 											:m Block6_Element2_Cell_Input1_Pooling_stride(Block6_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block6_Element2_Cell_Input1_Pooling_stride_1x1(Block6_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -4318,7 +4318,7 @@
 													: Block6_Element2_Cell_Input2_Dense_activation_softmax(Block6_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block6_Element2_Cell_Input2_Dense_activation_relu(Block6_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block6_Element2_Cell_Input2_Pooling(Block6_Element2_Cell_Input2_Pooling)
-											:m Block6_Element2_Cell_Input2_Pooling_features(Block6_Element2_Cell_Input2_Pooling_features)
+											:m Block6_Element2_Cell_Input2_Pooling_kernel(Block6_Element2_Cell_Input2_Pooling_kernel)
 											:m Block6_Element2_Cell_Input2_Pooling_stride(Block6_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block6_Element2_Cell_Input2_Pooling_stride_1x1(Block6_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -4353,9 +4353,9 @@
 										: Block6_Element2_Cell_Operation1_Dropout(Block6_Element2_Cell_Operation1_Dropout)
 											:o Block6_Element2_Cell_Operation1_Dropout_value(Block6_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block6_Element2_Cell_Operation1_Dropout_0_4(Block6_Element2_Cell_Operation1_Dropout_0_4)
-													: Block6_Element2_Cell_Operation1_Dropout_0_5(Block6_Element2_Cell_Operation1_Dropout_0_5)
-													: Block6_Element2_Cell_Operation1_Dropout_0_7(Block6_Element2_Cell_Operation1_Dropout_0_7)
+													: Block6_Element2_Cell_Operation1_Dropout_040(Block6_Element2_Cell_Operation1_Dropout_040)
+													: Block6_Element2_Cell_Operation1_Dropout_050(Block6_Element2_Cell_Operation1_Dropout_050)
+													: Block6_Element2_Cell_Operation1_Dropout_070(Block6_Element2_Cell_Operation1_Dropout_070)
 								:m Block6_Element2_Cell_Operation2(Block6_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block6_Element2_Cell_Operation2_Flatten(Block6_Element2_Cell_Operation2_Flatten)
@@ -4373,9 +4373,9 @@
 										: Block6_Element2_Cell_Operation2_Dropout(Block6_Element2_Cell_Operation2_Dropout)
 											:o Block6_Element2_Cell_Operation2_Dropout_value(Block6_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block6_Element2_Cell_Operation2_Dropout_0_4(Block6_Element2_Cell_Operation2_Dropout_0_4)
-													: Block6_Element2_Cell_Operation2_Dropout_0_5(Block6_Element2_Cell_Operation2_Dropout_0_5)
-													: Block6_Element2_Cell_Operation2_Dropout_0_7(Block6_Element2_Cell_Operation2_Dropout_0_7)
+													: Block6_Element2_Cell_Operation2_Dropout_040(Block6_Element2_Cell_Operation2_Dropout_040)
+													: Block6_Element2_Cell_Operation2_Dropout_050(Block6_Element2_Cell_Operation2_Dropout_050)
+													: Block6_Element2_Cell_Operation2_Dropout_070(Block6_Element2_Cell_Operation2_Dropout_070)
 								:m Block6_Element2_Cell_Combination(Block6_Element2_Cell_Combination)
 									:g [1,1]
 										: Block6_Element2_Cell_Combination_Concat(Block6_Element2_Cell_Combination_Concat)
@@ -4426,7 +4426,7 @@
 													: Block6_Element3_Cell_Input1_Dense_activation_softmax(Block6_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block6_Element3_Cell_Input1_Dense_activation_relu(Block6_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block6_Element3_Cell_Input1_Pooling(Block6_Element3_Cell_Input1_Pooling)
-											:m Block6_Element3_Cell_Input1_Pooling_features(Block6_Element3_Cell_Input1_Pooling_features)
+											:m Block6_Element3_Cell_Input1_Pooling_kernel(Block6_Element3_Cell_Input1_Pooling_kernel)
 											:m Block6_Element3_Cell_Input1_Pooling_stride(Block6_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block6_Element3_Cell_Input1_Pooling_stride_1x1(Block6_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -4480,7 +4480,7 @@
 													: Block6_Element3_Cell_Input2_Dense_activation_softmax(Block6_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block6_Element3_Cell_Input2_Dense_activation_relu(Block6_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block6_Element3_Cell_Input2_Pooling(Block6_Element3_Cell_Input2_Pooling)
-											:m Block6_Element3_Cell_Input2_Pooling_features(Block6_Element3_Cell_Input2_Pooling_features)
+											:m Block6_Element3_Cell_Input2_Pooling_kernel(Block6_Element3_Cell_Input2_Pooling_kernel)
 											:m Block6_Element3_Cell_Input2_Pooling_stride(Block6_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block6_Element3_Cell_Input2_Pooling_stride_1x1(Block6_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -4515,9 +4515,9 @@
 										: Block6_Element3_Cell_Operation1_Dropout(Block6_Element3_Cell_Operation1_Dropout)
 											:o Block6_Element3_Cell_Operation1_Dropout_value(Block6_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block6_Element3_Cell_Operation1_Dropout_0_4(Block6_Element3_Cell_Operation1_Dropout_0_4)
-													: Block6_Element3_Cell_Operation1_Dropout_0_5(Block6_Element3_Cell_Operation1_Dropout_0_5)
-													: Block6_Element3_Cell_Operation1_Dropout_0_7(Block6_Element3_Cell_Operation1_Dropout_0_7)
+													: Block6_Element3_Cell_Operation1_Dropout_040(Block6_Element3_Cell_Operation1_Dropout_040)
+													: Block6_Element3_Cell_Operation1_Dropout_050(Block6_Element3_Cell_Operation1_Dropout_050)
+													: Block6_Element3_Cell_Operation1_Dropout_070(Block6_Element3_Cell_Operation1_Dropout_070)
 								:m Block6_Element3_Cell_Operation2(Block6_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block6_Element3_Cell_Operation2_Flatten(Block6_Element3_Cell_Operation2_Flatten)
@@ -4535,9 +4535,9 @@
 										: Block6_Element3_Cell_Operation2_Dropout(Block6_Element3_Cell_Operation2_Dropout)
 											:o Block6_Element3_Cell_Operation2_Dropout_value(Block6_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block6_Element3_Cell_Operation2_Dropout_0_4(Block6_Element3_Cell_Operation2_Dropout_0_4)
-													: Block6_Element3_Cell_Operation2_Dropout_0_5(Block6_Element3_Cell_Operation2_Dropout_0_5)
-													: Block6_Element3_Cell_Operation2_Dropout_0_7(Block6_Element3_Cell_Operation2_Dropout_0_7)
+													: Block6_Element3_Cell_Operation2_Dropout_040(Block6_Element3_Cell_Operation2_Dropout_040)
+													: Block6_Element3_Cell_Operation2_Dropout_050(Block6_Element3_Cell_Operation2_Dropout_050)
+													: Block6_Element3_Cell_Operation2_Dropout_070(Block6_Element3_Cell_Operation2_Dropout_070)
 								:m Block6_Element3_Cell_Combination(Block6_Element3_Cell_Combination)
 									:g [1,1]
 										: Block6_Element3_Cell_Combination_Concat(Block6_Element3_Cell_Combination_Concat)
@@ -4588,7 +4588,7 @@
 													: Block6_Element4_Cell_Input1_Dense_activation_softmax(Block6_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block6_Element4_Cell_Input1_Dense_activation_relu(Block6_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block6_Element4_Cell_Input1_Pooling(Block6_Element4_Cell_Input1_Pooling)
-											:m Block6_Element4_Cell_Input1_Pooling_features(Block6_Element4_Cell_Input1_Pooling_features)
+											:m Block6_Element4_Cell_Input1_Pooling_kernel(Block6_Element4_Cell_Input1_Pooling_kernel)
 											:m Block6_Element4_Cell_Input1_Pooling_stride(Block6_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block6_Element4_Cell_Input1_Pooling_stride_1x1(Block6_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -4642,7 +4642,7 @@
 													: Block6_Element4_Cell_Input2_Dense_activation_softmax(Block6_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block6_Element4_Cell_Input2_Dense_activation_relu(Block6_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block6_Element4_Cell_Input2_Pooling(Block6_Element4_Cell_Input2_Pooling)
-											:m Block6_Element4_Cell_Input2_Pooling_features(Block6_Element4_Cell_Input2_Pooling_features)
+											:m Block6_Element4_Cell_Input2_Pooling_kernel(Block6_Element4_Cell_Input2_Pooling_kernel)
 											:m Block6_Element4_Cell_Input2_Pooling_stride(Block6_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block6_Element4_Cell_Input2_Pooling_stride_1x1(Block6_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -4677,9 +4677,9 @@
 										: Block6_Element4_Cell_Operation1_Dropout(Block6_Element4_Cell_Operation1_Dropout)
 											:o Block6_Element4_Cell_Operation1_Dropout_value(Block6_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block6_Element4_Cell_Operation1_Dropout_0_4(Block6_Element4_Cell_Operation1_Dropout_0_4)
-													: Block6_Element4_Cell_Operation1_Dropout_0_5(Block6_Element4_Cell_Operation1_Dropout_0_5)
-													: Block6_Element4_Cell_Operation1_Dropout_0_7(Block6_Element4_Cell_Operation1_Dropout_0_7)
+													: Block6_Element4_Cell_Operation1_Dropout_040(Block6_Element4_Cell_Operation1_Dropout_040)
+													: Block6_Element4_Cell_Operation1_Dropout_050(Block6_Element4_Cell_Operation1_Dropout_050)
+													: Block6_Element4_Cell_Operation1_Dropout_070(Block6_Element4_Cell_Operation1_Dropout_070)
 								:m Block6_Element4_Cell_Operation2(Block6_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block6_Element4_Cell_Operation2_Flatten(Block6_Element4_Cell_Operation2_Flatten)
@@ -4697,9 +4697,9 @@
 										: Block6_Element4_Cell_Operation2_Dropout(Block6_Element4_Cell_Operation2_Dropout)
 											:o Block6_Element4_Cell_Operation2_Dropout_value(Block6_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block6_Element4_Cell_Operation2_Dropout_0_4(Block6_Element4_Cell_Operation2_Dropout_0_4)
-													: Block6_Element4_Cell_Operation2_Dropout_0_5(Block6_Element4_Cell_Operation2_Dropout_0_5)
-													: Block6_Element4_Cell_Operation2_Dropout_0_7(Block6_Element4_Cell_Operation2_Dropout_0_7)
+													: Block6_Element4_Cell_Operation2_Dropout_040(Block6_Element4_Cell_Operation2_Dropout_040)
+													: Block6_Element4_Cell_Operation2_Dropout_050(Block6_Element4_Cell_Operation2_Dropout_050)
+													: Block6_Element4_Cell_Operation2_Dropout_070(Block6_Element4_Cell_Operation2_Dropout_070)
 								:m Block6_Element4_Cell_Combination(Block6_Element4_Cell_Combination)
 									:g [1,1]
 										: Block6_Element4_Cell_Combination_Concat(Block6_Element4_Cell_Combination_Concat)
@@ -4750,7 +4750,7 @@
 													: Block6_Element5_Cell_Input1_Dense_activation_softmax(Block6_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block6_Element5_Cell_Input1_Dense_activation_relu(Block6_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block6_Element5_Cell_Input1_Pooling(Block6_Element5_Cell_Input1_Pooling)
-											:m Block6_Element5_Cell_Input1_Pooling_features(Block6_Element5_Cell_Input1_Pooling_features)
+											:m Block6_Element5_Cell_Input1_Pooling_kernel(Block6_Element5_Cell_Input1_Pooling_kernel)
 											:m Block6_Element5_Cell_Input1_Pooling_stride(Block6_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block6_Element5_Cell_Input1_Pooling_stride_1x1(Block6_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -4804,7 +4804,7 @@
 													: Block6_Element5_Cell_Input2_Dense_activation_softmax(Block6_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block6_Element5_Cell_Input2_Dense_activation_relu(Block6_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block6_Element5_Cell_Input2_Pooling(Block6_Element5_Cell_Input2_Pooling)
-											:m Block6_Element5_Cell_Input2_Pooling_features(Block6_Element5_Cell_Input2_Pooling_features)
+											:m Block6_Element5_Cell_Input2_Pooling_kernel(Block6_Element5_Cell_Input2_Pooling_kernel)
 											:m Block6_Element5_Cell_Input2_Pooling_stride(Block6_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block6_Element5_Cell_Input2_Pooling_stride_1x1(Block6_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -4839,9 +4839,9 @@
 										: Block6_Element5_Cell_Operation1_Dropout(Block6_Element5_Cell_Operation1_Dropout)
 											:o Block6_Element5_Cell_Operation1_Dropout_value(Block6_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block6_Element5_Cell_Operation1_Dropout_0_4(Block6_Element5_Cell_Operation1_Dropout_0_4)
-													: Block6_Element5_Cell_Operation1_Dropout_0_5(Block6_Element5_Cell_Operation1_Dropout_0_5)
-													: Block6_Element5_Cell_Operation1_Dropout_0_7(Block6_Element5_Cell_Operation1_Dropout_0_7)
+													: Block6_Element5_Cell_Operation1_Dropout_040(Block6_Element5_Cell_Operation1_Dropout_040)
+													: Block6_Element5_Cell_Operation1_Dropout_050(Block6_Element5_Cell_Operation1_Dropout_050)
+													: Block6_Element5_Cell_Operation1_Dropout_070(Block6_Element5_Cell_Operation1_Dropout_070)
 								:m Block6_Element5_Cell_Operation2(Block6_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block6_Element5_Cell_Operation2_Flatten(Block6_Element5_Cell_Operation2_Flatten)
@@ -4859,9 +4859,9 @@
 										: Block6_Element5_Cell_Operation2_Dropout(Block6_Element5_Cell_Operation2_Dropout)
 											:o Block6_Element5_Cell_Operation2_Dropout_value(Block6_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block6_Element5_Cell_Operation2_Dropout_0_4(Block6_Element5_Cell_Operation2_Dropout_0_4)
-													: Block6_Element5_Cell_Operation2_Dropout_0_5(Block6_Element5_Cell_Operation2_Dropout_0_5)
-													: Block6_Element5_Cell_Operation2_Dropout_0_7(Block6_Element5_Cell_Operation2_Dropout_0_7)
+													: Block6_Element5_Cell_Operation2_Dropout_040(Block6_Element5_Cell_Operation2_Dropout_040)
+													: Block6_Element5_Cell_Operation2_Dropout_050(Block6_Element5_Cell_Operation2_Dropout_050)
+													: Block6_Element5_Cell_Operation2_Dropout_070(Block6_Element5_Cell_Operation2_Dropout_070)
 								:m Block6_Element5_Cell_Combination(Block6_Element5_Cell_Combination)
 									:g [1,1]
 										: Block6_Element5_Cell_Combination_Concat(Block6_Element5_Cell_Combination_Concat)
@@ -4913,7 +4913,7 @@
 													: Block7_Element1_Cell_Input1_Dense_activation_softmax(Block7_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block7_Element1_Cell_Input1_Dense_activation_relu(Block7_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block7_Element1_Cell_Input1_Pooling(Block7_Element1_Cell_Input1_Pooling)
-											:m Block7_Element1_Cell_Input1_Pooling_features(Block7_Element1_Cell_Input1_Pooling_features)
+											:m Block7_Element1_Cell_Input1_Pooling_kernel(Block7_Element1_Cell_Input1_Pooling_kernel)
 											:m Block7_Element1_Cell_Input1_Pooling_stride(Block7_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block7_Element1_Cell_Input1_Pooling_stride_1x1(Block7_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -4967,7 +4967,7 @@
 													: Block7_Element1_Cell_Input2_Dense_activation_softmax(Block7_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block7_Element1_Cell_Input2_Dense_activation_relu(Block7_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block7_Element1_Cell_Input2_Pooling(Block7_Element1_Cell_Input2_Pooling)
-											:m Block7_Element1_Cell_Input2_Pooling_features(Block7_Element1_Cell_Input2_Pooling_features)
+											:m Block7_Element1_Cell_Input2_Pooling_kernel(Block7_Element1_Cell_Input2_Pooling_kernel)
 											:m Block7_Element1_Cell_Input2_Pooling_stride(Block7_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block7_Element1_Cell_Input2_Pooling_stride_1x1(Block7_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -5002,9 +5002,9 @@
 										: Block7_Element1_Cell_Operation1_Dropout(Block7_Element1_Cell_Operation1_Dropout)
 											:o Block7_Element1_Cell_Operation1_Dropout_value(Block7_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block7_Element1_Cell_Operation1_Dropout_0_4(Block7_Element1_Cell_Operation1_Dropout_0_4)
-													: Block7_Element1_Cell_Operation1_Dropout_0_5(Block7_Element1_Cell_Operation1_Dropout_0_5)
-													: Block7_Element1_Cell_Operation1_Dropout_0_7(Block7_Element1_Cell_Operation1_Dropout_0_7)
+													: Block7_Element1_Cell_Operation1_Dropout_040(Block7_Element1_Cell_Operation1_Dropout_040)
+													: Block7_Element1_Cell_Operation1_Dropout_050(Block7_Element1_Cell_Operation1_Dropout_050)
+													: Block7_Element1_Cell_Operation1_Dropout_070(Block7_Element1_Cell_Operation1_Dropout_070)
 								:m Block7_Element1_Cell_Operation2(Block7_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block7_Element1_Cell_Operation2_Flatten(Block7_Element1_Cell_Operation2_Flatten)
@@ -5022,9 +5022,9 @@
 										: Block7_Element1_Cell_Operation2_Dropout(Block7_Element1_Cell_Operation2_Dropout)
 											:o Block7_Element1_Cell_Operation2_Dropout_value(Block7_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block7_Element1_Cell_Operation2_Dropout_0_4(Block7_Element1_Cell_Operation2_Dropout_0_4)
-													: Block7_Element1_Cell_Operation2_Dropout_0_5(Block7_Element1_Cell_Operation2_Dropout_0_5)
-													: Block7_Element1_Cell_Operation2_Dropout_0_7(Block7_Element1_Cell_Operation2_Dropout_0_7)
+													: Block7_Element1_Cell_Operation2_Dropout_040(Block7_Element1_Cell_Operation2_Dropout_040)
+													: Block7_Element1_Cell_Operation2_Dropout_050(Block7_Element1_Cell_Operation2_Dropout_050)
+													: Block7_Element1_Cell_Operation2_Dropout_070(Block7_Element1_Cell_Operation2_Dropout_070)
 								:m Block7_Element1_Cell_Combination(Block7_Element1_Cell_Combination)
 									:g [1,1]
 										: Block7_Element1_Cell_Combination_Concat(Block7_Element1_Cell_Combination_Concat)
@@ -5075,7 +5075,7 @@
 													: Block7_Element2_Cell_Input1_Dense_activation_softmax(Block7_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block7_Element2_Cell_Input1_Dense_activation_relu(Block7_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block7_Element2_Cell_Input1_Pooling(Block7_Element2_Cell_Input1_Pooling)
-											:m Block7_Element2_Cell_Input1_Pooling_features(Block7_Element2_Cell_Input1_Pooling_features)
+											:m Block7_Element2_Cell_Input1_Pooling_kernel(Block7_Element2_Cell_Input1_Pooling_kernel)
 											:m Block7_Element2_Cell_Input1_Pooling_stride(Block7_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block7_Element2_Cell_Input1_Pooling_stride_1x1(Block7_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -5129,7 +5129,7 @@
 													: Block7_Element2_Cell_Input2_Dense_activation_softmax(Block7_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block7_Element2_Cell_Input2_Dense_activation_relu(Block7_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block7_Element2_Cell_Input2_Pooling(Block7_Element2_Cell_Input2_Pooling)
-											:m Block7_Element2_Cell_Input2_Pooling_features(Block7_Element2_Cell_Input2_Pooling_features)
+											:m Block7_Element2_Cell_Input2_Pooling_kernel(Block7_Element2_Cell_Input2_Pooling_kernel)
 											:m Block7_Element2_Cell_Input2_Pooling_stride(Block7_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block7_Element2_Cell_Input2_Pooling_stride_1x1(Block7_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -5164,9 +5164,9 @@
 										: Block7_Element2_Cell_Operation1_Dropout(Block7_Element2_Cell_Operation1_Dropout)
 											:o Block7_Element2_Cell_Operation1_Dropout_value(Block7_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block7_Element2_Cell_Operation1_Dropout_0_4(Block7_Element2_Cell_Operation1_Dropout_0_4)
-													: Block7_Element2_Cell_Operation1_Dropout_0_5(Block7_Element2_Cell_Operation1_Dropout_0_5)
-													: Block7_Element2_Cell_Operation1_Dropout_0_7(Block7_Element2_Cell_Operation1_Dropout_0_7)
+													: Block7_Element2_Cell_Operation1_Dropout_040(Block7_Element2_Cell_Operation1_Dropout_040)
+													: Block7_Element2_Cell_Operation1_Dropout_050(Block7_Element2_Cell_Operation1_Dropout_050)
+													: Block7_Element2_Cell_Operation1_Dropout_070(Block7_Element2_Cell_Operation1_Dropout_070)
 								:m Block7_Element2_Cell_Operation2(Block7_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block7_Element2_Cell_Operation2_Flatten(Block7_Element2_Cell_Operation2_Flatten)
@@ -5184,9 +5184,9 @@
 										: Block7_Element2_Cell_Operation2_Dropout(Block7_Element2_Cell_Operation2_Dropout)
 											:o Block7_Element2_Cell_Operation2_Dropout_value(Block7_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block7_Element2_Cell_Operation2_Dropout_0_4(Block7_Element2_Cell_Operation2_Dropout_0_4)
-													: Block7_Element2_Cell_Operation2_Dropout_0_5(Block7_Element2_Cell_Operation2_Dropout_0_5)
-													: Block7_Element2_Cell_Operation2_Dropout_0_7(Block7_Element2_Cell_Operation2_Dropout_0_7)
+													: Block7_Element2_Cell_Operation2_Dropout_040(Block7_Element2_Cell_Operation2_Dropout_040)
+													: Block7_Element2_Cell_Operation2_Dropout_050(Block7_Element2_Cell_Operation2_Dropout_050)
+													: Block7_Element2_Cell_Operation2_Dropout_070(Block7_Element2_Cell_Operation2_Dropout_070)
 								:m Block7_Element2_Cell_Combination(Block7_Element2_Cell_Combination)
 									:g [1,1]
 										: Block7_Element2_Cell_Combination_Concat(Block7_Element2_Cell_Combination_Concat)
@@ -5237,7 +5237,7 @@
 													: Block7_Element3_Cell_Input1_Dense_activation_softmax(Block7_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block7_Element3_Cell_Input1_Dense_activation_relu(Block7_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block7_Element3_Cell_Input1_Pooling(Block7_Element3_Cell_Input1_Pooling)
-											:m Block7_Element3_Cell_Input1_Pooling_features(Block7_Element3_Cell_Input1_Pooling_features)
+											:m Block7_Element3_Cell_Input1_Pooling_kernel(Block7_Element3_Cell_Input1_Pooling_kernel)
 											:m Block7_Element3_Cell_Input1_Pooling_stride(Block7_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block7_Element3_Cell_Input1_Pooling_stride_1x1(Block7_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -5291,7 +5291,7 @@
 													: Block7_Element3_Cell_Input2_Dense_activation_softmax(Block7_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block7_Element3_Cell_Input2_Dense_activation_relu(Block7_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block7_Element3_Cell_Input2_Pooling(Block7_Element3_Cell_Input2_Pooling)
-											:m Block7_Element3_Cell_Input2_Pooling_features(Block7_Element3_Cell_Input2_Pooling_features)
+											:m Block7_Element3_Cell_Input2_Pooling_kernel(Block7_Element3_Cell_Input2_Pooling_kernel)
 											:m Block7_Element3_Cell_Input2_Pooling_stride(Block7_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block7_Element3_Cell_Input2_Pooling_stride_1x1(Block7_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -5326,9 +5326,9 @@
 										: Block7_Element3_Cell_Operation1_Dropout(Block7_Element3_Cell_Operation1_Dropout)
 											:o Block7_Element3_Cell_Operation1_Dropout_value(Block7_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block7_Element3_Cell_Operation1_Dropout_0_4(Block7_Element3_Cell_Operation1_Dropout_0_4)
-													: Block7_Element3_Cell_Operation1_Dropout_0_5(Block7_Element3_Cell_Operation1_Dropout_0_5)
-													: Block7_Element3_Cell_Operation1_Dropout_0_7(Block7_Element3_Cell_Operation1_Dropout_0_7)
+													: Block7_Element3_Cell_Operation1_Dropout_040(Block7_Element3_Cell_Operation1_Dropout_040)
+													: Block7_Element3_Cell_Operation1_Dropout_050(Block7_Element3_Cell_Operation1_Dropout_050)
+													: Block7_Element3_Cell_Operation1_Dropout_070(Block7_Element3_Cell_Operation1_Dropout_070)
 								:m Block7_Element3_Cell_Operation2(Block7_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block7_Element3_Cell_Operation2_Flatten(Block7_Element3_Cell_Operation2_Flatten)
@@ -5346,9 +5346,9 @@
 										: Block7_Element3_Cell_Operation2_Dropout(Block7_Element3_Cell_Operation2_Dropout)
 											:o Block7_Element3_Cell_Operation2_Dropout_value(Block7_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block7_Element3_Cell_Operation2_Dropout_0_4(Block7_Element3_Cell_Operation2_Dropout_0_4)
-													: Block7_Element3_Cell_Operation2_Dropout_0_5(Block7_Element3_Cell_Operation2_Dropout_0_5)
-													: Block7_Element3_Cell_Operation2_Dropout_0_7(Block7_Element3_Cell_Operation2_Dropout_0_7)
+													: Block7_Element3_Cell_Operation2_Dropout_040(Block7_Element3_Cell_Operation2_Dropout_040)
+													: Block7_Element3_Cell_Operation2_Dropout_050(Block7_Element3_Cell_Operation2_Dropout_050)
+													: Block7_Element3_Cell_Operation2_Dropout_070(Block7_Element3_Cell_Operation2_Dropout_070)
 								:m Block7_Element3_Cell_Combination(Block7_Element3_Cell_Combination)
 									:g [1,1]
 										: Block7_Element3_Cell_Combination_Concat(Block7_Element3_Cell_Combination_Concat)
@@ -5399,7 +5399,7 @@
 													: Block7_Element4_Cell_Input1_Dense_activation_softmax(Block7_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block7_Element4_Cell_Input1_Dense_activation_relu(Block7_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block7_Element4_Cell_Input1_Pooling(Block7_Element4_Cell_Input1_Pooling)
-											:m Block7_Element4_Cell_Input1_Pooling_features(Block7_Element4_Cell_Input1_Pooling_features)
+											:m Block7_Element4_Cell_Input1_Pooling_kernel(Block7_Element4_Cell_Input1_Pooling_kernel)
 											:m Block7_Element4_Cell_Input1_Pooling_stride(Block7_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block7_Element4_Cell_Input1_Pooling_stride_1x1(Block7_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -5453,7 +5453,7 @@
 													: Block7_Element4_Cell_Input2_Dense_activation_softmax(Block7_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block7_Element4_Cell_Input2_Dense_activation_relu(Block7_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block7_Element4_Cell_Input2_Pooling(Block7_Element4_Cell_Input2_Pooling)
-											:m Block7_Element4_Cell_Input2_Pooling_features(Block7_Element4_Cell_Input2_Pooling_features)
+											:m Block7_Element4_Cell_Input2_Pooling_kernel(Block7_Element4_Cell_Input2_Pooling_kernel)
 											:m Block7_Element4_Cell_Input2_Pooling_stride(Block7_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block7_Element4_Cell_Input2_Pooling_stride_1x1(Block7_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -5488,9 +5488,9 @@
 										: Block7_Element4_Cell_Operation1_Dropout(Block7_Element4_Cell_Operation1_Dropout)
 											:o Block7_Element4_Cell_Operation1_Dropout_value(Block7_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block7_Element4_Cell_Operation1_Dropout_0_4(Block7_Element4_Cell_Operation1_Dropout_0_4)
-													: Block7_Element4_Cell_Operation1_Dropout_0_5(Block7_Element4_Cell_Operation1_Dropout_0_5)
-													: Block7_Element4_Cell_Operation1_Dropout_0_7(Block7_Element4_Cell_Operation1_Dropout_0_7)
+													: Block7_Element4_Cell_Operation1_Dropout_040(Block7_Element4_Cell_Operation1_Dropout_040)
+													: Block7_Element4_Cell_Operation1_Dropout_050(Block7_Element4_Cell_Operation1_Dropout_050)
+													: Block7_Element4_Cell_Operation1_Dropout_070(Block7_Element4_Cell_Operation1_Dropout_070)
 								:m Block7_Element4_Cell_Operation2(Block7_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block7_Element4_Cell_Operation2_Flatten(Block7_Element4_Cell_Operation2_Flatten)
@@ -5508,9 +5508,9 @@
 										: Block7_Element4_Cell_Operation2_Dropout(Block7_Element4_Cell_Operation2_Dropout)
 											:o Block7_Element4_Cell_Operation2_Dropout_value(Block7_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block7_Element4_Cell_Operation2_Dropout_0_4(Block7_Element4_Cell_Operation2_Dropout_0_4)
-													: Block7_Element4_Cell_Operation2_Dropout_0_5(Block7_Element4_Cell_Operation2_Dropout_0_5)
-													: Block7_Element4_Cell_Operation2_Dropout_0_7(Block7_Element4_Cell_Operation2_Dropout_0_7)
+													: Block7_Element4_Cell_Operation2_Dropout_040(Block7_Element4_Cell_Operation2_Dropout_040)
+													: Block7_Element4_Cell_Operation2_Dropout_050(Block7_Element4_Cell_Operation2_Dropout_050)
+													: Block7_Element4_Cell_Operation2_Dropout_070(Block7_Element4_Cell_Operation2_Dropout_070)
 								:m Block7_Element4_Cell_Combination(Block7_Element4_Cell_Combination)
 									:g [1,1]
 										: Block7_Element4_Cell_Combination_Concat(Block7_Element4_Cell_Combination_Concat)
@@ -5561,7 +5561,7 @@
 													: Block7_Element5_Cell_Input1_Dense_activation_softmax(Block7_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block7_Element5_Cell_Input1_Dense_activation_relu(Block7_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block7_Element5_Cell_Input1_Pooling(Block7_Element5_Cell_Input1_Pooling)
-											:m Block7_Element5_Cell_Input1_Pooling_features(Block7_Element5_Cell_Input1_Pooling_features)
+											:m Block7_Element5_Cell_Input1_Pooling_kernel(Block7_Element5_Cell_Input1_Pooling_kernel)
 											:m Block7_Element5_Cell_Input1_Pooling_stride(Block7_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block7_Element5_Cell_Input1_Pooling_stride_1x1(Block7_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -5615,7 +5615,7 @@
 													: Block7_Element5_Cell_Input2_Dense_activation_softmax(Block7_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block7_Element5_Cell_Input2_Dense_activation_relu(Block7_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block7_Element5_Cell_Input2_Pooling(Block7_Element5_Cell_Input2_Pooling)
-											:m Block7_Element5_Cell_Input2_Pooling_features(Block7_Element5_Cell_Input2_Pooling_features)
+											:m Block7_Element5_Cell_Input2_Pooling_kernel(Block7_Element5_Cell_Input2_Pooling_kernel)
 											:m Block7_Element5_Cell_Input2_Pooling_stride(Block7_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block7_Element5_Cell_Input2_Pooling_stride_1x1(Block7_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -5650,9 +5650,9 @@
 										: Block7_Element5_Cell_Operation1_Dropout(Block7_Element5_Cell_Operation1_Dropout)
 											:o Block7_Element5_Cell_Operation1_Dropout_value(Block7_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block7_Element5_Cell_Operation1_Dropout_0_4(Block7_Element5_Cell_Operation1_Dropout_0_4)
-													: Block7_Element5_Cell_Operation1_Dropout_0_5(Block7_Element5_Cell_Operation1_Dropout_0_5)
-													: Block7_Element5_Cell_Operation1_Dropout_0_7(Block7_Element5_Cell_Operation1_Dropout_0_7)
+													: Block7_Element5_Cell_Operation1_Dropout_040(Block7_Element5_Cell_Operation1_Dropout_040)
+													: Block7_Element5_Cell_Operation1_Dropout_050(Block7_Element5_Cell_Operation1_Dropout_050)
+													: Block7_Element5_Cell_Operation1_Dropout_070(Block7_Element5_Cell_Operation1_Dropout_070)
 								:m Block7_Element5_Cell_Operation2(Block7_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block7_Element5_Cell_Operation2_Flatten(Block7_Element5_Cell_Operation2_Flatten)
@@ -5670,9 +5670,9 @@
 										: Block7_Element5_Cell_Operation2_Dropout(Block7_Element5_Cell_Operation2_Dropout)
 											:o Block7_Element5_Cell_Operation2_Dropout_value(Block7_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block7_Element5_Cell_Operation2_Dropout_0_4(Block7_Element5_Cell_Operation2_Dropout_0_4)
-													: Block7_Element5_Cell_Operation2_Dropout_0_5(Block7_Element5_Cell_Operation2_Dropout_0_5)
-													: Block7_Element5_Cell_Operation2_Dropout_0_7(Block7_Element5_Cell_Operation2_Dropout_0_7)
+													: Block7_Element5_Cell_Operation2_Dropout_040(Block7_Element5_Cell_Operation2_Dropout_040)
+													: Block7_Element5_Cell_Operation2_Dropout_050(Block7_Element5_Cell_Operation2_Dropout_050)
+													: Block7_Element5_Cell_Operation2_Dropout_070(Block7_Element5_Cell_Operation2_Dropout_070)
 								:m Block7_Element5_Cell_Combination(Block7_Element5_Cell_Combination)
 									:g [1,1]
 										: Block7_Element5_Cell_Combination_Concat(Block7_Element5_Cell_Combination_Concat)
@@ -5724,7 +5724,7 @@
 													: Block8_Element1_Cell_Input1_Dense_activation_softmax(Block8_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block8_Element1_Cell_Input1_Dense_activation_relu(Block8_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block8_Element1_Cell_Input1_Pooling(Block8_Element1_Cell_Input1_Pooling)
-											:m Block8_Element1_Cell_Input1_Pooling_features(Block8_Element1_Cell_Input1_Pooling_features)
+											:m Block8_Element1_Cell_Input1_Pooling_kernel(Block8_Element1_Cell_Input1_Pooling_kernel)
 											:m Block8_Element1_Cell_Input1_Pooling_stride(Block8_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block8_Element1_Cell_Input1_Pooling_stride_1x1(Block8_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -5778,7 +5778,7 @@
 													: Block8_Element1_Cell_Input2_Dense_activation_softmax(Block8_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block8_Element1_Cell_Input2_Dense_activation_relu(Block8_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block8_Element1_Cell_Input2_Pooling(Block8_Element1_Cell_Input2_Pooling)
-											:m Block8_Element1_Cell_Input2_Pooling_features(Block8_Element1_Cell_Input2_Pooling_features)
+											:m Block8_Element1_Cell_Input2_Pooling_kernel(Block8_Element1_Cell_Input2_Pooling_kernel)
 											:m Block8_Element1_Cell_Input2_Pooling_stride(Block8_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block8_Element1_Cell_Input2_Pooling_stride_1x1(Block8_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -5813,9 +5813,9 @@
 										: Block8_Element1_Cell_Operation1_Dropout(Block8_Element1_Cell_Operation1_Dropout)
 											:o Block8_Element1_Cell_Operation1_Dropout_value(Block8_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block8_Element1_Cell_Operation1_Dropout_0_4(Block8_Element1_Cell_Operation1_Dropout_0_4)
-													: Block8_Element1_Cell_Operation1_Dropout_0_5(Block8_Element1_Cell_Operation1_Dropout_0_5)
-													: Block8_Element1_Cell_Operation1_Dropout_0_7(Block8_Element1_Cell_Operation1_Dropout_0_7)
+													: Block8_Element1_Cell_Operation1_Dropout_040(Block8_Element1_Cell_Operation1_Dropout_040)
+													: Block8_Element1_Cell_Operation1_Dropout_050(Block8_Element1_Cell_Operation1_Dropout_050)
+													: Block8_Element1_Cell_Operation1_Dropout_070(Block8_Element1_Cell_Operation1_Dropout_070)
 								:m Block8_Element1_Cell_Operation2(Block8_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block8_Element1_Cell_Operation2_Flatten(Block8_Element1_Cell_Operation2_Flatten)
@@ -5833,9 +5833,9 @@
 										: Block8_Element1_Cell_Operation2_Dropout(Block8_Element1_Cell_Operation2_Dropout)
 											:o Block8_Element1_Cell_Operation2_Dropout_value(Block8_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block8_Element1_Cell_Operation2_Dropout_0_4(Block8_Element1_Cell_Operation2_Dropout_0_4)
-													: Block8_Element1_Cell_Operation2_Dropout_0_5(Block8_Element1_Cell_Operation2_Dropout_0_5)
-													: Block8_Element1_Cell_Operation2_Dropout_0_7(Block8_Element1_Cell_Operation2_Dropout_0_7)
+													: Block8_Element1_Cell_Operation2_Dropout_040(Block8_Element1_Cell_Operation2_Dropout_040)
+													: Block8_Element1_Cell_Operation2_Dropout_050(Block8_Element1_Cell_Operation2_Dropout_050)
+													: Block8_Element1_Cell_Operation2_Dropout_070(Block8_Element1_Cell_Operation2_Dropout_070)
 								:m Block8_Element1_Cell_Combination(Block8_Element1_Cell_Combination)
 									:g [1,1]
 										: Block8_Element1_Cell_Combination_Concat(Block8_Element1_Cell_Combination_Concat)
@@ -5886,7 +5886,7 @@
 													: Block8_Element2_Cell_Input1_Dense_activation_softmax(Block8_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block8_Element2_Cell_Input1_Dense_activation_relu(Block8_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block8_Element2_Cell_Input1_Pooling(Block8_Element2_Cell_Input1_Pooling)
-											:m Block8_Element2_Cell_Input1_Pooling_features(Block8_Element2_Cell_Input1_Pooling_features)
+											:m Block8_Element2_Cell_Input1_Pooling_kernel(Block8_Element2_Cell_Input1_Pooling_kernel)
 											:m Block8_Element2_Cell_Input1_Pooling_stride(Block8_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block8_Element2_Cell_Input1_Pooling_stride_1x1(Block8_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -5940,7 +5940,7 @@
 													: Block8_Element2_Cell_Input2_Dense_activation_softmax(Block8_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block8_Element2_Cell_Input2_Dense_activation_relu(Block8_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block8_Element2_Cell_Input2_Pooling(Block8_Element2_Cell_Input2_Pooling)
-											:m Block8_Element2_Cell_Input2_Pooling_features(Block8_Element2_Cell_Input2_Pooling_features)
+											:m Block8_Element2_Cell_Input2_Pooling_kernel(Block8_Element2_Cell_Input2_Pooling_kernel)
 											:m Block8_Element2_Cell_Input2_Pooling_stride(Block8_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block8_Element2_Cell_Input2_Pooling_stride_1x1(Block8_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -5975,9 +5975,9 @@
 										: Block8_Element2_Cell_Operation1_Dropout(Block8_Element2_Cell_Operation1_Dropout)
 											:o Block8_Element2_Cell_Operation1_Dropout_value(Block8_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block8_Element2_Cell_Operation1_Dropout_0_4(Block8_Element2_Cell_Operation1_Dropout_0_4)
-													: Block8_Element2_Cell_Operation1_Dropout_0_5(Block8_Element2_Cell_Operation1_Dropout_0_5)
-													: Block8_Element2_Cell_Operation1_Dropout_0_7(Block8_Element2_Cell_Operation1_Dropout_0_7)
+													: Block8_Element2_Cell_Operation1_Dropout_040(Block8_Element2_Cell_Operation1_Dropout_040)
+													: Block8_Element2_Cell_Operation1_Dropout_050(Block8_Element2_Cell_Operation1_Dropout_050)
+													: Block8_Element2_Cell_Operation1_Dropout_070(Block8_Element2_Cell_Operation1_Dropout_070)
 								:m Block8_Element2_Cell_Operation2(Block8_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block8_Element2_Cell_Operation2_Flatten(Block8_Element2_Cell_Operation2_Flatten)
@@ -5995,9 +5995,9 @@
 										: Block8_Element2_Cell_Operation2_Dropout(Block8_Element2_Cell_Operation2_Dropout)
 											:o Block8_Element2_Cell_Operation2_Dropout_value(Block8_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block8_Element2_Cell_Operation2_Dropout_0_4(Block8_Element2_Cell_Operation2_Dropout_0_4)
-													: Block8_Element2_Cell_Operation2_Dropout_0_5(Block8_Element2_Cell_Operation2_Dropout_0_5)
-													: Block8_Element2_Cell_Operation2_Dropout_0_7(Block8_Element2_Cell_Operation2_Dropout_0_7)
+													: Block8_Element2_Cell_Operation2_Dropout_040(Block8_Element2_Cell_Operation2_Dropout_040)
+													: Block8_Element2_Cell_Operation2_Dropout_050(Block8_Element2_Cell_Operation2_Dropout_050)
+													: Block8_Element2_Cell_Operation2_Dropout_070(Block8_Element2_Cell_Operation2_Dropout_070)
 								:m Block8_Element2_Cell_Combination(Block8_Element2_Cell_Combination)
 									:g [1,1]
 										: Block8_Element2_Cell_Combination_Concat(Block8_Element2_Cell_Combination_Concat)
@@ -6048,7 +6048,7 @@
 													: Block8_Element3_Cell_Input1_Dense_activation_softmax(Block8_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block8_Element3_Cell_Input1_Dense_activation_relu(Block8_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block8_Element3_Cell_Input1_Pooling(Block8_Element3_Cell_Input1_Pooling)
-											:m Block8_Element3_Cell_Input1_Pooling_features(Block8_Element3_Cell_Input1_Pooling_features)
+											:m Block8_Element3_Cell_Input1_Pooling_kernel(Block8_Element3_Cell_Input1_Pooling_kernel)
 											:m Block8_Element3_Cell_Input1_Pooling_stride(Block8_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block8_Element3_Cell_Input1_Pooling_stride_1x1(Block8_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -6102,7 +6102,7 @@
 													: Block8_Element3_Cell_Input2_Dense_activation_softmax(Block8_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block8_Element3_Cell_Input2_Dense_activation_relu(Block8_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block8_Element3_Cell_Input2_Pooling(Block8_Element3_Cell_Input2_Pooling)
-											:m Block8_Element3_Cell_Input2_Pooling_features(Block8_Element3_Cell_Input2_Pooling_features)
+											:m Block8_Element3_Cell_Input2_Pooling_kernel(Block8_Element3_Cell_Input2_Pooling_kernel)
 											:m Block8_Element3_Cell_Input2_Pooling_stride(Block8_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block8_Element3_Cell_Input2_Pooling_stride_1x1(Block8_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -6137,9 +6137,9 @@
 										: Block8_Element3_Cell_Operation1_Dropout(Block8_Element3_Cell_Operation1_Dropout)
 											:o Block8_Element3_Cell_Operation1_Dropout_value(Block8_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block8_Element3_Cell_Operation1_Dropout_0_4(Block8_Element3_Cell_Operation1_Dropout_0_4)
-													: Block8_Element3_Cell_Operation1_Dropout_0_5(Block8_Element3_Cell_Operation1_Dropout_0_5)
-													: Block8_Element3_Cell_Operation1_Dropout_0_7(Block8_Element3_Cell_Operation1_Dropout_0_7)
+													: Block8_Element3_Cell_Operation1_Dropout_040(Block8_Element3_Cell_Operation1_Dropout_040)
+													: Block8_Element3_Cell_Operation1_Dropout_050(Block8_Element3_Cell_Operation1_Dropout_050)
+													: Block8_Element3_Cell_Operation1_Dropout_070(Block8_Element3_Cell_Operation1_Dropout_070)
 								:m Block8_Element3_Cell_Operation2(Block8_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block8_Element3_Cell_Operation2_Flatten(Block8_Element3_Cell_Operation2_Flatten)
@@ -6157,9 +6157,9 @@
 										: Block8_Element3_Cell_Operation2_Dropout(Block8_Element3_Cell_Operation2_Dropout)
 											:o Block8_Element3_Cell_Operation2_Dropout_value(Block8_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block8_Element3_Cell_Operation2_Dropout_0_4(Block8_Element3_Cell_Operation2_Dropout_0_4)
-													: Block8_Element3_Cell_Operation2_Dropout_0_5(Block8_Element3_Cell_Operation2_Dropout_0_5)
-													: Block8_Element3_Cell_Operation2_Dropout_0_7(Block8_Element3_Cell_Operation2_Dropout_0_7)
+													: Block8_Element3_Cell_Operation2_Dropout_040(Block8_Element3_Cell_Operation2_Dropout_040)
+													: Block8_Element3_Cell_Operation2_Dropout_050(Block8_Element3_Cell_Operation2_Dropout_050)
+													: Block8_Element3_Cell_Operation2_Dropout_070(Block8_Element3_Cell_Operation2_Dropout_070)
 								:m Block8_Element3_Cell_Combination(Block8_Element3_Cell_Combination)
 									:g [1,1]
 										: Block8_Element3_Cell_Combination_Concat(Block8_Element3_Cell_Combination_Concat)
@@ -6210,7 +6210,7 @@
 													: Block8_Element4_Cell_Input1_Dense_activation_softmax(Block8_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block8_Element4_Cell_Input1_Dense_activation_relu(Block8_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block8_Element4_Cell_Input1_Pooling(Block8_Element4_Cell_Input1_Pooling)
-											:m Block8_Element4_Cell_Input1_Pooling_features(Block8_Element4_Cell_Input1_Pooling_features)
+											:m Block8_Element4_Cell_Input1_Pooling_kernel(Block8_Element4_Cell_Input1_Pooling_kernel)
 											:m Block8_Element4_Cell_Input1_Pooling_stride(Block8_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block8_Element4_Cell_Input1_Pooling_stride_1x1(Block8_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -6264,7 +6264,7 @@
 													: Block8_Element4_Cell_Input2_Dense_activation_softmax(Block8_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block8_Element4_Cell_Input2_Dense_activation_relu(Block8_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block8_Element4_Cell_Input2_Pooling(Block8_Element4_Cell_Input2_Pooling)
-											:m Block8_Element4_Cell_Input2_Pooling_features(Block8_Element4_Cell_Input2_Pooling_features)
+											:m Block8_Element4_Cell_Input2_Pooling_kernel(Block8_Element4_Cell_Input2_Pooling_kernel)
 											:m Block8_Element4_Cell_Input2_Pooling_stride(Block8_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block8_Element4_Cell_Input2_Pooling_stride_1x1(Block8_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -6299,9 +6299,9 @@
 										: Block8_Element4_Cell_Operation1_Dropout(Block8_Element4_Cell_Operation1_Dropout)
 											:o Block8_Element4_Cell_Operation1_Dropout_value(Block8_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block8_Element4_Cell_Operation1_Dropout_0_4(Block8_Element4_Cell_Operation1_Dropout_0_4)
-													: Block8_Element4_Cell_Operation1_Dropout_0_5(Block8_Element4_Cell_Operation1_Dropout_0_5)
-													: Block8_Element4_Cell_Operation1_Dropout_0_7(Block8_Element4_Cell_Operation1_Dropout_0_7)
+													: Block8_Element4_Cell_Operation1_Dropout_040(Block8_Element4_Cell_Operation1_Dropout_040)
+													: Block8_Element4_Cell_Operation1_Dropout_050(Block8_Element4_Cell_Operation1_Dropout_050)
+													: Block8_Element4_Cell_Operation1_Dropout_070(Block8_Element4_Cell_Operation1_Dropout_070)
 								:m Block8_Element4_Cell_Operation2(Block8_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block8_Element4_Cell_Operation2_Flatten(Block8_Element4_Cell_Operation2_Flatten)
@@ -6319,9 +6319,9 @@
 										: Block8_Element4_Cell_Operation2_Dropout(Block8_Element4_Cell_Operation2_Dropout)
 											:o Block8_Element4_Cell_Operation2_Dropout_value(Block8_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block8_Element4_Cell_Operation2_Dropout_0_4(Block8_Element4_Cell_Operation2_Dropout_0_4)
-													: Block8_Element4_Cell_Operation2_Dropout_0_5(Block8_Element4_Cell_Operation2_Dropout_0_5)
-													: Block8_Element4_Cell_Operation2_Dropout_0_7(Block8_Element4_Cell_Operation2_Dropout_0_7)
+													: Block8_Element4_Cell_Operation2_Dropout_040(Block8_Element4_Cell_Operation2_Dropout_040)
+													: Block8_Element4_Cell_Operation2_Dropout_050(Block8_Element4_Cell_Operation2_Dropout_050)
+													: Block8_Element4_Cell_Operation2_Dropout_070(Block8_Element4_Cell_Operation2_Dropout_070)
 								:m Block8_Element4_Cell_Combination(Block8_Element4_Cell_Combination)
 									:g [1,1]
 										: Block8_Element4_Cell_Combination_Concat(Block8_Element4_Cell_Combination_Concat)
@@ -6372,7 +6372,7 @@
 													: Block8_Element5_Cell_Input1_Dense_activation_softmax(Block8_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block8_Element5_Cell_Input1_Dense_activation_relu(Block8_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block8_Element5_Cell_Input1_Pooling(Block8_Element5_Cell_Input1_Pooling)
-											:m Block8_Element5_Cell_Input1_Pooling_features(Block8_Element5_Cell_Input1_Pooling_features)
+											:m Block8_Element5_Cell_Input1_Pooling_kernel(Block8_Element5_Cell_Input1_Pooling_kernel)
 											:m Block8_Element5_Cell_Input1_Pooling_stride(Block8_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block8_Element5_Cell_Input1_Pooling_stride_1x1(Block8_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -6426,7 +6426,7 @@
 													: Block8_Element5_Cell_Input2_Dense_activation_softmax(Block8_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block8_Element5_Cell_Input2_Dense_activation_relu(Block8_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block8_Element5_Cell_Input2_Pooling(Block8_Element5_Cell_Input2_Pooling)
-											:m Block8_Element5_Cell_Input2_Pooling_features(Block8_Element5_Cell_Input2_Pooling_features)
+											:m Block8_Element5_Cell_Input2_Pooling_kernel(Block8_Element5_Cell_Input2_Pooling_kernel)
 											:m Block8_Element5_Cell_Input2_Pooling_stride(Block8_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block8_Element5_Cell_Input2_Pooling_stride_1x1(Block8_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -6461,9 +6461,9 @@
 										: Block8_Element5_Cell_Operation1_Dropout(Block8_Element5_Cell_Operation1_Dropout)
 											:o Block8_Element5_Cell_Operation1_Dropout_value(Block8_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block8_Element5_Cell_Operation1_Dropout_0_4(Block8_Element5_Cell_Operation1_Dropout_0_4)
-													: Block8_Element5_Cell_Operation1_Dropout_0_5(Block8_Element5_Cell_Operation1_Dropout_0_5)
-													: Block8_Element5_Cell_Operation1_Dropout_0_7(Block8_Element5_Cell_Operation1_Dropout_0_7)
+													: Block8_Element5_Cell_Operation1_Dropout_040(Block8_Element5_Cell_Operation1_Dropout_040)
+													: Block8_Element5_Cell_Operation1_Dropout_050(Block8_Element5_Cell_Operation1_Dropout_050)
+													: Block8_Element5_Cell_Operation1_Dropout_070(Block8_Element5_Cell_Operation1_Dropout_070)
 								:m Block8_Element5_Cell_Operation2(Block8_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block8_Element5_Cell_Operation2_Flatten(Block8_Element5_Cell_Operation2_Flatten)
@@ -6481,9 +6481,9 @@
 										: Block8_Element5_Cell_Operation2_Dropout(Block8_Element5_Cell_Operation2_Dropout)
 											:o Block8_Element5_Cell_Operation2_Dropout_value(Block8_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block8_Element5_Cell_Operation2_Dropout_0_4(Block8_Element5_Cell_Operation2_Dropout_0_4)
-													: Block8_Element5_Cell_Operation2_Dropout_0_5(Block8_Element5_Cell_Operation2_Dropout_0_5)
-													: Block8_Element5_Cell_Operation2_Dropout_0_7(Block8_Element5_Cell_Operation2_Dropout_0_7)
+													: Block8_Element5_Cell_Operation2_Dropout_040(Block8_Element5_Cell_Operation2_Dropout_040)
+													: Block8_Element5_Cell_Operation2_Dropout_050(Block8_Element5_Cell_Operation2_Dropout_050)
+													: Block8_Element5_Cell_Operation2_Dropout_070(Block8_Element5_Cell_Operation2_Dropout_070)
 								:m Block8_Element5_Cell_Combination(Block8_Element5_Cell_Combination)
 									:g [1,1]
 										: Block8_Element5_Cell_Combination_Concat(Block8_Element5_Cell_Combination_Concat)
@@ -6535,7 +6535,7 @@
 													: Block9_Element1_Cell_Input1_Dense_activation_softmax(Block9_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block9_Element1_Cell_Input1_Dense_activation_relu(Block9_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block9_Element1_Cell_Input1_Pooling(Block9_Element1_Cell_Input1_Pooling)
-											:m Block9_Element1_Cell_Input1_Pooling_features(Block9_Element1_Cell_Input1_Pooling_features)
+											:m Block9_Element1_Cell_Input1_Pooling_kernel(Block9_Element1_Cell_Input1_Pooling_kernel)
 											:m Block9_Element1_Cell_Input1_Pooling_stride(Block9_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block9_Element1_Cell_Input1_Pooling_stride_1x1(Block9_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -6589,7 +6589,7 @@
 													: Block9_Element1_Cell_Input2_Dense_activation_softmax(Block9_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block9_Element1_Cell_Input2_Dense_activation_relu(Block9_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block9_Element1_Cell_Input2_Pooling(Block9_Element1_Cell_Input2_Pooling)
-											:m Block9_Element1_Cell_Input2_Pooling_features(Block9_Element1_Cell_Input2_Pooling_features)
+											:m Block9_Element1_Cell_Input2_Pooling_kernel(Block9_Element1_Cell_Input2_Pooling_kernel)
 											:m Block9_Element1_Cell_Input2_Pooling_stride(Block9_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block9_Element1_Cell_Input2_Pooling_stride_1x1(Block9_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -6624,9 +6624,9 @@
 										: Block9_Element1_Cell_Operation1_Dropout(Block9_Element1_Cell_Operation1_Dropout)
 											:o Block9_Element1_Cell_Operation1_Dropout_value(Block9_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block9_Element1_Cell_Operation1_Dropout_0_4(Block9_Element1_Cell_Operation1_Dropout_0_4)
-													: Block9_Element1_Cell_Operation1_Dropout_0_5(Block9_Element1_Cell_Operation1_Dropout_0_5)
-													: Block9_Element1_Cell_Operation1_Dropout_0_7(Block9_Element1_Cell_Operation1_Dropout_0_7)
+													: Block9_Element1_Cell_Operation1_Dropout_040(Block9_Element1_Cell_Operation1_Dropout_040)
+													: Block9_Element1_Cell_Operation1_Dropout_050(Block9_Element1_Cell_Operation1_Dropout_050)
+													: Block9_Element1_Cell_Operation1_Dropout_070(Block9_Element1_Cell_Operation1_Dropout_070)
 								:m Block9_Element1_Cell_Operation2(Block9_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block9_Element1_Cell_Operation2_Flatten(Block9_Element1_Cell_Operation2_Flatten)
@@ -6644,9 +6644,9 @@
 										: Block9_Element1_Cell_Operation2_Dropout(Block9_Element1_Cell_Operation2_Dropout)
 											:o Block9_Element1_Cell_Operation2_Dropout_value(Block9_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block9_Element1_Cell_Operation2_Dropout_0_4(Block9_Element1_Cell_Operation2_Dropout_0_4)
-													: Block9_Element1_Cell_Operation2_Dropout_0_5(Block9_Element1_Cell_Operation2_Dropout_0_5)
-													: Block9_Element1_Cell_Operation2_Dropout_0_7(Block9_Element1_Cell_Operation2_Dropout_0_7)
+													: Block9_Element1_Cell_Operation2_Dropout_040(Block9_Element1_Cell_Operation2_Dropout_040)
+													: Block9_Element1_Cell_Operation2_Dropout_050(Block9_Element1_Cell_Operation2_Dropout_050)
+													: Block9_Element1_Cell_Operation2_Dropout_070(Block9_Element1_Cell_Operation2_Dropout_070)
 								:m Block9_Element1_Cell_Combination(Block9_Element1_Cell_Combination)
 									:g [1,1]
 										: Block9_Element1_Cell_Combination_Concat(Block9_Element1_Cell_Combination_Concat)
@@ -6697,7 +6697,7 @@
 													: Block9_Element2_Cell_Input1_Dense_activation_softmax(Block9_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block9_Element2_Cell_Input1_Dense_activation_relu(Block9_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block9_Element2_Cell_Input1_Pooling(Block9_Element2_Cell_Input1_Pooling)
-											:m Block9_Element2_Cell_Input1_Pooling_features(Block9_Element2_Cell_Input1_Pooling_features)
+											:m Block9_Element2_Cell_Input1_Pooling_kernel(Block9_Element2_Cell_Input1_Pooling_kernel)
 											:m Block9_Element2_Cell_Input1_Pooling_stride(Block9_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block9_Element2_Cell_Input1_Pooling_stride_1x1(Block9_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -6751,7 +6751,7 @@
 													: Block9_Element2_Cell_Input2_Dense_activation_softmax(Block9_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block9_Element2_Cell_Input2_Dense_activation_relu(Block9_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block9_Element2_Cell_Input2_Pooling(Block9_Element2_Cell_Input2_Pooling)
-											:m Block9_Element2_Cell_Input2_Pooling_features(Block9_Element2_Cell_Input2_Pooling_features)
+											:m Block9_Element2_Cell_Input2_Pooling_kernel(Block9_Element2_Cell_Input2_Pooling_kernel)
 											:m Block9_Element2_Cell_Input2_Pooling_stride(Block9_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block9_Element2_Cell_Input2_Pooling_stride_1x1(Block9_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -6786,9 +6786,9 @@
 										: Block9_Element2_Cell_Operation1_Dropout(Block9_Element2_Cell_Operation1_Dropout)
 											:o Block9_Element2_Cell_Operation1_Dropout_value(Block9_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block9_Element2_Cell_Operation1_Dropout_0_4(Block9_Element2_Cell_Operation1_Dropout_0_4)
-													: Block9_Element2_Cell_Operation1_Dropout_0_5(Block9_Element2_Cell_Operation1_Dropout_0_5)
-													: Block9_Element2_Cell_Operation1_Dropout_0_7(Block9_Element2_Cell_Operation1_Dropout_0_7)
+													: Block9_Element2_Cell_Operation1_Dropout_040(Block9_Element2_Cell_Operation1_Dropout_040)
+													: Block9_Element2_Cell_Operation1_Dropout_050(Block9_Element2_Cell_Operation1_Dropout_050)
+													: Block9_Element2_Cell_Operation1_Dropout_070(Block9_Element2_Cell_Operation1_Dropout_070)
 								:m Block9_Element2_Cell_Operation2(Block9_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block9_Element2_Cell_Operation2_Flatten(Block9_Element2_Cell_Operation2_Flatten)
@@ -6806,9 +6806,9 @@
 										: Block9_Element2_Cell_Operation2_Dropout(Block9_Element2_Cell_Operation2_Dropout)
 											:o Block9_Element2_Cell_Operation2_Dropout_value(Block9_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block9_Element2_Cell_Operation2_Dropout_0_4(Block9_Element2_Cell_Operation2_Dropout_0_4)
-													: Block9_Element2_Cell_Operation2_Dropout_0_5(Block9_Element2_Cell_Operation2_Dropout_0_5)
-													: Block9_Element2_Cell_Operation2_Dropout_0_7(Block9_Element2_Cell_Operation2_Dropout_0_7)
+													: Block9_Element2_Cell_Operation2_Dropout_040(Block9_Element2_Cell_Operation2_Dropout_040)
+													: Block9_Element2_Cell_Operation2_Dropout_050(Block9_Element2_Cell_Operation2_Dropout_050)
+													: Block9_Element2_Cell_Operation2_Dropout_070(Block9_Element2_Cell_Operation2_Dropout_070)
 								:m Block9_Element2_Cell_Combination(Block9_Element2_Cell_Combination)
 									:g [1,1]
 										: Block9_Element2_Cell_Combination_Concat(Block9_Element2_Cell_Combination_Concat)
@@ -6859,7 +6859,7 @@
 													: Block9_Element3_Cell_Input1_Dense_activation_softmax(Block9_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block9_Element3_Cell_Input1_Dense_activation_relu(Block9_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block9_Element3_Cell_Input1_Pooling(Block9_Element3_Cell_Input1_Pooling)
-											:m Block9_Element3_Cell_Input1_Pooling_features(Block9_Element3_Cell_Input1_Pooling_features)
+											:m Block9_Element3_Cell_Input1_Pooling_kernel(Block9_Element3_Cell_Input1_Pooling_kernel)
 											:m Block9_Element3_Cell_Input1_Pooling_stride(Block9_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block9_Element3_Cell_Input1_Pooling_stride_1x1(Block9_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -6913,7 +6913,7 @@
 													: Block9_Element3_Cell_Input2_Dense_activation_softmax(Block9_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block9_Element3_Cell_Input2_Dense_activation_relu(Block9_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block9_Element3_Cell_Input2_Pooling(Block9_Element3_Cell_Input2_Pooling)
-											:m Block9_Element3_Cell_Input2_Pooling_features(Block9_Element3_Cell_Input2_Pooling_features)
+											:m Block9_Element3_Cell_Input2_Pooling_kernel(Block9_Element3_Cell_Input2_Pooling_kernel)
 											:m Block9_Element3_Cell_Input2_Pooling_stride(Block9_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block9_Element3_Cell_Input2_Pooling_stride_1x1(Block9_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -6948,9 +6948,9 @@
 										: Block9_Element3_Cell_Operation1_Dropout(Block9_Element3_Cell_Operation1_Dropout)
 											:o Block9_Element3_Cell_Operation1_Dropout_value(Block9_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block9_Element3_Cell_Operation1_Dropout_0_4(Block9_Element3_Cell_Operation1_Dropout_0_4)
-													: Block9_Element3_Cell_Operation1_Dropout_0_5(Block9_Element3_Cell_Operation1_Dropout_0_5)
-													: Block9_Element3_Cell_Operation1_Dropout_0_7(Block9_Element3_Cell_Operation1_Dropout_0_7)
+													: Block9_Element3_Cell_Operation1_Dropout_040(Block9_Element3_Cell_Operation1_Dropout_040)
+													: Block9_Element3_Cell_Operation1_Dropout_050(Block9_Element3_Cell_Operation1_Dropout_050)
+													: Block9_Element3_Cell_Operation1_Dropout_070(Block9_Element3_Cell_Operation1_Dropout_070)
 								:m Block9_Element3_Cell_Operation2(Block9_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block9_Element3_Cell_Operation2_Flatten(Block9_Element3_Cell_Operation2_Flatten)
@@ -6968,9 +6968,9 @@
 										: Block9_Element3_Cell_Operation2_Dropout(Block9_Element3_Cell_Operation2_Dropout)
 											:o Block9_Element3_Cell_Operation2_Dropout_value(Block9_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block9_Element3_Cell_Operation2_Dropout_0_4(Block9_Element3_Cell_Operation2_Dropout_0_4)
-													: Block9_Element3_Cell_Operation2_Dropout_0_5(Block9_Element3_Cell_Operation2_Dropout_0_5)
-													: Block9_Element3_Cell_Operation2_Dropout_0_7(Block9_Element3_Cell_Operation2_Dropout_0_7)
+													: Block9_Element3_Cell_Operation2_Dropout_040(Block9_Element3_Cell_Operation2_Dropout_040)
+													: Block9_Element3_Cell_Operation2_Dropout_050(Block9_Element3_Cell_Operation2_Dropout_050)
+													: Block9_Element3_Cell_Operation2_Dropout_070(Block9_Element3_Cell_Operation2_Dropout_070)
 								:m Block9_Element3_Cell_Combination(Block9_Element3_Cell_Combination)
 									:g [1,1]
 										: Block9_Element3_Cell_Combination_Concat(Block9_Element3_Cell_Combination_Concat)
@@ -7021,7 +7021,7 @@
 													: Block9_Element4_Cell_Input1_Dense_activation_softmax(Block9_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block9_Element4_Cell_Input1_Dense_activation_relu(Block9_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block9_Element4_Cell_Input1_Pooling(Block9_Element4_Cell_Input1_Pooling)
-											:m Block9_Element4_Cell_Input1_Pooling_features(Block9_Element4_Cell_Input1_Pooling_features)
+											:m Block9_Element4_Cell_Input1_Pooling_kernel(Block9_Element4_Cell_Input1_Pooling_kernel)
 											:m Block9_Element4_Cell_Input1_Pooling_stride(Block9_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block9_Element4_Cell_Input1_Pooling_stride_1x1(Block9_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -7075,7 +7075,7 @@
 													: Block9_Element4_Cell_Input2_Dense_activation_softmax(Block9_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block9_Element4_Cell_Input2_Dense_activation_relu(Block9_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block9_Element4_Cell_Input2_Pooling(Block9_Element4_Cell_Input2_Pooling)
-											:m Block9_Element4_Cell_Input2_Pooling_features(Block9_Element4_Cell_Input2_Pooling_features)
+											:m Block9_Element4_Cell_Input2_Pooling_kernel(Block9_Element4_Cell_Input2_Pooling_kernel)
 											:m Block9_Element4_Cell_Input2_Pooling_stride(Block9_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block9_Element4_Cell_Input2_Pooling_stride_1x1(Block9_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -7110,9 +7110,9 @@
 										: Block9_Element4_Cell_Operation1_Dropout(Block9_Element4_Cell_Operation1_Dropout)
 											:o Block9_Element4_Cell_Operation1_Dropout_value(Block9_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block9_Element4_Cell_Operation1_Dropout_0_4(Block9_Element4_Cell_Operation1_Dropout_0_4)
-													: Block9_Element4_Cell_Operation1_Dropout_0_5(Block9_Element4_Cell_Operation1_Dropout_0_5)
-													: Block9_Element4_Cell_Operation1_Dropout_0_7(Block9_Element4_Cell_Operation1_Dropout_0_7)
+													: Block9_Element4_Cell_Operation1_Dropout_040(Block9_Element4_Cell_Operation1_Dropout_040)
+													: Block9_Element4_Cell_Operation1_Dropout_050(Block9_Element4_Cell_Operation1_Dropout_050)
+													: Block9_Element4_Cell_Operation1_Dropout_070(Block9_Element4_Cell_Operation1_Dropout_070)
 								:m Block9_Element4_Cell_Operation2(Block9_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block9_Element4_Cell_Operation2_Flatten(Block9_Element4_Cell_Operation2_Flatten)
@@ -7130,9 +7130,9 @@
 										: Block9_Element4_Cell_Operation2_Dropout(Block9_Element4_Cell_Operation2_Dropout)
 											:o Block9_Element4_Cell_Operation2_Dropout_value(Block9_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block9_Element4_Cell_Operation2_Dropout_0_4(Block9_Element4_Cell_Operation2_Dropout_0_4)
-													: Block9_Element4_Cell_Operation2_Dropout_0_5(Block9_Element4_Cell_Operation2_Dropout_0_5)
-													: Block9_Element4_Cell_Operation2_Dropout_0_7(Block9_Element4_Cell_Operation2_Dropout_0_7)
+													: Block9_Element4_Cell_Operation2_Dropout_040(Block9_Element4_Cell_Operation2_Dropout_040)
+													: Block9_Element4_Cell_Operation2_Dropout_050(Block9_Element4_Cell_Operation2_Dropout_050)
+													: Block9_Element4_Cell_Operation2_Dropout_070(Block9_Element4_Cell_Operation2_Dropout_070)
 								:m Block9_Element4_Cell_Combination(Block9_Element4_Cell_Combination)
 									:g [1,1]
 										: Block9_Element4_Cell_Combination_Concat(Block9_Element4_Cell_Combination_Concat)
@@ -7183,7 +7183,7 @@
 													: Block9_Element5_Cell_Input1_Dense_activation_softmax(Block9_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block9_Element5_Cell_Input1_Dense_activation_relu(Block9_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block9_Element5_Cell_Input1_Pooling(Block9_Element5_Cell_Input1_Pooling)
-											:m Block9_Element5_Cell_Input1_Pooling_features(Block9_Element5_Cell_Input1_Pooling_features)
+											:m Block9_Element5_Cell_Input1_Pooling_kernel(Block9_Element5_Cell_Input1_Pooling_kernel)
 											:m Block9_Element5_Cell_Input1_Pooling_stride(Block9_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block9_Element5_Cell_Input1_Pooling_stride_1x1(Block9_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -7237,7 +7237,7 @@
 													: Block9_Element5_Cell_Input2_Dense_activation_softmax(Block9_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block9_Element5_Cell_Input2_Dense_activation_relu(Block9_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block9_Element5_Cell_Input2_Pooling(Block9_Element5_Cell_Input2_Pooling)
-											:m Block9_Element5_Cell_Input2_Pooling_features(Block9_Element5_Cell_Input2_Pooling_features)
+											:m Block9_Element5_Cell_Input2_Pooling_kernel(Block9_Element5_Cell_Input2_Pooling_kernel)
 											:m Block9_Element5_Cell_Input2_Pooling_stride(Block9_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block9_Element5_Cell_Input2_Pooling_stride_1x1(Block9_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -7272,9 +7272,9 @@
 										: Block9_Element5_Cell_Operation1_Dropout(Block9_Element5_Cell_Operation1_Dropout)
 											:o Block9_Element5_Cell_Operation1_Dropout_value(Block9_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block9_Element5_Cell_Operation1_Dropout_0_4(Block9_Element5_Cell_Operation1_Dropout_0_4)
-													: Block9_Element5_Cell_Operation1_Dropout_0_5(Block9_Element5_Cell_Operation1_Dropout_0_5)
-													: Block9_Element5_Cell_Operation1_Dropout_0_7(Block9_Element5_Cell_Operation1_Dropout_0_7)
+													: Block9_Element5_Cell_Operation1_Dropout_040(Block9_Element5_Cell_Operation1_Dropout_040)
+													: Block9_Element5_Cell_Operation1_Dropout_050(Block9_Element5_Cell_Operation1_Dropout_050)
+													: Block9_Element5_Cell_Operation1_Dropout_070(Block9_Element5_Cell_Operation1_Dropout_070)
 								:m Block9_Element5_Cell_Operation2(Block9_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block9_Element5_Cell_Operation2_Flatten(Block9_Element5_Cell_Operation2_Flatten)
@@ -7292,9 +7292,9 @@
 										: Block9_Element5_Cell_Operation2_Dropout(Block9_Element5_Cell_Operation2_Dropout)
 											:o Block9_Element5_Cell_Operation2_Dropout_value(Block9_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block9_Element5_Cell_Operation2_Dropout_0_4(Block9_Element5_Cell_Operation2_Dropout_0_4)
-													: Block9_Element5_Cell_Operation2_Dropout_0_5(Block9_Element5_Cell_Operation2_Dropout_0_5)
-													: Block9_Element5_Cell_Operation2_Dropout_0_7(Block9_Element5_Cell_Operation2_Dropout_0_7)
+													: Block9_Element5_Cell_Operation2_Dropout_040(Block9_Element5_Cell_Operation2_Dropout_040)
+													: Block9_Element5_Cell_Operation2_Dropout_050(Block9_Element5_Cell_Operation2_Dropout_050)
+													: Block9_Element5_Cell_Operation2_Dropout_070(Block9_Element5_Cell_Operation2_Dropout_070)
 								:m Block9_Element5_Cell_Combination(Block9_Element5_Cell_Combination)
 									:g [1,1]
 										: Block9_Element5_Cell_Combination_Concat(Block9_Element5_Cell_Combination_Concat)
@@ -7346,7 +7346,7 @@
 													: Block10_Element1_Cell_Input1_Dense_activation_softmax(Block10_Element1_Cell_Input1_Dense_activation_softmax)
 													: Block10_Element1_Cell_Input1_Dense_activation_relu(Block10_Element1_Cell_Input1_Dense_activation_relu)
 										:o Block10_Element1_Cell_Input1_Pooling(Block10_Element1_Cell_Input1_Pooling)
-											:m Block10_Element1_Cell_Input1_Pooling_features(Block10_Element1_Cell_Input1_Pooling_features)
+											:m Block10_Element1_Cell_Input1_Pooling_kernel(Block10_Element1_Cell_Input1_Pooling_kernel)
 											:m Block10_Element1_Cell_Input1_Pooling_stride(Block10_Element1_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block10_Element1_Cell_Input1_Pooling_stride_1x1(Block10_Element1_Cell_Input1_Pooling_stride_1x1)
@@ -7400,7 +7400,7 @@
 													: Block10_Element1_Cell_Input2_Dense_activation_softmax(Block10_Element1_Cell_Input2_Dense_activation_softmax)
 													: Block10_Element1_Cell_Input2_Dense_activation_relu(Block10_Element1_Cell_Input2_Dense_activation_relu)
 										:o Block10_Element1_Cell_Input2_Pooling(Block10_Element1_Cell_Input2_Pooling)
-											:m Block10_Element1_Cell_Input2_Pooling_features(Block10_Element1_Cell_Input2_Pooling_features)
+											:m Block10_Element1_Cell_Input2_Pooling_kernel(Block10_Element1_Cell_Input2_Pooling_kernel)
 											:m Block10_Element1_Cell_Input2_Pooling_stride(Block10_Element1_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block10_Element1_Cell_Input2_Pooling_stride_1x1(Block10_Element1_Cell_Input2_Pooling_stride_1x1)
@@ -7435,9 +7435,9 @@
 										: Block10_Element1_Cell_Operation1_Dropout(Block10_Element1_Cell_Operation1_Dropout)
 											:o Block10_Element1_Cell_Operation1_Dropout_value(Block10_Element1_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block10_Element1_Cell_Operation1_Dropout_0_4(Block10_Element1_Cell_Operation1_Dropout_0_4)
-													: Block10_Element1_Cell_Operation1_Dropout_0_5(Block10_Element1_Cell_Operation1_Dropout_0_5)
-													: Block10_Element1_Cell_Operation1_Dropout_0_7(Block10_Element1_Cell_Operation1_Dropout_0_7)
+													: Block10_Element1_Cell_Operation1_Dropout_040(Block10_Element1_Cell_Operation1_Dropout_040)
+													: Block10_Element1_Cell_Operation1_Dropout_050(Block10_Element1_Cell_Operation1_Dropout_050)
+													: Block10_Element1_Cell_Operation1_Dropout_070(Block10_Element1_Cell_Operation1_Dropout_070)
 								:m Block10_Element1_Cell_Operation2(Block10_Element1_Cell_Operation2)
 									:g [1,1]
 										: Block10_Element1_Cell_Operation2_Flatten(Block10_Element1_Cell_Operation2_Flatten)
@@ -7455,9 +7455,9 @@
 										: Block10_Element1_Cell_Operation2_Dropout(Block10_Element1_Cell_Operation2_Dropout)
 											:o Block10_Element1_Cell_Operation2_Dropout_value(Block10_Element1_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block10_Element1_Cell_Operation2_Dropout_0_4(Block10_Element1_Cell_Operation2_Dropout_0_4)
-													: Block10_Element1_Cell_Operation2_Dropout_0_5(Block10_Element1_Cell_Operation2_Dropout_0_5)
-													: Block10_Element1_Cell_Operation2_Dropout_0_7(Block10_Element1_Cell_Operation2_Dropout_0_7)
+													: Block10_Element1_Cell_Operation2_Dropout_040(Block10_Element1_Cell_Operation2_Dropout_040)
+													: Block10_Element1_Cell_Operation2_Dropout_050(Block10_Element1_Cell_Operation2_Dropout_050)
+													: Block10_Element1_Cell_Operation2_Dropout_070(Block10_Element1_Cell_Operation2_Dropout_070)
 								:m Block10_Element1_Cell_Combination(Block10_Element1_Cell_Combination)
 									:g [1,1]
 										: Block10_Element1_Cell_Combination_Concat(Block10_Element1_Cell_Combination_Concat)
@@ -7508,7 +7508,7 @@
 													: Block10_Element2_Cell_Input1_Dense_activation_softmax(Block10_Element2_Cell_Input1_Dense_activation_softmax)
 													: Block10_Element2_Cell_Input1_Dense_activation_relu(Block10_Element2_Cell_Input1_Dense_activation_relu)
 										:o Block10_Element2_Cell_Input1_Pooling(Block10_Element2_Cell_Input1_Pooling)
-											:m Block10_Element2_Cell_Input1_Pooling_features(Block10_Element2_Cell_Input1_Pooling_features)
+											:m Block10_Element2_Cell_Input1_Pooling_kernel(Block10_Element2_Cell_Input1_Pooling_kernel)
 											:m Block10_Element2_Cell_Input1_Pooling_stride(Block10_Element2_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block10_Element2_Cell_Input1_Pooling_stride_1x1(Block10_Element2_Cell_Input1_Pooling_stride_1x1)
@@ -7562,7 +7562,7 @@
 													: Block10_Element2_Cell_Input2_Dense_activation_softmax(Block10_Element2_Cell_Input2_Dense_activation_softmax)
 													: Block10_Element2_Cell_Input2_Dense_activation_relu(Block10_Element2_Cell_Input2_Dense_activation_relu)
 										:o Block10_Element2_Cell_Input2_Pooling(Block10_Element2_Cell_Input2_Pooling)
-											:m Block10_Element2_Cell_Input2_Pooling_features(Block10_Element2_Cell_Input2_Pooling_features)
+											:m Block10_Element2_Cell_Input2_Pooling_kernel(Block10_Element2_Cell_Input2_Pooling_kernel)
 											:m Block10_Element2_Cell_Input2_Pooling_stride(Block10_Element2_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block10_Element2_Cell_Input2_Pooling_stride_1x1(Block10_Element2_Cell_Input2_Pooling_stride_1x1)
@@ -7597,9 +7597,9 @@
 										: Block10_Element2_Cell_Operation1_Dropout(Block10_Element2_Cell_Operation1_Dropout)
 											:o Block10_Element2_Cell_Operation1_Dropout_value(Block10_Element2_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block10_Element2_Cell_Operation1_Dropout_0_4(Block10_Element2_Cell_Operation1_Dropout_0_4)
-													: Block10_Element2_Cell_Operation1_Dropout_0_5(Block10_Element2_Cell_Operation1_Dropout_0_5)
-													: Block10_Element2_Cell_Operation1_Dropout_0_7(Block10_Element2_Cell_Operation1_Dropout_0_7)
+													: Block10_Element2_Cell_Operation1_Dropout_040(Block10_Element2_Cell_Operation1_Dropout_040)
+													: Block10_Element2_Cell_Operation1_Dropout_050(Block10_Element2_Cell_Operation1_Dropout_050)
+													: Block10_Element2_Cell_Operation1_Dropout_070(Block10_Element2_Cell_Operation1_Dropout_070)
 								:m Block10_Element2_Cell_Operation2(Block10_Element2_Cell_Operation2)
 									:g [1,1]
 										: Block10_Element2_Cell_Operation2_Flatten(Block10_Element2_Cell_Operation2_Flatten)
@@ -7617,9 +7617,9 @@
 										: Block10_Element2_Cell_Operation2_Dropout(Block10_Element2_Cell_Operation2_Dropout)
 											:o Block10_Element2_Cell_Operation2_Dropout_value(Block10_Element2_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block10_Element2_Cell_Operation2_Dropout_0_4(Block10_Element2_Cell_Operation2_Dropout_0_4)
-													: Block10_Element2_Cell_Operation2_Dropout_0_5(Block10_Element2_Cell_Operation2_Dropout_0_5)
-													: Block10_Element2_Cell_Operation2_Dropout_0_7(Block10_Element2_Cell_Operation2_Dropout_0_7)
+													: Block10_Element2_Cell_Operation2_Dropout_040(Block10_Element2_Cell_Operation2_Dropout_040)
+													: Block10_Element2_Cell_Operation2_Dropout_050(Block10_Element2_Cell_Operation2_Dropout_050)
+													: Block10_Element2_Cell_Operation2_Dropout_070(Block10_Element2_Cell_Operation2_Dropout_070)
 								:m Block10_Element2_Cell_Combination(Block10_Element2_Cell_Combination)
 									:g [1,1]
 										: Block10_Element2_Cell_Combination_Concat(Block10_Element2_Cell_Combination_Concat)
@@ -7670,7 +7670,7 @@
 													: Block10_Element3_Cell_Input1_Dense_activation_softmax(Block10_Element3_Cell_Input1_Dense_activation_softmax)
 													: Block10_Element3_Cell_Input1_Dense_activation_relu(Block10_Element3_Cell_Input1_Dense_activation_relu)
 										:o Block10_Element3_Cell_Input1_Pooling(Block10_Element3_Cell_Input1_Pooling)
-											:m Block10_Element3_Cell_Input1_Pooling_features(Block10_Element3_Cell_Input1_Pooling_features)
+											:m Block10_Element3_Cell_Input1_Pooling_kernel(Block10_Element3_Cell_Input1_Pooling_kernel)
 											:m Block10_Element3_Cell_Input1_Pooling_stride(Block10_Element3_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block10_Element3_Cell_Input1_Pooling_stride_1x1(Block10_Element3_Cell_Input1_Pooling_stride_1x1)
@@ -7724,7 +7724,7 @@
 													: Block10_Element3_Cell_Input2_Dense_activation_softmax(Block10_Element3_Cell_Input2_Dense_activation_softmax)
 													: Block10_Element3_Cell_Input2_Dense_activation_relu(Block10_Element3_Cell_Input2_Dense_activation_relu)
 										:o Block10_Element3_Cell_Input2_Pooling(Block10_Element3_Cell_Input2_Pooling)
-											:m Block10_Element3_Cell_Input2_Pooling_features(Block10_Element3_Cell_Input2_Pooling_features)
+											:m Block10_Element3_Cell_Input2_Pooling_kernel(Block10_Element3_Cell_Input2_Pooling_kernel)
 											:m Block10_Element3_Cell_Input2_Pooling_stride(Block10_Element3_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block10_Element3_Cell_Input2_Pooling_stride_1x1(Block10_Element3_Cell_Input2_Pooling_stride_1x1)
@@ -7759,9 +7759,9 @@
 										: Block10_Element3_Cell_Operation1_Dropout(Block10_Element3_Cell_Operation1_Dropout)
 											:o Block10_Element3_Cell_Operation1_Dropout_value(Block10_Element3_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block10_Element3_Cell_Operation1_Dropout_0_4(Block10_Element3_Cell_Operation1_Dropout_0_4)
-													: Block10_Element3_Cell_Operation1_Dropout_0_5(Block10_Element3_Cell_Operation1_Dropout_0_5)
-													: Block10_Element3_Cell_Operation1_Dropout_0_7(Block10_Element3_Cell_Operation1_Dropout_0_7)
+													: Block10_Element3_Cell_Operation1_Dropout_040(Block10_Element3_Cell_Operation1_Dropout_040)
+													: Block10_Element3_Cell_Operation1_Dropout_050(Block10_Element3_Cell_Operation1_Dropout_050)
+													: Block10_Element3_Cell_Operation1_Dropout_070(Block10_Element3_Cell_Operation1_Dropout_070)
 								:m Block10_Element3_Cell_Operation2(Block10_Element3_Cell_Operation2)
 									:g [1,1]
 										: Block10_Element3_Cell_Operation2_Flatten(Block10_Element3_Cell_Operation2_Flatten)
@@ -7779,9 +7779,9 @@
 										: Block10_Element3_Cell_Operation2_Dropout(Block10_Element3_Cell_Operation2_Dropout)
 											:o Block10_Element3_Cell_Operation2_Dropout_value(Block10_Element3_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block10_Element3_Cell_Operation2_Dropout_0_4(Block10_Element3_Cell_Operation2_Dropout_0_4)
-													: Block10_Element3_Cell_Operation2_Dropout_0_5(Block10_Element3_Cell_Operation2_Dropout_0_5)
-													: Block10_Element3_Cell_Operation2_Dropout_0_7(Block10_Element3_Cell_Operation2_Dropout_0_7)
+													: Block10_Element3_Cell_Operation2_Dropout_040(Block10_Element3_Cell_Operation2_Dropout_040)
+													: Block10_Element3_Cell_Operation2_Dropout_050(Block10_Element3_Cell_Operation2_Dropout_050)
+													: Block10_Element3_Cell_Operation2_Dropout_070(Block10_Element3_Cell_Operation2_Dropout_070)
 								:m Block10_Element3_Cell_Combination(Block10_Element3_Cell_Combination)
 									:g [1,1]
 										: Block10_Element3_Cell_Combination_Concat(Block10_Element3_Cell_Combination_Concat)
@@ -7832,7 +7832,7 @@
 													: Block10_Element4_Cell_Input1_Dense_activation_softmax(Block10_Element4_Cell_Input1_Dense_activation_softmax)
 													: Block10_Element4_Cell_Input1_Dense_activation_relu(Block10_Element4_Cell_Input1_Dense_activation_relu)
 										:o Block10_Element4_Cell_Input1_Pooling(Block10_Element4_Cell_Input1_Pooling)
-											:m Block10_Element4_Cell_Input1_Pooling_features(Block10_Element4_Cell_Input1_Pooling_features)
+											:m Block10_Element4_Cell_Input1_Pooling_kernel(Block10_Element4_Cell_Input1_Pooling_kernel)
 											:m Block10_Element4_Cell_Input1_Pooling_stride(Block10_Element4_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block10_Element4_Cell_Input1_Pooling_stride_1x1(Block10_Element4_Cell_Input1_Pooling_stride_1x1)
@@ -7886,7 +7886,7 @@
 													: Block10_Element4_Cell_Input2_Dense_activation_softmax(Block10_Element4_Cell_Input2_Dense_activation_softmax)
 													: Block10_Element4_Cell_Input2_Dense_activation_relu(Block10_Element4_Cell_Input2_Dense_activation_relu)
 										:o Block10_Element4_Cell_Input2_Pooling(Block10_Element4_Cell_Input2_Pooling)
-											:m Block10_Element4_Cell_Input2_Pooling_features(Block10_Element4_Cell_Input2_Pooling_features)
+											:m Block10_Element4_Cell_Input2_Pooling_kernel(Block10_Element4_Cell_Input2_Pooling_kernel)
 											:m Block10_Element4_Cell_Input2_Pooling_stride(Block10_Element4_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block10_Element4_Cell_Input2_Pooling_stride_1x1(Block10_Element4_Cell_Input2_Pooling_stride_1x1)
@@ -7921,9 +7921,9 @@
 										: Block10_Element4_Cell_Operation1_Dropout(Block10_Element4_Cell_Operation1_Dropout)
 											:o Block10_Element4_Cell_Operation1_Dropout_value(Block10_Element4_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block10_Element4_Cell_Operation1_Dropout_0_4(Block10_Element4_Cell_Operation1_Dropout_0_4)
-													: Block10_Element4_Cell_Operation1_Dropout_0_5(Block10_Element4_Cell_Operation1_Dropout_0_5)
-													: Block10_Element4_Cell_Operation1_Dropout_0_7(Block10_Element4_Cell_Operation1_Dropout_0_7)
+													: Block10_Element4_Cell_Operation1_Dropout_040(Block10_Element4_Cell_Operation1_Dropout_040)
+													: Block10_Element4_Cell_Operation1_Dropout_050(Block10_Element4_Cell_Operation1_Dropout_050)
+													: Block10_Element4_Cell_Operation1_Dropout_070(Block10_Element4_Cell_Operation1_Dropout_070)
 								:m Block10_Element4_Cell_Operation2(Block10_Element4_Cell_Operation2)
 									:g [1,1]
 										: Block10_Element4_Cell_Operation2_Flatten(Block10_Element4_Cell_Operation2_Flatten)
@@ -7941,9 +7941,9 @@
 										: Block10_Element4_Cell_Operation2_Dropout(Block10_Element4_Cell_Operation2_Dropout)
 											:o Block10_Element4_Cell_Operation2_Dropout_value(Block10_Element4_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block10_Element4_Cell_Operation2_Dropout_0_4(Block10_Element4_Cell_Operation2_Dropout_0_4)
-													: Block10_Element4_Cell_Operation2_Dropout_0_5(Block10_Element4_Cell_Operation2_Dropout_0_5)
-													: Block10_Element4_Cell_Operation2_Dropout_0_7(Block10_Element4_Cell_Operation2_Dropout_0_7)
+													: Block10_Element4_Cell_Operation2_Dropout_040(Block10_Element4_Cell_Operation2_Dropout_040)
+													: Block10_Element4_Cell_Operation2_Dropout_050(Block10_Element4_Cell_Operation2_Dropout_050)
+													: Block10_Element4_Cell_Operation2_Dropout_070(Block10_Element4_Cell_Operation2_Dropout_070)
 								:m Block10_Element4_Cell_Combination(Block10_Element4_Cell_Combination)
 									:g [1,1]
 										: Block10_Element4_Cell_Combination_Concat(Block10_Element4_Cell_Combination_Concat)
@@ -7994,7 +7994,7 @@
 													: Block10_Element5_Cell_Input1_Dense_activation_softmax(Block10_Element5_Cell_Input1_Dense_activation_softmax)
 													: Block10_Element5_Cell_Input1_Dense_activation_relu(Block10_Element5_Cell_Input1_Dense_activation_relu)
 										:o Block10_Element5_Cell_Input1_Pooling(Block10_Element5_Cell_Input1_Pooling)
-											:m Block10_Element5_Cell_Input1_Pooling_features(Block10_Element5_Cell_Input1_Pooling_features)
+											:m Block10_Element5_Cell_Input1_Pooling_kernel(Block10_Element5_Cell_Input1_Pooling_kernel)
 											:m Block10_Element5_Cell_Input1_Pooling_stride(Block10_Element5_Cell_Input1_Pooling_stride)
 												:g [1,1]
 													: Block10_Element5_Cell_Input1_Pooling_stride_1x1(Block10_Element5_Cell_Input1_Pooling_stride_1x1)
@@ -8048,7 +8048,7 @@
 													: Block10_Element5_Cell_Input2_Dense_activation_softmax(Block10_Element5_Cell_Input2_Dense_activation_softmax)
 													: Block10_Element5_Cell_Input2_Dense_activation_relu(Block10_Element5_Cell_Input2_Dense_activation_relu)
 										:o Block10_Element5_Cell_Input2_Pooling(Block10_Element5_Cell_Input2_Pooling)
-											:m Block10_Element5_Cell_Input2_Pooling_features(Block10_Element5_Cell_Input2_Pooling_features)
+											:m Block10_Element5_Cell_Input2_Pooling_kernel(Block10_Element5_Cell_Input2_Pooling_kernel)
 											:m Block10_Element5_Cell_Input2_Pooling_stride(Block10_Element5_Cell_Input2_Pooling_stride)
 												:g [1,1]
 													: Block10_Element5_Cell_Input2_Pooling_stride_1x1(Block10_Element5_Cell_Input2_Pooling_stride_1x1)
@@ -8083,9 +8083,9 @@
 										: Block10_Element5_Cell_Operation1_Dropout(Block10_Element5_Cell_Operation1_Dropout)
 											:o Block10_Element5_Cell_Operation1_Dropout_value(Block10_Element5_Cell_Operation1_Dropout_value)
 												:g [1,1]
-													: Block10_Element5_Cell_Operation1_Dropout_0_4(Block10_Element5_Cell_Operation1_Dropout_0_4)
-													: Block10_Element5_Cell_Operation1_Dropout_0_5(Block10_Element5_Cell_Operation1_Dropout_0_5)
-													: Block10_Element5_Cell_Operation1_Dropout_0_7(Block10_Element5_Cell_Operation1_Dropout_0_7)
+													: Block10_Element5_Cell_Operation1_Dropout_040(Block10_Element5_Cell_Operation1_Dropout_040)
+													: Block10_Element5_Cell_Operation1_Dropout_050(Block10_Element5_Cell_Operation1_Dropout_050)
+													: Block10_Element5_Cell_Operation1_Dropout_070(Block10_Element5_Cell_Operation1_Dropout_070)
 								:m Block10_Element5_Cell_Operation2(Block10_Element5_Cell_Operation2)
 									:g [1,1]
 										: Block10_Element5_Cell_Operation2_Flatten(Block10_Element5_Cell_Operation2_Flatten)
@@ -8103,9 +8103,9 @@
 										: Block10_Element5_Cell_Operation2_Dropout(Block10_Element5_Cell_Operation2_Dropout)
 											:o Block10_Element5_Cell_Operation2_Dropout_value(Block10_Element5_Cell_Operation2_Dropout_value)
 												:g [1,1]
-													: Block10_Element5_Cell_Operation2_Dropout_0_4(Block10_Element5_Cell_Operation2_Dropout_0_4)
-													: Block10_Element5_Cell_Operation2_Dropout_0_5(Block10_Element5_Cell_Operation2_Dropout_0_5)
-													: Block10_Element5_Cell_Operation2_Dropout_0_7(Block10_Element5_Cell_Operation2_Dropout_0_7)
+													: Block10_Element5_Cell_Operation2_Dropout_040(Block10_Element5_Cell_Operation2_Dropout_040)
+													: Block10_Element5_Cell_Operation2_Dropout_050(Block10_Element5_Cell_Operation2_Dropout_050)
+													: Block10_Element5_Cell_Operation2_Dropout_070(Block10_Element5_Cell_Operation2_Dropout_070)
 								:m Block10_Element5_Cell_Combination(Block10_Element5_Cell_Combination)
 									:g [1,1]
 										: Block10_Element5_Cell_Combination_Concat(Block10_Element5_Cell_Combination_Concat)

@@ -115,6 +115,7 @@ class Input(Node):
                     if(len(child.get("children"))):
                         features = Node.get_type(child.get("children")[0])
 
+
             input_element = ConvolutionInput(_kernel=_kernel,_stride=_stride, _padding=_padding,_activation=_activation,_features=_features,raw_dict=input)
         
         return input_element
@@ -131,45 +132,74 @@ class DenseInput(Input):
     def __init__(self, _features, _activation, raw_dict=None):
         super(DenseInput, self).__init__(raw_dict=raw_dict)
 
+        activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         if not _features:
             self.append_parameter("_features","__int__")
+        else:
+            self._features = int(_features)
 
-        if not _activation:
-            self.append_parameter("_activation","tanh|relu|sigmoid|softmax")
+        if not _activation or str(_activation) not in activationAcceptedValues:
+            self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
+        else:
+            self._activation = str(_activation)
 
 
 class PoolingInput(Input):
     def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None):
         super(PoolingInput, self).__init__(raw_dict=raw_dict)
 
+        typeAcceptedValues = ("max","average","dilated","global")
+        paddingAcceptedValues = ("max","average","dilated","global")
+
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
+        else:
+            self._kernel =(int(_kernel[0]), int(_kernel[1]))
 
         if not _stride:
             self.append_parameter("_stride",'(__int__,__int__)')
+        else:
+            self._stride = (int(_stride[0]), int(_stride[1]))
 
-        if not _type:
-            self.append_parameter("_type","max|average|dilated|global")
+        if not _type or str(_type) not in typeAcceptedValues:
+            self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
+        else:
+            self._type = _type
 
-        if not _padding:
-            self.append_parameter("_padding","valid|same")
+        if not _padding or str(_padding) not in paddingAcceptedValues:
+            self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+        else:
+            self._padding = _padding
 
 
 class ConvolutionInput(Input):
     def __init__(self, _kernel, _stride, _features, _padding, _activation, raw_dict=None):
         super(ConvolutionInput, self).__init__(raw_dict=raw_dict)
 
+        activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
+        paddingAcceptedValues = ("max","average","dilated","global")
+
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
+        else:
+            self._kernel =(int(_kernel[0]), int(_kernel[1]))
 
         if not _stride:
             self.append_parameter("_stride",'(__int__,__int__)')
+        else:
+            self._stride = (int(_stride[0]), int(_stride[1]))
 
         if not _features:
             self.append_parameter("_features","__int__")
+        else:
+            self._features = int(_features)
 
-        if not _activation:
-            self.append_parameter("_activation","tanh|relu|sigmoid|softmax")
+        if not _activation or str(_activation) not in activationAcceptedValues:
+            self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
+        else:
+            self._activation = str(_activation)
 
-        if not _padding:
-            self.append_parameter("_padding","valid|same")
+        if not _padding or str(_padding) not in paddingAcceptedValues:
+            self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+        else:
+            self._padding = _padding
