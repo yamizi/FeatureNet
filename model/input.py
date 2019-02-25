@@ -101,7 +101,7 @@ class Input(Node):
                 elif(element_type == "kernel"):
                     if(len(child.get("children"))):
                         _kernel = Node.get_type(child.get("children")[0])
-                        _kernel = _stride.split("x")
+                        _kernel = _kernel.split("x")
                         if len(_kernel)==2:
                             _kernel = tuple(_kernel)
                         else:

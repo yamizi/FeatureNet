@@ -35,5 +35,7 @@ class KerasFeatureModel(Sequential):
 
         model.blocks.sort(key = lambda a : a.get_name())
 
-        print(model.get_custom_parameters())
+        missing_params = model.get_custom_parameters()
+        for name,(node, params) in missing_params.items():
+            print("{0}:{1}".format(name, list(params.keys())))
             

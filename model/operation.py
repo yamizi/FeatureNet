@@ -60,7 +60,7 @@ class Operation(Node):
             operation_element = BatchNormalization(_axis=_axis, raw_dict=operation)
 
         elif operation_type=="activation":
-            operation_element = Activation(operation)
+            operation_element = Activation(raw_dict=operation)
 
         return operation_element
         

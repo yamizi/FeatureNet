@@ -14,9 +14,8 @@ class Output(Node):
     def parse_feature_model(feature_model):
         output = feature_model.get("children")[0] 
         output_type = Node.get_type(output)
-        if output_type=="out":
-            output_element = Out(output)
-        elif output_type=="block":
+        
+        if output_type=="block":
             _relativeBlockIndex = None
             _relativeCellIndex = None
             for child in output.get("children"):
@@ -37,6 +36,9 @@ class Output(Node):
                     if(len(child.get("children"))):
                         _relativeCellIndex = Node.get_type(child.get("children")[0])
             output_element = OutCell(_relativeCellIndex=_relativeCellIndex, raw_dict=output)
+
+        else:
+            output_element = Out(output)
         
         return output_element
 

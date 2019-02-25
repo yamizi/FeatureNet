@@ -23,16 +23,18 @@ class TensorflowGenerator(object):
 def parse_products():
 
     from products_tree import ProductSet
-    url = "C:/Users/salah.ghamizi/Downloads/pledge-master/tensorflow//NAS Products.pdt"
+    url = "C:/Users/salah.ghamizi/Documents/PhD/spl/tensorflow/10Products.pdt"
     productSet = ProductSet(url)
     print("number of features {0}, number of products: {1}".format(productSet.nbFeatures, productSet.nbProducts))    
     product = productSet.format_product(2)
 
-    f = open("./block.json", "w")
+    f = open("./block2.json", "w")
     f.write(json.dumps([product[0]])) 
 
 #parse_products()
 
-f = open("./block.json", "r")
+f = open("./block2.json", "r")
 
-tensorflow = TensorflowGenerator(json.loads(f.read()))
+product = json.loads(f.read())
+
+tensorflow = TensorflowGenerator(product)
