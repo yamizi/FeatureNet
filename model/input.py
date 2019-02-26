@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
+from keras.layers import Dense, Conv2D
+from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
+from .output import Output
 
 class Input(Node):
     def __init__(self, raw_dict=None):
@@ -10,6 +13,12 @@ class Input(Node):
 
     def build_tensorflow_model(self, model, source1, source2):
         pass
+
+    def build(self, input):
+        if input is Output:
+            return input.content
+        else:
+            return input
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -123,10 +132,16 @@ class Input(Node):
 class ZerosInput(Input):
     def __init__(self, raw_dict=None):
         super(ZerosInput, self).__init__(raw_dict=raw_dict)
+        
+    def build(self, input):
+        return None
 
 class IdentityInput(Input):
     def __init__(self, raw_dict=None):
         super(IdentityInput, self).__init__(raw_dict=raw_dict)
+
+    def build(self, input):
+        return input
 
 class DenseInput(Input):
     def __init__(self, _features, _activation, raw_dict=None):
@@ -143,6 +158,9 @@ class DenseInput(Input):
         else:
             self._activation = str(_activation)
 
+    def build(self, input):
+        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(super(DenseInput, self).build(input))
+
 
 class PoolingInput(Input):
     def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None):
@@ -151,26 +169,36 @@ class PoolingInput(Input):
         typeAcceptedValues = ("max","average","dilated","global")
         paddingAcceptedValues = ("valid", "same")
 
-        if not _kernel:
-            self.append_parameter("_kernel","(__int__,__int__)")
-        else:
-            self._kernel =(int(_kernel[0]), int(_kernel[1]))
-
-        if not _stride:
-            self.append_parameter("_stride",'(__int__,__int__)')
-        else:
-            self._stride = (int(_stride[0]), int(_stride[1]))
-
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
         else:
             self._type = _type
 
-        if not _padding or str(_padding) not in paddingAcceptedValues:
-            self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
-        else:
-            self._padding = _padding
+        if self._type !="global":
 
+            if not _kernel:
+                self.append_parameter("_kernel","(__int__,__int__)")
+            else:
+                self._kernel =(int(_kernel[0]), int(_kernel[1]))
+
+            if not _stride:
+                self.append_parameter("_stride",'(__int__,__int__)')
+            else:
+                self._stride = (int(_stride[0]), int(_stride[1]))
+
+            if not _padding or str(_padding) not in paddingAcceptedValues:
+                self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+            else:
+                self._padding = _padding
+
+    def build(self, input):
+        #from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
+        if self._type=="max":
+            return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(super(PoolingInput, self).build(input))
+        if self._type=="average":
+            return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(super(PoolingInput, self).build(input))
+        if self._type=="global":
+            return GlobalMaxPooling2D(name=Node.get_name(self))(input)
 
 class ConvolutionInput(Input):
     def __init__(self, _kernel, _stride, _features, _padding, _activation, raw_dict=None):
@@ -203,3 +231,6 @@ class ConvolutionInput(Input):
             self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
         else:
             self._padding = _padding
+        
+    def build(self, input):
+        return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(super(ConvolutionInput, self).build(input))
