@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
+from keras import backend as K
 from keras.layers import Dense, Conv2D
 from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
-from .output import Output
+from .output import Output, OutCell, OutBlock, Out
 
 class Input(Node):
     def __init__(self, raw_dict=None):
@@ -14,8 +15,8 @@ class Input(Node):
     def build_tensorflow_model(self, model, source1, source2):
         pass
 
-    def build(self, input):
-        if input is Output:
+    def build(self, input, neighbour=None):
+        if type(input) is OutCell or type(input) is OutBlock or type(input) is Out:
             return input.content
         else:
             return input
@@ -133,14 +134,15 @@ class ZerosInput(Input):
     def __init__(self, raw_dict=None):
         super(ZerosInput, self).__init__(raw_dict=raw_dict)
         
-    def build(self, input):
-        return None
+    def build(self, input, neighbour=None):
+        shape = neighbour.shape
+        return K.zeros(shape)
 
 class IdentityInput(Input):
     def __init__(self, raw_dict=None):
         super(IdentityInput, self).__init__(raw_dict=raw_dict)
 
-    def build(self, input):
+    def build(self, input, neighbour=None):
         return input
 
 class DenseInput(Input):
@@ -158,7 +160,7 @@ class DenseInput(Input):
         else:
             self._activation = str(_activation)
 
-    def build(self, input):
+    def build(self, input, neighbour=None):
         return Dense(self._features, activation=self._activation, name=Node.get_name(self))(super(DenseInput, self).build(input))
 
 
@@ -191,7 +193,7 @@ class PoolingInput(Input):
             else:
                 self._padding = _padding
 
-    def build(self, input):
+    def build(self, input, neighbour=None):
         #from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
         if self._type=="max":
             return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(super(PoolingInput, self).build(input))
@@ -232,5 +234,5 @@ class ConvolutionInput(Input):
         else:
             self._padding = _padding
         
-    def build(self, input):
+    def build(self, input, neighbour=None):
         return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(super(ConvolutionInput, self).build(input))

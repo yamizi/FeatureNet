@@ -2,6 +2,7 @@
 
 from .node import Node
 from .cell import Cell
+from .output import Out, OutCell, OutBlock
 
 class Block(Node):
     def __init__(self, raw_dict=None, previous_block = None):
@@ -29,8 +30,31 @@ class Block(Node):
 
         return params
 
-    def build_tensorflow_model(self, model):
-        pass
+    def build_tensorflow_model(self, inputs):
+        
+        outputs = []
+        for cell in self.cells:
+            _outputs, _inputs = cell.build_tensorflow_model(inputs)
+            
+            #Reputting cell inputs that have planned in previous cells 
+            for i in _inputs:
+                if i is OutCell and i.currentIndex>0:
+                    i.currentIndex = i.currentIndex-1
+                    if i.currentIndex==0:
+                        _inputs.insert(i)
+
+            outputs = outputs + _outputs
+            
+        #Cleaning the input stack from the Output who are directed to cells or to be logged out
+        _inputs = [i for i in inputs if (i is not Out and i is not OutCell)]
+        #Reputting block inputs that have planned in previous cells 
+        for i in _inputs:
+            if i is OutBlock:
+                i.currentIndex = i.currentIndex-1
+                if i.currentIndex==0:
+                    _inputs.insert(i)
+       
+        return outputs, _inputs 
 
 
     @staticmethod

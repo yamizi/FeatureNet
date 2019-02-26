@@ -3,8 +3,14 @@
 from .node import Node
 
 class Output(Node):
+
+    currentIndex =0
     def __init__(self, raw_dict=None):
         super(Output, self).__init__(raw_dict=raw_dict)
+
+    def build(self, input):
+        self.content = input
+        return self
         
 
     def build_tensorflow_model(self, model, source1, source2):

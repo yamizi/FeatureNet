@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
+from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply
 
 class Operation(Node):
     def __init__(self,  raw_dict=None):
@@ -9,6 +10,9 @@ class Operation(Node):
 
     def build_tensorflow_model(self, model, source1, source2):
         pass
+
+    def build(self,input):
+        return input
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -19,7 +23,7 @@ class Operation(Node):
         if operation_type=="void":
             operation_element = Void(operation)
         elif operation_type=="flatten":
-            operation_element = Flatten(operation)
+            operation_element = Flat(operation)
         elif operation_type=="dropout":
 
             _value = None
@@ -64,13 +68,19 @@ class Operation(Node):
 
         return operation_element
         
-class Flatten(Operation):
+class Flat(Operation):
     def __init__(self, raw_dict=None):
-        super(Flatten, self).__init__(raw_dict=raw_dict)
+        super(Flat, self).__init__(raw_dict=raw_dict)
+
+    def build(self,input):
+        return Flatten()(input)
 
 class Void(Operation):
     def __init__(self, raw_dict=None):
         super(Void, self).__init__(raw_dict=raw_dict)
+
+    def build(self,input):
+        return input
 
 class Dropout(Operation):
     def __init__(self, _value, raw_dict=None):
@@ -117,9 +127,8 @@ class Activation(Operation):
 class Combination(Node):
     def __init__(self, raw_dict=None):
         super(Combination, self).__init__(raw_dict=raw_dict)
-        
 
-    def build_tensorflow_model(self, model, source1, source2):
+    def build(self, source1, source2):
         pass
 
     @staticmethod
@@ -148,6 +157,9 @@ class Combination(Node):
 class Sum(Combination):
     def __init__(self,  raw_dict=None):
         super(Sum, self).__init__(raw_dict=raw_dict)
+
+    def build(self, source1, source2):
+        return Add()([source1, source2])
         
 class Concat(Combination):
     def __init__(self, _axis=None, raw_dict=None):
@@ -157,7 +169,14 @@ class Concat(Combination):
         else:
             self._axis = int(_axis)
 
+    def build(self, source1, source2):
+        return Concatenate(axis=self._axis)([source1, source2])
+
 class Product(Combination):
     def __init__(self, raw_dict=None):
         super(Product, self).__init__(raw_dict=raw_dict)
+
+    
+    def build(self, source1, source2):
+        return Multiply()([source1, source2])
         
