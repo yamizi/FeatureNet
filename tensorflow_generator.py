@@ -33,7 +33,7 @@ def parse_products():
 
 #parse_products()
 
-f = open("./block2.json", "r")
+f = open("./lenet5.json", "r")
 
 product = json.loads(f.read())
 

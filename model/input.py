@@ -66,7 +66,7 @@ class Input(Node):
                 elif(element_type == "kernel"):
                     if(len(child.get("children"))):
                         _kernel = Node.get_type(child.get("children")[0])
-                        _kernel = _stride.split("x")
+                        _kernel = _kernel.split("x")
                         if len(_kernel)==2:
                             _kernel = tuple(_kernel)
                         else:
@@ -109,11 +109,11 @@ class Input(Node):
 
                 elif(element_type == "activation"):
                     if(len(child.get("children"))):
-                        activation = Node.get_type(child.get("children")[0])
+                        _activation = Node.get_type(child.get("children")[0])
 
                 elif(element_type == "features"):
                     if(len(child.get("children"))):
-                        features = Node.get_type(child.get("children")[0])
+                        _features = Node.get_type(child.get("children")[0])
 
 
             input_element = ConvolutionInput(_kernel=_kernel,_stride=_stride, _padding=_padding,_activation=_activation,_features=_features,raw_dict=input)
@@ -149,7 +149,7 @@ class PoolingInput(Input):
         super(PoolingInput, self).__init__(raw_dict=raw_dict)
 
         typeAcceptedValues = ("max","average","dilated","global")
-        paddingAcceptedValues = ("max","average","dilated","global")
+        paddingAcceptedValues = ("valid", "same")
 
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
@@ -177,7 +177,7 @@ class ConvolutionInput(Input):
         super(ConvolutionInput, self).__init__(raw_dict=raw_dict)
 
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
-        paddingAcceptedValues = ("max","average","dilated","global")
+        paddingAcceptedValues = ("valid","same")
 
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")

@@ -17,16 +17,12 @@ class Output(Node):
         
         if output_type=="block":
             _relativeBlockIndex = None
-            _relativeCellIndex = None
             for child in output.get("children"):
                 element_type = Node.get_type(child)
-                if(element_type == "relativeCellIndex"):
-                    if(len(child.get("children"))):
-                        _relativeCellIndex = Node.get_type(child.get("children")[0])
                 if(element_type == "relativeBlockIndex"):
                     if(len(child.get("children"))):
                         _relativeBlockIndex = Node.get_type(child.get("children")[0])
-            output_element = OutBlock(_relativeBlockIndex=_relativeBlockIndex,_relativeCellIndex=_relativeCellIndex, raw_dict=output)
+            output_element = OutBlock(_relativeBlockIndex=_relativeBlockIndex, raw_dict=output)
 
         elif output_type=="cell":
             _relativeCellIndex = None
@@ -48,22 +44,22 @@ class Out(Output):
         super(Out, self).__init__(raw_dict=raw_dict)
         
 class OutBlock(Output):
-    def __init__(self, _relativeBlockIndex=None, _relativeCellIndex=None, raw_dict=None):
+    def __init__(self, _relativeBlockIndex=None,  raw_dict=None):
         super(OutBlock, self).__init__(raw_dict=raw_dict)
         if not _relativeBlockIndex:
-            self.append_parameter("_relativeBlockIndex","__int__")
+            self._relativeBlockIndex = 1
         else:
             self._relativeBlockIndex = int(_relativeBlockIndex)
 
-        if not _relativeCellIndex:
-            self.append_parameter("_relativeCellIndex","__int__")
-        else:
-            self._relativeCellIndex = int(_relativeCellIndex)
+        self.currentIndex = self._relativeBlockIndex
+
 
 class OutCell(Output):
     def __init__(self, _relativeCellIndex=None, raw_dict=None):
         super(OutCell, self).__init__(raw_dict=raw_dict)
         if not _relativeCellIndex:
-            self.append_parameter("_relativeCellIndex","__int__")
+            self._relativeCellIndex = 1
         else:
             self._relativeCellIndex = int(_relativeCellIndex)
+
+        self.currentIndex = self._relativeCellIndex
