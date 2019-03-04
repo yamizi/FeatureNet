@@ -60,6 +60,22 @@ class ProductSet(object):
         #only return nodes that represents the blocks
         return [nodes for nodes in product_nodes if nodes.get("label").startswith("Block") and nodes.get("label").find("_")==-1]
     
+
+    def light_product(self, prd_index=0, product=None):
+        if not product:
+            product =  self.products[prd_index]
+
+        product_nodes = self.format_product(product=product)
+        
+        def light_label(node):
+            node["label"] =  node["label"][node["label"].rfind("_"):]
+            node["children"] = [light_label(child) for child in node["children"]]
+            return node
+
+        export_product = [light_label(product_nodes[0])]
+        return export_product
+
+
     
     def format_products(self):
         for product in self.products:
