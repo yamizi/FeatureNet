@@ -198,6 +198,8 @@ class PoolingInput(Input):
         input = super(PoolingInput, self).build(input)
         if input.shape.ndims==4:
             if self._type=="max":
+                if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                    self._padding="same"
                 return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
             if self._type=="average":
                 return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
@@ -241,6 +243,8 @@ class ConvolutionInput(Input):
     def build(self, input, neighbour=None):
         input = super(ConvolutionInput, self).build(input)
         if input.shape.ndims==4:
+            if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                    self._padding="same"
             return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
         return input
         
