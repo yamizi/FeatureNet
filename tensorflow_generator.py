@@ -10,13 +10,10 @@ import json
 
 
 class TensorflowGenerator(object):
+    accuracy = 0
     def __init__(self, product):
         
         if product:
-            model =KerasFeatureModel.parse_feature_model(product)
-            self.model = model.build((28,28,1))
-
-            
             batch_size = 128
             num_classes = 10
             epochs = 12
@@ -26,6 +23,19 @@ class TensorflowGenerator(object):
 
             # the data, split between train and test sets
             (x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+            # convert class vectors to binary class matrices
+            y_train = keras.utils.to_categorical(y_train, num_classes)
+            y_test = keras.utils.to_categorical(y_test, num_classes)
+
+            model =KerasFeatureModel.parse_feature_model(product)
+            
+
+            print("Loading new feature model with {0} blocks".format(len(model.blocks)))
+            self.model = model.build((28,28,1), num_classes)
+
+            if not self.model:
+                return 
 
             if K.image_data_format() == 'channels_first':
                 x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -44,10 +54,6 @@ class TensorflowGenerator(object):
             print(x_train.shape[0], 'train samples')
             print(x_test.shape[0], 'test samples')
 
-            # convert class vectors to binary class matrices
-            y_train = keras.utils.to_categorical(y_train, num_classes)
-            y_test = keras.utils.to_categorical(y_test, num_classes)
-
             self.model.fit(x_train, y_train,
                     batch_size=batch_size,
                     epochs=epochs,
@@ -56,6 +62,8 @@ class TensorflowGenerator(object):
             score = self.model.evaluate(x_test, y_test, verbose=0)
             print('Test loss:', score[0])
             print('Test accuracy:', score[1])
+
+            self.accuracy = score[1]
 
 
     def load_products(self, product):
@@ -67,9 +75,9 @@ class TensorflowGenerator(object):
         build_rec(product)
         
 
-f = open("./lenet5.json", "r")
+#f = open("./lenet5.json", "r")
 
-product = json.loads(f.read())
+#product = json.loads(f.read())
 
-tensorflow = TensorflowGenerator(product)
+#tensorflow = TensorflowGenerator(product)
 

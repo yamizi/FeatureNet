@@ -69,7 +69,7 @@ class ProductSet(object):
         
         def light_label(node):
             node["label"] =  node["label"][node["label"].rfind("_"):]
-            node["children"] = [light_label(child) for child in node["children"]]
+            node["children"] = sorted( [light_label(child) for child in node["children"]], key=lambda k: k['id'])
             return node
 
         export_product = [light_label(product_nodes[0])]
@@ -78,5 +78,12 @@ class ProductSet(object):
 
     
     def format_products(self):
+        prds = []
         for product in self.products:
-            yield self.format_product(product=product)
+            prds.append(self.format_product(product=product))
+            
+        return prds
+
+    def light_products(self):
+        for product in self.products:
+            yield self.light_product(product=product)

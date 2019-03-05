@@ -1,13 +1,15 @@
+import uuid
 class Node(object):
     def __init__(self, raw_dict=None):
             self.raw_dict = raw_dict
             self.customizable_parameters = {}
+            self.uniqid = str(uuid.uuid1())[0:5]
             print(self.get_name())
 
     def get_name(self, raw_dict=None):
         if self.raw_dict:
-            return self.raw_dict.get("label")
-        return ""
+            return self.uniqid+self.raw_dict.get("label")
+        return self.uniqid
 
     def append_parameter(self, attribute, possible_values=""):
         self.customizable_parameters[attribute] = possible_values

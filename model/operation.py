@@ -2,6 +2,7 @@
 
 from .node import Node
 from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply
+from .output import Output, OutCell, OutBlock, Out
 
 class Operation(Node):
     def __init__(self,  raw_dict=None):
@@ -11,8 +12,11 @@ class Operation(Node):
     def build_tensorflow_model(self, model, source1, source2):
         pass
 
-    def build(self,input):
-        return input
+    def build(self, input, neighbour=None):
+        if type(input) is OutCell or type(input) is OutBlock or type(input) is Out:
+            return input.content
+        else:
+            return input
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -32,7 +36,7 @@ class Operation(Node):
                 if(element_type == "value"):
                     if(len(child.get("children"))):
                         _value = Node.get_type(child.get("children")[0])
-            operation_element = Dropout(_value=_value, raw_dict=operation)
+            operation_element = Drop(_value=_value, raw_dict=operation)
 
         elif operation_type=="padding":
             _fillValue = None
@@ -51,7 +55,9 @@ class Operation(Node):
                             _fillSize = tuple(_fillSize)
                         else:
                             _fillSize = None
-            operation_element = Padding(_fillValue=_fillValue,_fillSize=_fillSize, raw_dict=operation)
+
+            operation_element = Void(operation)
+            #operation_element = Padding(_fillValue=_fillValue,_fillSize=_fillSize, raw_dict=operation)
 
         elif operation_type=="batchnormalization":
             _axis = None
@@ -61,10 +67,11 @@ class Operation(Node):
                     if(len(child.get("children"))):
                         _axis = Node.get_type(child.get("children")[0])
 
-            operation_element = BatchNormalization(_axis=_axis, raw_dict=operation)
+            operation_element = BatchNorm(_axis=_axis, raw_dict=operation)
 
         elif operation_type=="activation":
-            operation_element = Activation(raw_dict=operation)
+            operation_element = Void(operation)
+            #operation_element = Active(raw_dict=operation)
 
         return operation_element
         
@@ -73,7 +80,10 @@ class Flat(Operation):
         super(Flat, self).__init__(raw_dict=raw_dict)
 
     def build(self,input):
-        return Flatten()(input)
+        input = super(Flat, self).build(input)
+        if(input.shape.ndims > 2):
+            return Flatten()(input)
+        return input
 
 class Void(Operation):
     def __init__(self, raw_dict=None):
@@ -82,19 +92,22 @@ class Void(Operation):
     def build(self,input):
         return input
 
-class Dropout(Operation):
+class Drop(Operation):
     def __init__(self, _value, raw_dict=None):
-        super(Dropout, self).__init__(raw_dict=raw_dict)
-
+        super(Drop, self).__init__(raw_dict=raw_dict)
+        _value = 0.5
         if not _value:
-            self.append_parameter("_value","__int__")
+            self.append_parameter("_value","__float__")
         else:
             self._value = int(_value)
 
 class Padding(Operation):
     def __init__(self, _fillValue=None, _fillSize=None, raw_dict=None):
         super(Padding, self).__init__(raw_dict=raw_dict)
-        if not _fillValue:
+
+        _fillValue = 0
+        _fillSize = (3,3)
+        if _fillValue==None:
             self.append_parameter("_fillValue","__int__")
         else:
             self._fillValue = int(_fillValue)
@@ -104,19 +117,20 @@ class Padding(Operation):
         else:
             self._fillSize = (int(_fillSize[0]), int(_fillSize[1]))
 
-class BatchNormalization(Operation):
+class BatchNorm(Operation):
     def __init__(self, _axis=None, raw_dict=None):
-        super(BatchNormalization, self).__init__(raw_dict=raw_dict)
-
+        super(BatchNorm, self).__init__(raw_dict=raw_dict)
+        _axis = 3
         if not _axis:
             self.append_parameter("_axis","__int__")
         else:
             self._axis = int(_axis)
 
-class Activation(Operation):
+class Active(Operation):
     def __init__(self, _method=None, raw_dict=None):
-        super(Activation, self).__init__(raw_dict=raw_dict)
+        super(Active, self).__init__(raw_dict=raw_dict)
 
+        _method = "relu"
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         if not _method or str(_method) not in activationAcceptedValues:
             self.append_parameter("_method",'|'.join(str(i) for i in activationAcceptedValues))
@@ -149,7 +163,8 @@ class Combination(Node):
                     if(len(child.get("children"))):
                         _axis = Node.get_type(child.get("children")[0])
 
-            operation_element = Concat(_axis=_axis, raw_dict=operation)
+            operation_element = Sum(operation)
+            #operation_element = Concat(_axis=_axis, raw_dict=operation)
         
         return operation_element 
 
@@ -159,11 +174,14 @@ class Sum(Combination):
         super(Sum, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
-        return Add()([source1, source2])
+        if source1.shape.dims == source2.shape.dims:
+            return Add()([source1, source2])
+        return source1
         
 class Concat(Combination):
     def __init__(self, _axis=None, raw_dict=None):
         super(Concat, self).__init__(raw_dict=raw_dict)
+        _axis = 3
         if not _axis:
             self.append_parameter("_axis","__int__")
         else:

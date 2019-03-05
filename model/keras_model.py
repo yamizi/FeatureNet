@@ -4,10 +4,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import keras.backend as k
 from keras.models import Sequential, Model
+from keras.layers import Dense, Flatten
 from keras.layers import Input
 #from keras import optimizers
 
 from .block import Block
+from .output import Out
 
 class KerasFeatureModel(object):
     
@@ -29,23 +31,31 @@ class KerasFeatureModel(object):
         return params
 
         
-    def build(self, input_shape):
+    def build(self, input_shape, output_shape):
         self.outputs = []
 
         X_input = Input(input_shape)
         _inputs = [X_input]
+        model = None
 
-        for block in self.blocks:
-            _outputs, _inputs = block.build_tensorflow_model(_inputs)
-            self.outputs = self.outputs + _outputs
+        try:
+            print("Build Tensorflow model")
+            for block in self.blocks:
+                _outputs, _inputs = block.build_tensorflow_model(_inputs)
+                self.outputs = self.outputs + _outputs
 
+            out = self.outputs[-1]
+            
+            out = Flatten()(out)
+            self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]
+            # Create model
+            model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
 
-        # Create model
-        model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
-
-        #sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-        model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
-
+            #sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+            model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
+        
+        except Exception as e:
+            print(e)
         return model
 
 

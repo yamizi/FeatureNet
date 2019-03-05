@@ -42,12 +42,14 @@ class Block(Node):
                     i.currentIndex = i.currentIndex-1
                     if i.currentIndex==0:
                         _inputs.insert(i)
-
-            outputs = outputs + _outputs
+            
+            if len(outputs)==0:
+                outputs = outputs + _outputs
+            # We only keep one output
             
         #Cleaning the input stack from the Output who are directed to cells or to be logged out
         _inputs = [i for i in inputs if (i is not Out and i is not OutCell)]
-        #Reputting block inputs that have planned in previous cells 
+        #Reputting block inputs that have been planned in previous cells 
         for i in _inputs:
             if i is OutBlock:
                 i.currentIndex = i.currentIndex-1

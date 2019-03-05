@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from .node import Node
 from .input import Input, ZerosInput
 from .output import Output, OutCell, OutBlock, Out

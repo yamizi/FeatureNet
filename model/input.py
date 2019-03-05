@@ -195,12 +195,16 @@ class PoolingInput(Input):
 
     def build(self, input, neighbour=None):
         #from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
-        if self._type=="max":
-            return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(super(PoolingInput, self).build(input))
-        if self._type=="average":
-            return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(super(PoolingInput, self).build(input))
+        input = super(PoolingInput, self).build(input)
+        if input.shape.ndims==4:
+            if self._type=="max":
+                return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
+            if self._type=="average":
+                return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
         if self._type=="global":
             return GlobalMaxPooling2D(name=Node.get_name(self))(input)
+
+        return input
 
 class ConvolutionInput(Input):
     def __init__(self, _kernel, _stride, _features, _padding, _activation, raw_dict=None):
@@ -235,4 +239,8 @@ class ConvolutionInput(Input):
             self._padding = _padding
         
     def build(self, input, neighbour=None):
-        return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(super(ConvolutionInput, self).build(input))
+        input = super(ConvolutionInput, self).build(input)
+        if input.shape.ndims==4:
+            return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+        return input
+        
