@@ -69,3 +69,9 @@ class OutCell(Output):
             self._relativeCellIndex = int(_relativeCellIndex)
 
         self.currentIndex = self._relativeCellIndex
+
+    @property
+    def shape(self):
+        if self.content is not None:
+            return self.content.shape
+        return None

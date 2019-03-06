@@ -153,7 +153,7 @@ class DenseInput(Input):
         if not _features:
             self.append_parameter("_features","__int__")
         else:
-            self._features = int(_features)
+            self._features = min(512,int(_features))
 
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
@@ -161,7 +161,8 @@ class DenseInput(Input):
             self._activation = str(_activation)
 
     def build(self, input, neighbour=None):
-        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(super(DenseInput, self).build(input))
+        input = super(DenseInput, self).build(input)
+        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(input.content if hasattr(input,"content") else input)
 
 
 class PoolingInput(Input):
@@ -181,7 +182,7 @@ class PoolingInput(Input):
             if not _kernel:
                 self.append_parameter("_kernel","(__int__,__int__)")
             else:
-                self._kernel =(int(_kernel[0]), int(_kernel[1]))
+                self._kernel =(min(int(_kernel[0]),3),min(int(_kernel[1]),3))
 
             if not _stride:
                 self.append_parameter("_stride",'(__int__,__int__)')
@@ -194,17 +195,22 @@ class PoolingInput(Input):
                 self._padding = _padding
 
     def build(self, input, neighbour=None):
-        #from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
+        
         input = super(PoolingInput, self).build(input)
+        input = input.content if hasattr(input,"content") else input
+
         if input.shape.ndims==4:
             if self._type=="max":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
             if self._type=="average":
+                if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                    self._padding="same"
                 return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
         if self._type=="global":
-            return GlobalMaxPooling2D(name=Node.get_name(self))(input)
+            return input
+            #return GlobalMaxPooling2D(name=Node.get_name(self))(input)
 
         return input
 
@@ -218,7 +224,7 @@ class ConvolutionInput(Input):
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
         else:
-            self._kernel =(int(_kernel[0]), int(_kernel[1]))
+            self._kernel =(min(int(_kernel[0]),3),min(int(_kernel[1]),3))
 
         if not _stride:
             self.append_parameter("_stride",'(__int__,__int__)')
@@ -228,7 +234,7 @@ class ConvolutionInput(Input):
         if not _features:
             self.append_parameter("_features","__int__")
         else:
-            self._features = int(_features)
+            self._features = min(128,int(_features))
 
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
@@ -242,6 +248,8 @@ class ConvolutionInput(Input):
         
     def build(self, input, neighbour=None):
         input = super(ConvolutionInput, self).build(input)
+        input = input.content if hasattr(input,"content") else input
+        
         if input.shape.ndims==4:
             if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"

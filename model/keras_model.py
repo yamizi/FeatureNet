@@ -46,7 +46,8 @@ class KerasFeatureModel(object):
 
             out = self.outputs[-1]
             
-            out = Flatten()(out)
+            if out.shape.ndims >2:
+                out = Flatten()(out)
             self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]
             # Create model
             model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
@@ -64,7 +65,7 @@ class KerasFeatureModel(object):
 
         print("building keras model from feature model tree")
         model = KerasFeatureModel(name=name)
-
+        model.blocks = []
         for block_dict in feature_model:
             block = Block.parse_feature_model(block_dict)
             model.blocks.append(block)

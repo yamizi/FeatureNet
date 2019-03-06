@@ -1,5 +1,6 @@
 import uuid
 class Node(object):
+    content = None
     def __init__(self, raw_dict=None):
             self.raw_dict = raw_dict
             self.customizable_parameters = {}
