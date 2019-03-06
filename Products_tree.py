@@ -72,7 +72,7 @@ class ProductSet(object):
             node["children"] = sorted( [light_label(child) for child in node["children"]], key=lambda k: k['id'])
             return node
 
-        export_product = [light_label(product_nodes[0])]
+        export_product = [light_label(prd) for prd in product_nodes]
         return export_product
 
 
