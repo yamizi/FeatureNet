@@ -3,3 +3,4 @@ __pychache__/
 .vscode/
 trash.xml
 products/
+report*.txt
