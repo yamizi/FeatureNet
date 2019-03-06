@@ -65,13 +65,14 @@ class Block(Node):
         block = Block(raw_dict=feature_model)
 
         for cell_dict in feature_model.get("children"):
-            cell_type = cell_dict.get("children")[0].get("label")
-            cell_type = cell_type[cell_type.rfind("_")+1:]
-            cell_type = ''.join([i for i in cell_type if not i.isdigit()])
-            
-            if cell_type=="Cell":
-                cell = Cell.parse_feature_model(cell_dict.get("children")[0])
-                block.cells.append(cell)
+            if len(cell_dict.get("children")):
+                cell_type = cell_dict.get("children")[0].get("label")
+                cell_type = cell_type[cell_type.rfind("_")+1:]
+                cell_type = ''.join([i for i in cell_type if not i.isdigit()])
+                
+                if cell_type=="Cell":
+                    cell = Cell.parse_feature_model(cell_dict.get("children")[0])
+                    block.cells.append(cell)
         
         block.cells.sort(key = lambda a : a.get_name())
         return block
