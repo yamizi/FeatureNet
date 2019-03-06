@@ -45,7 +45,8 @@ class KerasFeatureModel(object):
                 self.outputs = self.outputs + _outputs
 
             out = self.outputs[-1]
-            
+            out = out.content if hasattr(out,"content") else out
+
             if out.shape.ndims >2:
                 out = Flatten()(out)
             self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]

@@ -45,6 +45,8 @@ class TimedStopping(Callback):
 
 class TensorflowGenerator(object):
     accuracy = 0
+    training_time = 0
+    params = 0
     stop_training = False
     def __init__(self, product, epochs=12, dataset="mnist"):
         

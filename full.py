@@ -27,7 +27,8 @@ for index,product in enumerate(productSet.format_products()):
                 f2 = open("report_{0}_{1}.txt".format(url,dataset),"a")
                 f2.write("\r\n{0}: {1} {2} {3} {4}".format(index, tensorflow.accuracy, tensorflow.stop_training, tensorflow.training_time, tensorflow.params))
                 f2.close()
-                products.append(tensorflow.model)
+        products.append(tensorflow.model)
+        
         
 
         
@@ -36,7 +37,6 @@ for index,product in enumerate(productSet.format_products()):
 
 
         
-
 
 
 
