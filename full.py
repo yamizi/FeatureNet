@@ -4,7 +4,7 @@ from products_tree import ProductSet
 import json
 
 baseurl = "./"
-url = "1000Products"
+url = "100Products_lenet5"
 productSet = ProductSet(baseurl+url+".pdt")
 
 products = []
@@ -21,11 +21,11 @@ for index,product in enumerate(productSet.format_products()):
         f.write(str_)
         f.close()
 
-        datasets = ["mnist", "cifar"]
+        datasets = ["mnist"]
         for dataset in datasets:
-                tensorflow = TensorflowGenerator(product,12, dataset)
+                tensorflow = TensorflowGenerator(product,2, dataset)
                 f2 = open("report_{0}_{1}.txt".format(url,dataset),"a")
-                f2.write("\r\n{0}: {1} {2} {3} {4}".format(index, tensorflow.accuracy, tensorflow.stop_training, tensorflow.training_time, tensorflow.params))
+                f2.write("\r\n{0}: {1} {2} {3} {4} {5}".format(index, tensorflow.accuracy, tensorflow.stop_training, tensorflow.training_time, tensorflow.params, tensorflow.flops))
                 f2.close()
         products.append(tensorflow.model)
         

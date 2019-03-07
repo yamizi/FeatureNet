@@ -5,10 +5,21 @@ from model.keras_model import KerasFeatureModel
 from keras.datasets import mnist, cifar10
 import keras
 from keras import backend as K
-
+import tensorflow as tf
 import json
 import time
 from keras.callbacks import Callback
+
+
+def get_flops(model):
+    run_meta = tf.RunMetadata()
+    opts = tf.profiler.ProfileOptionBuilder.float_operation()
+
+    # We use the Keras session graph in the call to the profiler.
+    flops = tf.profiler.profile(graph=K.get_session().graph,
+                                run_meta=run_meta, cmd='op', options=opts)
+
+    return flops.total_float_ops
 
 class TimedStopping(Callback):
     '''Stop training when enough time has passed.
@@ -47,6 +58,7 @@ class TensorflowGenerator(object):
     accuracy = 0
     training_time = 0
     params = 0
+    flops = 0
     stop_training = False
     def __init__(self, product, epochs=12, dataset="mnist"):
         
@@ -93,9 +105,9 @@ class TensorflowGenerator(object):
             x_test = x_test.astype('float32')
             x_train /= 255
             x_test /= 255
-            print('x_train shape:', x_train.shape)
-            print(x_train.shape[0], 'train samples')
-            print(x_test.shape[0], 'test samples')
+            #print('x_train shape:', x_train.shape)
+            #print(x_train.shape[0], 'train samples')
+            #print(x_test.shape[0], 'test samples')
 
 
             timed = TimedStopping(self,None, 600)
@@ -111,14 +123,15 @@ class TensorflowGenerator(object):
             print('Test loss:', score[0])
             print('Test accuracy:', score[1])
             print('model params:', self.model.count_params())
+            
                 
-
+            self.flops = get_flops(model)
             self.accuracy = score[1]
             self.params = self.model.count_params()
 
     def load_products(self, product):
         def build_rec(node, level=0):
-            print("-"*level + node.get("label"))
+            #print("-"*level + node.get("label"))
             for child in node.get("children"):
                 build_rec(child, level+1)
 
