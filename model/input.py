@@ -224,7 +224,7 @@ class ConvolutionInput(Input):
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
         else:
-            self._kernel =(min(int(_kernel[0]),3),min(int(_kernel[1]),3))
+            self._kernel =(min(int(_kernel[0]),5),min(int(_kernel[1]),5))
 
         if not _stride:
             self.append_parameter("_stride",'(__int__,__int__)')
