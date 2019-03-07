@@ -41,17 +41,20 @@ class Predictor(object):
         split_elements = int(9*nb_elements/10)
 
         X = np.array(X)
-        Y = np.array(Y)
+
+        #We split the Y values into 10 batchs
+        Y = np.floor(np.array(Y).astype(float) *10)
+        print(Y[0])
 
         model = Sequential()
-        model.add(Dense(128, input_dim=len(X[0]), activation='relu'))
+        model.add(Dense( len(X[0]), input_dim=len(X[0]), activation='relu'))
         model.add(Dense(128, activation='relu'))
-        model.add(Dense(1, activation='linear'))
+        model.add(Dense(1))
         model.compile(loss='mse', optimizer='adam')
 
         X_train = X[0:split_elements]
         Y_train = Y[0:split_elements]
-        model.fit(X_train, Y_train, epochs=1000, verbose=1)
+        model.fit(X_train, Y_train, epochs=100, verbose=1)
         score = model.evaluate(X[split_elements:], Y[split_elements:])
 
         print("predictor score {0}".format(score))
