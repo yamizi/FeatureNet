@@ -2,7 +2,7 @@ import keras.backend as k
 from keras.models import Sequential, Model
 from keras.layers import Dense
 import numpy as np
-
+import keras
 class Predictor(object):
 
 
@@ -37,20 +37,24 @@ class Predictor(object):
 
         print(len(X))
 
+
+        num_classes = 100
         nb_elements = len(X)
         split_elements = int(9*nb_elements/10)
 
-        X = np.array(X)
+        X = np.array(X).astype(int)
 
         #We split the Y values into 10 batchs
-        Y = np.floor(np.array(Y).astype(float) *10)
+        Y = np.floor(np.array(Y).astype(float) *num_classes).astype(int)
         print(Y[0])
 
+        Y =  keras.utils.to_categorical(Y, num_classes)
+
         model = Sequential()
-        model.add(Dense( len(X[0]), input_dim=len(X[0]), activation='relu'))
+        model.add(Dense(128, input_dim=8847, activation='relu'))
         model.add(Dense(128, activation='relu'))
-        model.add(Dense(1))
-        model.compile(loss='mse', optimizer='adam')
+        model.add(Dense(num_classes, activation='softmax'))
+        model.compile(loss="categorical_crossentropy", metrics=['accuracy'], optimizer="sgd")
 
         X_train = X[0:split_elements]
         Y_train = Y[0:split_elements]
