@@ -5,7 +5,7 @@ from keras import backend as K
 import tensorflow as tf
 import time
 
-class LeNet(models.Sequential):
+class AlexNet(models.Sequential):
     optimizers = []
     losss = ['categorical_crossentropy']
 
@@ -14,13 +14,66 @@ class LeNet(models.Sequential):
 
             
 
-        self.add(layers.Conv2D(6, kernel_size=(5, 5), strides=(1, 1), activation='tanh', input_shape=input_shape, padding="same"))
-        self.add(layers.AveragePooling2D(pool_size=(2, 2), strides=(1, 1), padding='valid'))
-        self.add(layers.Conv2D(16, kernel_size=(5, 5), strides=(1, 1), activation='tanh', padding='valid'))
-        self.add(layers.AveragePooling2D(pool_size=(2, 2), strides=(2, 2), padding='valid'))
-        self.add(layers.Conv2D(120, kernel_size=(5, 5), strides=(1, 1), activation='tanh', padding='valid'))
+        self.add(layers.Conv2D(filters=96, input_shape=input_shape, kernel_size=(11,11),strides=(4,4), padding='valid'))
+        self.add(layers.Activation('relu'))
+        # Pooling
+        self.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,2), padding='valid'))
+        # Batch Normalisation before passing it to the next layer
+        self.add(layers.BatchNormalization())
+
+        # 2nd Convolutional Layer
+        self.add(layers.Conv2D(filters=256, kernel_size=(11,11), strides=(1,1), padding='valid'))
+        self.add(layers.Activation('relu'))
+        # Pooling
+        self.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,2), padding='valid'))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
+
+        # 3rd Convolutional Layer
+        self.add(layers.Conv2D(filters=384, kernel_size=(3,3), strides=(1,1), padding='valid'))
+        self.add(layers.Activation('relu'))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
+
+        # 4th Convolutional Layer
+        self.add(layers.Conv2D(filters=384, kernel_size=(3,3), strides=(1,1), padding='valid'))
+        self.add(layers.Activation('relu'))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
+
+        # 5th Convolutional Layer
+        self.add(layers.Conv2D(filters=256, kernel_size=(3,3), strides=(1,1), padding='valid'))
+        self.add(layers.Activation('relu'))
+        # Pooling
+        self.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,2), padding='valid'))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
+
+        # Passing it to a dense layer
         self.add(layers.Flatten())
-        self.add(layers.Dense(84, activation='tanh'))
+        # 1st Dense Layer
+        self.add(layers.Dense(4096, input_shape=input_shape))
+        self.add(layers.Activation('relu'))
+        # Add Dropout to prevent overfitting
+        self.add(layers.Dropout(0.4))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
+
+        # 2nd Dense Layer
+        self.add(layers.Dense(4096))
+        self.add(layers.Activation('relu'))
+        # Add Dropout
+        self.add(layers.Dropout(0.4))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
+
+        # 3rd Dense Layer
+        self.add(layers.Dense(1000))
+        self.add(layers.Activation('relu'))
+        # Add Dropout
+        self.add(layers.Dropout(0.4))
+        # Batch Normalisation
+        self.add(layers.BatchNormalization())
         self.add(layers.Dense(num_classes, activation='softmax'))
 
         self.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
@@ -71,7 +124,7 @@ def run(dataset="mnist", epochs=12):
     print(x_train.shape[0], 'train samples')
     print(x_test.shape[0], 'test samples')
 
-    model = LeNet(input_shape, num_classes)
+    model = AlexNet(input_shape, num_classes)
 
     begin_training = time.time()
     model.fit(x_train, y_train,
@@ -80,7 +133,6 @@ def run(dataset="mnist", epochs=12):
         verbose=1,
         validation_data=(x_test, y_test))
 
-    training_time = time.time() - begin_training
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
@@ -88,4 +140,4 @@ def run(dataset="mnist", epochs=12):
 
     #print("flops", get_flops(model))
 
-run("mnist", 12)
+run("cifar", 12)
