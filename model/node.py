@@ -5,7 +5,7 @@ class Node(object):
             self.raw_dict = raw_dict
             self.customizable_parameters = {}
             self.uniqid = str(uuid.uuid1())[0:5]
-            print(self.get_name())
+            #print(self.get_name())
 
     def get_name(self, raw_dict=None):
         if self.raw_dict:
