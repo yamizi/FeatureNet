@@ -10,7 +10,7 @@ import json
 def run_tensorflow(product, url, index,datasets=[], epochs=12):
         for dataset in datasets:
                 tensorflow = TensorflowGenerator(product,epochs, dataset)
-                f2 = open("report_600_{0}_{1}.txt".format(url,dataset),"a")
+                f2 = open("report_top600_{0}_{1}.txt".format(url,dataset),"a")
                 f2.write("\r\n{0}: {1} {2} {3} {4} {5}".format(index, tensorflow.accuracy, tensorflow.stop_training, tensorflow.training_time, tensorflow.params, tensorflow.flops))
                 f2.close()
 
@@ -40,7 +40,9 @@ def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epoc
 
 if __name__ == "__main__":
     # execute only if run as a script
-    main("1000Products", datasets=["cifar"], filter_indices=[],epochs=600)
+
+    top_cifar = [59, 143, 203, 477, 595, 634, 444, 63, 161, 936]
+    main("1000Products", datasets=["cifar"], filter_indices=top_cifar,epochs=600)
        
 
         

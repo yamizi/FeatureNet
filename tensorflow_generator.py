@@ -63,7 +63,7 @@ class TensorflowGenerator(object):
     def __init__(self, product, epochs=12, dataset="mnist"):
         
         if product:
-            batch_size = 128
+            batch_size = 64
             num_classes = 10
 
             # the data, split between train and test sets
@@ -110,7 +110,7 @@ class TensorflowGenerator(object):
             #print(x_test.shape[0], 'test samples')
 
 
-            timed = TimedStopping(self,None, 600)
+            timed = TimedStopping(self,None, 6000)
             begin_training = time.time()
             self.model.fit(x_train, y_train,
                     batch_size=batch_size,

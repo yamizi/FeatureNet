@@ -6,6 +6,7 @@ import keras.backend as k
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten
 from keras.layers import Input
+from keras.optimizers import SGD
 #from keras import optimizers
 
 from .block import Block
@@ -37,6 +38,8 @@ class KerasFeatureModel(object):
         X_input = Input(input_shape)
         _inputs = [X_input]
         model = None
+
+        self.optimizers.append(SGD(lr=0.1, momentum=0.9, decay=0.0001, nesterov=True))
 
         try:
             print("Build Tensorflow model")
