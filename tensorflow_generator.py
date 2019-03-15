@@ -9,6 +9,7 @@ import tensorflow as tf
 import json
 import time
 from keras.callbacks import Callback
+from keras.preprocessing.image import ImageDataGenerator
 
 
 def get_flops(model):
@@ -60,10 +61,10 @@ class TensorflowGenerator(object):
     params = 0
     flops = 0
     stop_training = False
-    def __init__(self, product, epochs=12, dataset="mnist"):
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True):
         
         if product:
-            batch_size = 64
+            batch_size = 128 #64
             num_classes = 10
 
             # the data, split between train and test sets
@@ -112,11 +113,29 @@ class TensorflowGenerator(object):
 
             timed = TimedStopping(self,None, 6000)
             begin_training = time.time()
-            self.model.fit(x_train, y_train,
-                    batch_size=batch_size,
-                    epochs=epochs,
-                    verbose=1,
-                    validation_data=(x_test, y_test), callbacks=[timed])
+
+            if data_augmentation:
+                datagen = ImageDataGenerator(
+                featurewise_center=True,
+                featurewise_std_normalization=True,
+                rotation_range=20,
+                width_shift_range=0.2,
+                height_shift_range=0.2,
+                horizontal_flip=True)
+
+                # compute quantities required for featurewise normalization
+                # (std, mean, and principal components if ZCA whitening is applied)
+                datagen.fit(x_train)
+
+                # fits the model on batches with real-time data augmentation:
+                self.model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),steps_per_epoch=len(x_train) / 32, epochs=epochs, callbacks=[timed])
+
+            else:
+                self.model.fit(x_train, y_train,
+                        batch_size=batch_size,
+                        epochs=epochs,
+                        verbose=1,
+                        validation_data=(x_test, y_test), callbacks=[timed])
             
             self.training_time = time.time() - begin_training
             score = self.model.evaluate(x_test, y_test, verbose=0)
