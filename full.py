@@ -7,14 +7,17 @@ import json
 
 
 
-def run_tensorflow(product, url, index,datasets=[], epochs=12):
+def run_tensorflow(product, url, index,datasets=[], epochs=12, depth=1, data_augmentation=False):
         for dataset in datasets:
-                tensorflow = TensorflowGenerator(product,epochs, dataset)
-                f2 = open("report_top600_{0}_{1}.txt".format(url,dataset),"a")
-                f2.write("\r\n{0}: {1} {2} {3} {4} {5}".format(index, tensorflow.accuracy, tensorflow.stop_training, tensorflow.training_time, tensorflow.params, tensorflow.flops))
+                logpath = "report_all_{2}epochs_{3}depth_{0}_{1}.txt".format(url,dataset, epochs, depth)
+                tensorflow = TensorflowGenerator(product,epochs, dataset, depth=depth, data_augmentation=data_augmentation)
+                f2 = open(logpath,"a")
+
+                history = "{accuracy}|{validation_accuracy}".format(accuracy="#".join(map(str, tensorflow.history[0])), validation_accuracy="#".join(map(str, tensorflow.history[1])))
+                f2.write("\r\n{0}: {1} {2} {3} {4} {5} {6}".format(index, tensorflow.accuracy, tensorflow.stop_training, tensorflow.training_time, tensorflow.params, tensorflow.flops, history))
                 f2.close()
 
-def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epochs=12):
+def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epochs=12, depth=1, data_augmentation=False):
         baseurl = "./"
         productSet = ProductSet(baseurl+target+".pdt")
 
@@ -30,7 +33,7 @@ def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epoc
                         f.write(str_)
                         f.close()
 
-                        run_tensorflow(product, target, index, datasets, epochs)
+                        run_tensorflow(product, target, index, datasets, epochs, depth, data_augmentation=data_augmentation)
                         #p = multiprocessing.Process(target=run_tensorflow, args=(product,))
                         #p.start()
                         #p.join()
@@ -41,8 +44,11 @@ def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epoc
 if __name__ == "__main__":
     # execute only if run as a script
 
-    top_cifar = [59, 143, 203, 477, 595, 634, 444, 63, 161, 936]
-    main("1000Products", datasets=["cifar"], filter_indices=top_cifar,epochs=600)
+    top_cifar = [59, 63, 143,  161, 203, 444, 477, 595, 634,  936]
+    #top_cifar = top_cifar[6:]
+    # small architectures < 4M on CIFAR
+    top_cifar = [59, 203, 477, 634, 63, 161, 936]
+    main("1000Products", datasets=["cifar"], epochs=600, depth=5, data_augmentation=False)
        
 
         

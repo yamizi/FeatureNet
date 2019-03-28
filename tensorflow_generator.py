@@ -10,6 +10,7 @@ import json
 import time
 from keras.callbacks import Callback
 from keras.preprocessing.image import ImageDataGenerator
+import numpy as np
 
 
 def get_flops(model):
@@ -61,84 +62,105 @@ class TensorflowGenerator(object):
     params = 0
     flops = 0
     stop_training = False
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True):
+    X_train = []
+    Y_train = []
+    X_test = []
+    Y_test = []
+    history = ([],[])
+    dataset = None
+    input_shape = (0,0,0)
+
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1):
         
         if product:
             batch_size = 128 #64
             num_classes = 10
 
-            # the data, split between train and test sets
-            if dataset=="mnist":
-                (x_train, y_train), (x_test, y_test) = mnist.load_data()
-            elif dataset=="cifar":
-                (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+            if TensorflowGenerator.dataset != dataset:
 
-            # input image dimensions
-            img_rows, img_cols, channels = x_train.shape[1], x_train.shape[2], x_train.shape[3] if len(x_train.shape) ==4 else 1
+                # the data, split between train and test sets
+                if dataset=="mnist":
+                    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+                elif dataset=="cifar":
+                    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 
-            # convert class vectors to binary class matrices
-            y_train = keras.utils.to_categorical(y_train, num_classes)
-            y_test = keras.utils.to_categorical(y_test, num_classes)
+                # input image dimensions
+                img_rows, img_cols, channels = x_train.shape[1], x_train.shape[2], x_train.shape[3] if len(x_train.shape) ==4 else 1
 
-            if K.image_data_format() == 'channels_first':
-                x_train = x_train.reshape(x_train.shape[0], channels, img_rows, img_cols)
-                x_test = x_test.reshape(x_test.shape[0], channels, img_rows, img_cols)
-                input_shape = (channels, img_rows, img_cols)
-            else:
-                x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
-                x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
-                input_shape = (img_rows, img_cols, channels)
+                # convert class vectors to binary class matrices
+                y_train = keras.utils.to_categorical(y_train, num_classes)
+                y_test = keras.utils.to_categorical(y_test, num_classes)
 
+                if K.image_data_format() == 'channels_first':
+                    x_train = x_train.reshape(x_train.shape[0], channels, img_rows, img_cols)
+                    x_test = x_test.reshape(x_test.shape[0], channels, img_rows, img_cols)
+                    TensorflowGenerator.input_shape = (channels, img_rows, img_cols)
+                else:
+                    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
+                    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
+                    TensorflowGenerator.input_shape = (img_rows, img_cols, channels)
 
-            model = None
-            model =KerasFeatureModel.parse_feature_model(product)
-            
+                x_train = x_train.astype('float32')
+                x_test = x_test.astype('float32')
+                x_train /= 255
+                x_test /= 255
+                #print('x_train shape:', x_train.shape)
+                #print(x_train.shape[0], 'train samples')
+                #print(x_test.shape[0], 'test samples')
+
+                if data_augmentation:
+
+                    augment_size=5000
+                    train_size = x_train.shape[0]
+
+                    datagen = ImageDataGenerator(
+                    rotation_range=10,
+                    zoom_range = 0.05, 
+                    width_shift_range=0.07,
+                    height_shift_range=0.07,
+                    horizontal_flip=False,
+                    vertical_flip=False, 
+                    data_format="channels_last",
+                    zca_whitening=True)
+
+                    # compute quantities required for featurewise normalization
+                    # (std, mean, and principal components if ZCA whitening is applied)
+                    datagen.fit(x_train, augment=True)
+
+                    randidx = np.random.randint(train_size, size=augment_size)
+                    x_augmented = x_train[randidx].copy()
+                    y_augmented = y_train[randidx].copy()
+                    
+                    x_augmented = datagen.flow(x_augmented, np.zeros(augment_size), batch_size=augment_size, shuffle=False).next()[0]
+                    x_train = np.concatenate((x_train, x_augmented))
+                    y_train = np.concatenate((y_train, y_augmented))
+
+                TensorflowGenerator.X_train = x_train
+                TensorflowGenerator.X_test = x_test
+                TensorflowGenerator.Y_train = y_train
+                TensorflowGenerator.Y_test = y_test
+                TensorflowGenerator.dataset = dataset
+
+    
+            timed = TimedStopping(self,None, 6000)
+            begin_training = time.time()    
+            model =KerasFeatureModel.parse_feature_model(product, depth)
 
             print("====> Loading new feature model with {0} blocks".format(len(model.blocks)))
-            self.model = model.build(input_shape, num_classes)
+            self.model = model.build(TensorflowGenerator.input_shape, num_classes)
 
             if not self.model:
                 return 
 
-            
-
-            x_train = x_train.astype('float32')
-            x_test = x_test.astype('float32')
-            x_train /= 255
-            x_test /= 255
-            #print('x_train shape:', x_train.shape)
-            #print(x_train.shape[0], 'train samples')
-            #print(x_test.shape[0], 'test samples')
-
-
-            timed = TimedStopping(self,None, 6000)
-            begin_training = time.time()
-
-            if data_augmentation:
-                datagen = ImageDataGenerator(
-                featurewise_center=True,
-                featurewise_std_normalization=True,
-                rotation_range=20,
-                width_shift_range=0.2,
-                height_shift_range=0.2,
-                horizontal_flip=True)
-
-                # compute quantities required for featurewise normalization
-                # (std, mean, and principal components if ZCA whitening is applied)
-                datagen.fit(x_train)
-
-                # fits the model on batches with real-time data augmentation:
-                self.model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),steps_per_epoch=len(x_train) / 32, epochs=epochs, callbacks=[timed])
-
-            else:
-                self.model.fit(x_train, y_train,
-                        batch_size=batch_size,
-                        epochs=epochs,
-                        verbose=1,
-                        validation_data=(x_test, y_test), callbacks=[timed])
+            history = self.model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
+                    batch_size=batch_size,
+                    epochs=epochs,
+                    verbose=1,
+                    validation_data=(TensorflowGenerator.X_test, TensorflowGenerator.Y_test), 
+                    callbacks=[timed])
             
             self.training_time = time.time() - begin_training
-            score = self.model.evaluate(x_test, y_test, verbose=0)
+            score = self.model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
             print('Test loss:', score[0])
             print('Test accuracy:', score[1])
             print('model params:', self.model.count_params())
@@ -147,6 +169,7 @@ class TensorflowGenerator(object):
             self.flops = get_flops(model)
             self.accuracy = score[1]
             self.params = self.model.count_params()
+            self.history = (history.history['acc'], history.history['val_acc'])
 
     def load_products(self, product):
         def build_rec(node, level=0):
