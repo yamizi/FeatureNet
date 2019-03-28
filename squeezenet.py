@@ -202,20 +202,30 @@ def run(dataset="mnist", epochs=12):
 
     model = SqueezeNet(input_shape, num_classes)
 
-    model.fit(x_train, y_train,
+    history = model.fit(x_train, y_train,
         batch_size=batch_size,
         epochs=epochs,
         verbose=1,
         validation_data=(x_test, y_test))
 
     score = model.evaluate(x_test, y_test, verbose=0)
+    h = (history.history['acc'], history.history['val_acc'])
+    h = "{accuracy}|{validation_accuracy}".format(accuracy="#".join(map(str, h[0])), validation_accuracy="#".join(map(str, h[1])))
+    
+    
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
     print('model params:', model.count_params())
 
+    f2 = open("squeezenet_cifar_validation.txt","a")
+    index = 0
+    f2.write("{0}: {1} {2} - - - {3}".format(index, score[1], model.count_params(), h))
+    f2.close()
+
+
     #print("flops", get_flops(model))
 
-run("cifar", 12)
+run("cifar", 300)
 
 #Test accuracy: 0.1796
 #model params: 876970

@@ -6,14 +6,9 @@ import tensorflow as tf
 import time
 
 class LeNet(models.Sequential):
-    optimizers = []
-    losss = ['categorical_crossentropy']
-
+    
     def __init__(self, input_shape, num_classes):
         super().__init__()
-
-            
-
         self.add(layers.Conv2D(6, kernel_size=(5, 5), strides=(1, 1), activation='tanh', input_shape=input_shape, padding="same"))
         self.add(layers.AveragePooling2D(pool_size=(2, 2), strides=(1, 1), padding='valid'))
         self.add(layers.Conv2D(16, kernel_size=(5, 5), strides=(1, 1), activation='tanh', padding='valid'))
@@ -23,18 +18,7 @@ class LeNet(models.Sequential):
         self.add(layers.Dense(84, activation='tanh'))
         self.add(layers.Dense(num_classes, activation='softmax'))
 
-        self.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
-
-
-def get_flops(model):
-    run_meta = tf.RunMetadata()
-    opts = tf.profiler.ProfileOptionBuilder.float_operation()
-
-    # We use the Keras session graph in the call to the profiler.
-    flops = tf.profiler.profile(graph=K.get_session().graph,
-                                run_meta=run_meta, cmd='op', options=opts)
-
-    return flops.total_float_ops
+        self.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer="sgd")
 
 
 def run(dataset="mnist", epochs=12):
@@ -74,18 +58,29 @@ def run(dataset="mnist", epochs=12):
     model = LeNet(input_shape, num_classes)
 
     begin_training = time.time()
-    model.fit(x_train, y_train,
+    history = model.fit(x_train, y_train,
         batch_size=batch_size,
+        validation_data=(x_test, y_test), 
         epochs=epochs,
-        verbose=1,
-        validation_data=(x_test, y_test))
+        verbose=1)
 
     training_time = time.time() - begin_training
+
+    h = (history.history['acc'], history.history['val_acc'])
+    h = "{accuracy}|{validation_accuracy}".format(accuracy="#".join(map(str, h[0])), validation_accuracy="#".join(map(str, h[1])))
+               
+
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
     print('model params:', model.count_params())
 
-    #print("flops", get_flops(model))
 
-run("mnist", 12)
+    f2 = open("lenet_cifar_validation.txt","a")
+    index = 0
+    f2.write("{0}: {1} {2} - - - {3}".format(index, score[1], model.count_params(), h))
+    f2.close()
+
+
+
+run("cifar", 300)
