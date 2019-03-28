@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
 from .node import Node
-from .input import Input, ZerosInput
+from .input import Input, ZerosInput, IdentityInput
 from .output import Output, OutCell, OutBlock, Out
-from .operation import Operation, Combination, Sum
+from .operation import Operation, Combination, Sum, Void
 
 class Cell(Node):
     def __init__(self, raw_dict=None, input1=None, operation1=None, input2=None, operation2=None, output=None, output_combination=None):
+
+
+        if not input2:
+            input2 = ZerosInput()
+        if not operation1:
+            operation1 = Void()
+        if not operation2:
+            operation2 = Void()
+        if not output_combination:
+            output_combination = Sum()
+
+        if not output:
+            output = OutCell()
 
         self.input1 = input1
         self.input2 = input2
@@ -74,7 +87,7 @@ class Cell(Node):
                 element = Output.parse_feature_model(cell_element_dict)
                 
             setattr(cell, element_type, element)   
-            print("settings {0}".format(element_type)) 
+            print("settings {0} {1}".format(element_type, element.get_name())) 
   
 
         return cell
