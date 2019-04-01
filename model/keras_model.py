@@ -117,7 +117,7 @@ class KerasFeatureModel(object):
         block1.append_cell(cell12)
 
         block2 = Block()
-        cell21 = Cell(input1 = ConvolutionInput((5,5),(1,1),6,"same", "tanh"))
+        cell21 = Cell(input1 = ConvolutionInput((5,5),(1,1),16,"same", "tanh"))
         block2.append_cell(cell21)
         cell22 = Cell(input1 = PoolingInput((2,2),(2,2),"average", "valid"), output=OutBlock())
         block2.append_cell(cell22)
