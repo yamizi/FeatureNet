@@ -31,19 +31,22 @@ class ProductSet(object):
                     self._features_reverse[feature.group(2)] = feature.group(1)
             else:
 
-                product_features = [abs(int(x)) for x in line.split(";") if  x.isdigit() and int(x)>0]
+                product_features = line.split(";")
                 self.products.append(product_features) 
             line = f.readline()
         f.close()
         self.nbFeatures = len(self.features.keys())
         self.nbProducts = len(self.products)
 
-    def format_product(self,prd_index=0, product=None):
+    def format_product(self,prd_index=0, original_product=None):
         #product = [self.features.get(str(x)) for x in self.products[index]]
         # to dict
 
-        if not product:
-            product =  self.products[prd_index]
+        if not original_product:
+            original_product =  self.products[prd_index]
+            
+        product = [abs(int(x)) for x in original_product if  x.isdigit() and int(x)>0]
+
         product_labels = {self.features[str(x)]:i for i,x in enumerate(product)}
         product_nodes = [{'label':self.features[str(x)],'id':x, "children":[]} for x in product]
 
@@ -58,14 +61,16 @@ class ProductSet(object):
                     product_nodes[parent_product_index].get("children").append(product_nodes[product.index(i)])
 
         #only return nodes that represents the blocks
-        return [nodes for nodes in product_nodes if nodes.get("label").startswith("Block") and nodes.get("label").find("_")==-1]
+        prod =  [nodes for nodes in product_nodes if nodes.get("label").startswith("Block") and nodes.get("label").find("_")==-1]
+
+        return prod, original_product
     
 
     def light_product(self, prd_index=0, product=None):
         if not product:
             product =  self.products[prd_index]
 
-        product_nodes = self.format_product(product=product)
+        product_nodes, features = self.format_product(original_product=product)
         
         def light_label(node):
             node["label"] =  node["label"][node["label"].rfind("_"):]
@@ -80,7 +85,7 @@ class ProductSet(object):
     def format_products(self):
         prds = []
         for product in self.products:
-            prds.append(self.format_product(product=product))
+            prds.append(self.format_product(original_product=product))
             
         return prds
 
