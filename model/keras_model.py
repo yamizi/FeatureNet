@@ -18,6 +18,12 @@ class KerasFeatureModel(object):
     blocks = []
     outputs = []
     optimizers = []
+    features = []
+    nb_flops  = 0
+    nb_params = 0
+    model = None
+    score = 0
+
     losss = ['categorical_crossentropy']
 
 
@@ -31,6 +37,10 @@ class KerasFeatureModel(object):
             params = {**params, **block.get_custom_parameters()}
 
         return params
+
+    
+    def to_vector(self):
+        return [len(self.blocks),len(self.model.layers), self.nb_params, self.nb_flops] + self.features
 
         
     def build(self, input_shape, output_shape):
@@ -49,7 +59,7 @@ class KerasFeatureModel(object):
                 _outputs, _inputs = block.build_tensorflow_model(_inputs)
                 self.outputs = self.outputs + _outputs
 
-            out = self.outputs[-1]
+            out = self.outputs[-1] if len(self.outputs) else  _inputs[0]
             out = out.content if hasattr(out,"content") else out
 
             if out.shape.ndims >2:
@@ -62,15 +72,21 @@ class KerasFeatureModel(object):
             model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
         
         except Exception as e:
-            print(e)
+            print("error",e)
+            raise e
+        
+        self.model = model
         return model
 
 
     @staticmethod
-    def parse_feature_model(feature_model, name=None, depth=1):
+    def parse_feature_model(feature_model, name=None, depth=1, features=None):
 
         print("building keras model from feature model tree")
         model = KerasFeatureModel(name=name)
+
+        if features:
+            model.features = [1 if x.isdigit() and int(x)>0 else 0 for x in features]
         model.blocks = []
 
         if len(feature_model)==0:

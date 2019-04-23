@@ -8,12 +8,12 @@ from keras import backend as K
 import tensorflow as tf
 import json
 import time
-from keras.callbacks import Callback
+from keras.callbacks import Callback, EarlyStopping
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 
 
-def get_flops(model):
+def get_flops():
     run_meta = tf.RunMetadata()
     opts = tf.profiler.ProfileOptionBuilder.float_operation()
 
@@ -70,8 +70,8 @@ class TensorflowGenerator(object):
     dataset = None
     input_shape = (0,0,0)
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1):
-        
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, features=None):
+        #features is a list of enabled and siabled features based on the original feature model
         if product:
             batch_size = 128 #64
             num_classes = 10
@@ -144,20 +144,24 @@ class TensorflowGenerator(object):
     
             timed = TimedStopping(self,None, 6000)
             begin_training = time.time()    
-            model =KerasFeatureModel.parse_feature_model(product, depth)
+            model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, features=features)
 
             print("====> Loading new feature model with {0} blocks".format(len(model.blocks)))
             self.model = model.build(TensorflowGenerator.input_shape, num_classes)
 
             if not self.model:
+                print("#### model is not valid ####")
                 return 
+                
+            
+            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=25)
 
             history = self.model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                     batch_size=batch_size,
                     epochs=epochs,
-                    verbose=1,
+                    verbose=2,
                     validation_data=(TensorflowGenerator.X_test, TensorflowGenerator.Y_test), 
-                    callbacks=[timed])
+                    callbacks=[timed, early_stopping])
             
             self.training_time = time.time() - begin_training
             score = self.model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
@@ -166,9 +170,9 @@ class TensorflowGenerator(object):
             print('model params:', self.model.count_params())
             
                 
-            self.flops = get_flops(model)
-            self.accuracy = score[1]
-            self.params = self.model.count_params()
+            model.nb_flops =  self.flops = get_flops()
+            model.nb_params = self.params = self.model.count_params()
+            model.score = self.accuracy = score[1]
             self.history = (history.history['acc'], history.history['val_acc'])
 
     def load_products(self, product):
