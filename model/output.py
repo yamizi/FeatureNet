@@ -34,7 +34,7 @@ class Output(Node):
             _relativeCellIndex = None
             for child in output.get("children"):
                 element_type = Node.get_type(child)
-                if(element_type == "relativeCellIndex"):
+                if(element_type == "relativecellindex"):
                     if(len(child.get("children"))):
                         _relativeCellIndex = Node.get_type(child.get("children")[0])
             output_element = OutCell(_relativeCellIndex=_relativeCellIndex, raw_dict=output)
@@ -64,9 +64,11 @@ class OutCell(Output):
     def __init__(self, _relativeCellIndex=None, raw_dict=None):
         super(OutCell, self).__init__(raw_dict=raw_dict)
         if not _relativeCellIndex:
-            self._relativeCellIndex = 1
+            self._relativeCellIndex = 0
         else:
             self._relativeCellIndex = int(_relativeCellIndex)
+            if self._relativeCellIndex > 0 :
+                print("skip {} cells".format(self._relativeCellIndex))
 
         self.currentIndex = self._relativeCellIndex
 

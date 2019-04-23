@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
-from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply
+from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D
 from .output import Output, OutCell, OutBlock, Out
 
 class Operation(Node):
@@ -56,8 +56,8 @@ class Operation(Node):
                         else:
                             _fillSize = None
 
-            operation_element = Void(operation)
-            #operation_element = Padding(_fillValue=_fillValue,_fillSize=_fillSize, raw_dict=operation)
+            #operation_element = Void(operation)
+            operation_element = Padding(_fillValue=_fillValue,_fillSize=_fillSize, raw_dict=operation)
 
         elif operation_type=="batchnormalization":
             _axis = None
@@ -70,8 +70,8 @@ class Operation(Node):
             operation_element = BatchNorm(_axis=_axis, raw_dict=operation)
 
         elif operation_type=="activation":
-            operation_element = Void(operation)
-            #operation_element = Active(raw_dict=operation)
+            #operation_element = Void(operation)
+            operation_element = Active(raw_dict=operation)
 
         return operation_element
         
@@ -110,25 +110,36 @@ class Padding(Operation):
         super(Padding, self).__init__(raw_dict=raw_dict)
 
         _fillValue = 0
-        _fillSize = (3,3)
+        
         if _fillValue==None:
             self.append_parameter("_fillValue","__int__")
         else:
             self._fillValue = int(_fillValue)
 
         if not _fillSize:
-            self.append_parameter("_fillSize","(__int__,__int__)")
+            self._fillSize = (1,1)
+            #self.append_parameter("_fillSize","(__int__,__int__)")
         else:
             self._fillSize = (int(_fillSize[0]), int(_fillSize[1]))
+
+    def build(self,input):
+        input = super(Padding, self).build(input)
+        if input.shape.ndims ==4:
+            return ZeroPadding2D(self._fillSize)(input)
+        return input
 
 class BatchNorm(Operation):
     def __init__(self, _axis=None, raw_dict=None):
         super(BatchNorm, self).__init__(raw_dict=raw_dict)
-        _axis = 3
+        _axis = 1
         if not _axis:
             self.append_parameter("_axis","__int__")
         else:
             self._axis = int(_axis)
+
+    def build(self,input):
+        input = super(BatchNorm, self).build(input)
+        return BatchNormalization(axis = self._axis)(input)
 
 class Active(Operation):
     def __init__(self, _method=None, raw_dict=None):
@@ -167,8 +178,8 @@ class Combination(Node):
                     if(len(child.get("children"))):
                         _axis = Node.get_type(child.get("children")[0])
 
-            operation_element = Sum(operation)
-            #operation_element = Concat(_axis=_axis, raw_dict=operation)
+            #operation_element = Sum(operation)
+            operation_element = Concat(_axis=_axis, raw_dict=operation)
         
         return operation_element 
 
@@ -185,14 +196,16 @@ class Sum(Combination):
 class Concat(Combination):
     def __init__(self, _axis=None, raw_dict=None):
         super(Concat, self).__init__(raw_dict=raw_dict)
-        _axis = 3
+        _axis = 1
         if not _axis:
             self.append_parameter("_axis","__int__")
         else:
             self._axis = int(_axis)
 
     def build(self, source1, source2):
-        return Concatenate(axis=self._axis)([source1, source2])
+        if source1.shape.dims == source2.shape.dims:
+            return Concatenate(axis=self._axis)([source1, source2])
+        return source1
 
 class Product(Combination):
     def __init__(self, raw_dict=None):

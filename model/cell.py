@@ -30,7 +30,7 @@ class Cell(Node):
 
     def build_tensorflow_model(self, inputs):
 
-        last_inputs = inputs #[input for input in inputs if  input is not Output or input.currentIndex ==1]
+        last_inputs = inputs #[input for input in inputs if  input is not Output and input.currentIndex ==0]
 
         i1 = self.input1.build(last_inputs[0] if len(last_inputs)>0 else None)
         i1 = self.operation1.build(i1)
@@ -44,7 +44,7 @@ class Cell(Node):
 
         output = self.output.build(combination)
         outputs = []
-        if type(self.output) is OutCell and self.output.currentIndex==1:           
+        if type(self.output) is OutCell and self.output.currentIndex>-1:           
             inputs.insert(0, output)
         if type(self.output) is Out:
             outputs = [output.content]

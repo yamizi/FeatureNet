@@ -38,10 +38,10 @@ class Block(Node):
             
             #Reputting cell inputs that have planned in previous cells 
             for i in _inputs:
-                if i is OutCell and i.currentIndex>0:
+                if type(i) is OutCell and i.currentIndex>0:
                     i.currentIndex = i.currentIndex-1
                     if i.currentIndex==0:
-                        _inputs.insert(i)
+                        _inputs.insert(0,i)
             
             if len(outputs)==0:
                 outputs = outputs + _outputs
