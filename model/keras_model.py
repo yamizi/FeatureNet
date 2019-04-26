@@ -13,6 +13,40 @@ from .block import Block
 from .output import Out
 from .cell import Cell
 
+import random
+
+
+class KerasFeatureVector(object):
+
+    features = []
+    attributes = []
+    accuracy = None
+
+    def __init__(self, features, attributes, accuracy):
+        self.features = features
+        self.attributes = attributes
+        self.accuracy= accuracy
+
+    def mutate(self, rate=0.05):
+        l = len(self.features)
+        mask = [random.random() > rate for _ in range(l)]
+        self.features = [self.features[i]  if mask[i] else 1 - self.features[i] for i in range(l)]   
+ 
+    def cross_over(self, second_vector, crossover_type="onepoint"):
+        if crossover_type=="onepoint":
+            point = random.randint(0, len(self.features))
+            return KerasFeatureVector(self.features[0:point]+second_vector.features[point:], [], 0)
+
+    def to_vector(self):
+        return self.attributes + self.features
+
+    def __str__(self):
+        return "{}:{}".format(";".join(self.attributes), self.accuracy)
+
+    @property
+    def fitness(self):
+        return 0 if self.accuracy is None else self.accuracy 
+
 class KerasFeatureModel(object):
     
     blocks = []
@@ -22,7 +56,7 @@ class KerasFeatureModel(object):
     nb_flops  = 0
     nb_params = 0
     model = None
-    score = 0
+    accuracy = 0
 
     losss = ['categorical_crossentropy']
 
@@ -40,7 +74,7 @@ class KerasFeatureModel(object):
 
     
     def to_vector(self):
-        return [len(self.blocks),len(self.model.layers), self.nb_params, self.nb_flops] + self.features
+        return KerasFeatureVector(self.features, [len(self.blocks),len(self.model.layers), self.nb_params, self.nb_flops], self.accuracy)
 
         
     def build(self, input_shape, output_shape):

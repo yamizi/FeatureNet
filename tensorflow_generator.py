@@ -144,19 +144,20 @@ class TensorflowGenerator(object):
     
             timed = TimedStopping(self,None, 6000)
             begin_training = time.time()    
-            model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, features=features)
+            self.model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, features=features)
 
-            print("====> Loading new feature model with {0} blocks".format(len(model.blocks)))
-            self.model = model.build(TensorflowGenerator.input_shape, num_classes)
+            print("====> Loading new feature model with {0} blocks".format(len(self.model.blocks)))
+            model = self.model.build(TensorflowGenerator.input_shape, num_classes)
 
-            if not self.model:
+            if not model:
                 print("#### model is not valid ####")
                 return 
-                
+
+            return   
             
             early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=25)
 
-            history = self.model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
+            history = model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                     batch_size=batch_size,
                     epochs=epochs,
                     verbose=2,
@@ -164,15 +165,15 @@ class TensorflowGenerator(object):
                     callbacks=[timed, early_stopping])
             
             self.training_time = time.time() - begin_training
-            score = self.model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
+            score = model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
             print('Test loss:', score[0])
             print('Test accuracy:', score[1])
-            print('model params:', self.model.count_params())
+            print('model params:', model.count_params())
             
                 
-            model.nb_flops =  self.flops = get_flops()
-            model.nb_params = self.params = self.model.count_params()
-            model.score = self.accuracy = score[1]
+            #self.model.nb_flops =  self.flops = get_flops()
+            self.model.nb_params = self.params = model.count_params()
+            self.model.accuracy = self.accuracy = score[1]
             self.history = (history.history['acc'], history.history['val_acc'])
 
     def load_products(self, product):

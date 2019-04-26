@@ -45,7 +45,7 @@ class ProductSet(object):
         if not original_product:
             original_product =  self.products[prd_index]
             
-        product = [abs(int(x)) for x in original_product if  x.isdigit() and int(x)>0]
+        product = [abs(int(x)) for x in original_product if  str(x).isdigit() and int(x)>0]
 
         product_labels = {self.features[str(x)]:i for i,x in enumerate(product)}
         product_nodes = [{'label':self.features[str(x)],'id':x, "children":[]} for x in product]
