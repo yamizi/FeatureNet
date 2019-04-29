@@ -21,7 +21,7 @@ class LeNet(models.Sequential):
         self.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer="sgd")
 
 
-def run(dataset="mnist", epochs=12):
+def run(dataset="mnist", epochs=12, index=0):
     batch_size = 128
     num_classes = 10
 
@@ -71,16 +71,16 @@ def run(dataset="mnist", epochs=12):
                
 
     score = model.evaluate(x_test, y_test, verbose=0)
-    print('Test loss:', score[0])
+    #print('Test loss:', score[0])
     print('Test accuracy:', score[1])
-    print('model params:', model.count_params())
+    #print('model params:', model.count_params())
 
 
-    f2 = open("lenet_cifar_validation.txt","a")
-    index = 0
-    f2.write("{0}: {1} {2} - - - {3}".format(index, score[1], model.count_params(), h))
+    f2 = open("report_lenet5_cifar_validation.txt","a")
+    f2.write("lenet5_raw{0}: {1} {2} - - - {3}".format(index, score[1], model.count_params(), h))
     f2.close()
 
 
-
-run("cifar", 300)
+for i in range(10):
+    print("sprint {}".format(i))
+    run("cifar", 150, i)
