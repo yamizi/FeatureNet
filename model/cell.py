@@ -7,7 +7,8 @@ from .operation import Operation, Combination, Sum, Void
 class Cell(Node):
     def __init__(self, raw_dict=None, input1=None, operation1=None, input2=None, operation2=None, output=None, output_combination=None):
 
-
+        if not input1:
+            input1 = IdentityInput()
         if not input2:
             input2 = ZerosInput()
         if not operation1:
@@ -16,7 +17,6 @@ class Cell(Node):
             operation2 = Void()
         if not output_combination:
             output_combination = Sum()
-
         if not output:
             output = OutCell()
 
@@ -67,28 +67,30 @@ class Cell(Node):
         for cell_element_dict in feature_model.get("children"):
             element_type = Node.get_type(cell_element_dict)
             element = None
+
+            if len(cell_element_dict.get("children")) >0:
+                
+                if(element_type=="input1"):
+                    element = Input.parse_feature_model(cell_element_dict)
+
+                elif(element_type=="input2"):
+                    element = Input.parse_feature_model(cell_element_dict)
+                    
+                elif(element_type=="operation1"):
+                    element = Operation.parse_feature_model(cell_element_dict)
+                    
+                elif(element_type=="operation2"):
+                    element = Operation.parse_feature_model(cell_element_dict)
+                    
+                elif(element_type=="combination"):
+                    element = Combination.parse_feature_model(cell_element_dict)
+                    
+                elif(element_type=="output"):
+                    element = Output.parse_feature_model(cell_element_dict)
             
-            if(element_type=="input1"):
-                element = Input.parse_feature_model(cell_element_dict)
-
-            elif(element_type=="input2"):
-                element = Input.parse_feature_model(cell_element_dict)
-                
-            elif(element_type=="operation1"):
-                element = Operation.parse_feature_model(cell_element_dict)
-                
-            elif(element_type=="operation2"):
-                element = Operation.parse_feature_model(cell_element_dict)
-                
-            elif(element_type=="combination"):
-                element = Combination.parse_feature_model(cell_element_dict)
-                
-            elif(element_type=="output"):
-                element = Output.parse_feature_model(cell_element_dict)
-                
-            setattr(cell, element_type, element)   
-            print("settings {0} {1}".format(element_type, element.get_name())) 
+            if element:
+                setattr(cell, element_type, element)   
+            #print("settings {0} {1}".format(element_type, element.get_name())) 
   
-
         return cell
         

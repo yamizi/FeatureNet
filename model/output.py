@@ -68,7 +68,8 @@ class OutCell(Output):
         else:
             self._relativeCellIndex = int(_relativeCellIndex)
             if self._relativeCellIndex > 0 :
-                print("skip {} cells".format(self._relativeCellIndex))
+                #print("skip {} cells".format(self._relativeCellIndex))
+                pass
 
         self.currentIndex = self._relativeCellIndex
 

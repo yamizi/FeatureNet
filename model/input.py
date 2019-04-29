@@ -174,6 +174,7 @@ class PoolingInput(Input):
 
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
+            self._type = "max"
         else:
             self._type = _type
 
