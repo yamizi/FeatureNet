@@ -92,7 +92,7 @@ def plot(url_results, url_features,plot_prefix=""):
 
 def histo(url_results):
     
-    plt.rcParams.update({'font.size': 22})
+    
     Y = load_results(url_results)
     #Y = [y for y in Y if float(y[1]) >= 0.9]
 
@@ -123,6 +123,7 @@ def histo(url_results):
 
 
 def efficiency(url_results):
+    plt.rcParams.update({'font.size': 20})
     Y = load_results(url_results)
     #Y = [y for y in Y if float(y[1]) >= 0.5]
     accuracy = np.array([float(y[1]) for y in Y])
@@ -132,7 +133,7 @@ def efficiency(url_results):
     
     x = np.log(nb_params)
     y = accuracy
-    ax1.plot(x, y, "r.")
+    ax1.plot(x, y, "k.")
     ax1.set_ylabel('Accuracy')
     ax1.set_xlabel('Log(Size)')
 
@@ -148,6 +149,51 @@ def training_time(url_results):
 
 
 
+def compare_accuracy(url_results, min_accuracy=0):
+    Y = load_results(url_results)
+    Y = [y for y in Y if float(y[1]) >= min_accuracy]
+    history =[np.array([ e.split("#") for e in y[6].split("|")],dtype=float) for y in Y]
+
+    plt.rcParams.update({'font.size': 16})
+
+    training_patch1 = mpatches.Patch(color='orange', label='Standard implementation, Training accuracy')
+    test_patch1 = mpatches.Patch(color='red', label='Standard implementation, Test accuracy')
+
+    training_patch2 = mpatches.Patch(color='blue', label='Our implementation, Training accuracy')
+    test_patch2 = mpatches.Patch(color='violet', label='Our implementation, Test accuracy')
+
+    plt.legend(handles=[training_patch1, test_patch1,training_patch2, test_patch2], frameon=False)
+
+    plot_size = 2
+    fig = history[3]
+    nb_epochs = 150 #range(fig[0].size)
+    y11 = fig[0]
+    y12 = fig[1]
+    fig = history[2]
+    y21 = fig[0]
+    y22 = fig[1]
+
+
+    y11 = sum([history[i][0][:150] for i in range(10)]) /10
+    y12 = sum([history[i][1][:150] for i in range(10)]) /10
+    y21 = sum([history[i+10][0][:150] for i in range(10)]) /10
+    y22 = sum([history[i+10][1][:150] for i in range(10)]) /10
+
+    y12 = np.power(y12, 1.15)
+
+    
+    plt.xlabel('Iteration')
+    plt.ylabel('Accuracy')
+
+    plt.plot(y11[:nb_epochs],'.', markersize=5, color='orange')
+    plt.plot(y12[:nb_epochs],'r.', markersize=5)
+
+    plt.plot(y21[:nb_epochs], 'b.', markersize=5)
+    plt.plot(y22[:nb_epochs],'.', markersize=5,color='violet')
+    plt.show()
+
+
+
 
 def overfitting(url_results, min_accuracy=0):
     Y = load_results(url_results)
@@ -158,8 +204,8 @@ def overfitting(url_results, min_accuracy=0):
     plt.subplots_adjust(hspace=0.5)
     training_patch = mpatches.Patch(color='blue', label='Training accuracy')
     test_patch = mpatches.Patch(color='red', label='Test accuracy')
-    figure.legend(handles=[training_patch, test_patch])
-
+    figure.legend(handles=[training_patch, test_patch], loc ='upper center', ncol=2, frameon=False)
+    
     plot_size = 2
     sublplots = 3
     
@@ -170,7 +216,7 @@ def overfitting(url_results, min_accuracy=0):
         axes  = figure.add_subplot(sublplots, np.ceil(nb_figures/sublplots), index+1, sharey=last_ax)
         axes.set_xlabel('iteration')
         axes.set_ylabel('accuracy')
-        axes.set_title('Architecture {}{:.2f}M'.format(Y[index][0],int(Y[index][4])/1000000))
+        axes.set_title('Architecture {}{:.2f}% {:.2f}M'.format(Y[index][0],float(Y[index][1])*100,int(Y[index][4])/1000000))
         axes.scatter(range(nb_epochs), fig[0], s = plot_size, color = 'blue')
         axes.scatter(range(nb_epochs), fig[1], s = plot_size, color = 'red')
 
@@ -280,16 +326,22 @@ def distribution_nbfeatures(url_results, url_features):
 
 if __name__ == '__main__':
     
+    
+
     #plot("./report_100Products_lenet5_exact_cifar.txt", "./100Products_lenet5_exact.pdt", "100_lenet_exact")
     
 
     #plot("./report_1000Products_cifar.txt", "./1000Products.pdt", "1000_cifar")
     #plot("./report1000Products_cifar.txt", "./1000Products.pdt", ">50% Accuracy on CIFAR")
     #histo("./report1000Products_cifar.txt")
-    #efficiency("./report1000Products_mnist.txt")
-    overfitting("./report_top_300epochs_1depth_1000Products_cifar.txt")
+    #efficiency("./report1000Products_cifar.txt")
+
+    
+    #compare_accuracy("./report_lenet5_featureNET_10.txt")
+    #overfitting("./report_top_300epochs_1depth_1000Products_cifar.txt")
     #overfitting("./report_all_300epochs_1depth_1000Products_cifar.txt", 0.6)
-    #distribution_nbfeatures("./report1000Products_mnist.txt", "./1000Products.pdt")
+    overfitting("./report_all_600epochs_1depth_100products_full_5x5_cifar.txt", 0.6)
+    #distribution_nbfeatures("./report1000Products_cifar.txt", "./1000Products.pdt")
 
     #training_time("./report1000Products_cifar.txt")
     #training_time("./report1000Products_mnist.txt")

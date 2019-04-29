@@ -4,4 +4,8 @@ __pychache__/
 trash.xml
 products/
 report*.txt
+reports/*
 plots/
+*.pdt
+*.out
+*.sh
