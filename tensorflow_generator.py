@@ -70,8 +70,8 @@ class TensorflowGenerator(object):
     dataset = None
     input_shape = (0,0,0)
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, features=None):
-        #features is a list of enabled and siabled features based on the original feature model
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None):
+        #product_features is a list of enabled and disabled features based on the original feature model
         if product:
             batch_size = 128 #64
             num_classes = 10
@@ -144,7 +144,7 @@ class TensorflowGenerator(object):
     
             timed = TimedStopping(self,None, 6000)
             begin_training = time.time()    
-            self.model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, features=features)
+            self.model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, product_features=product_features, features_label=features_label)
 
             print("====> Loading new feature model with {0} blocks".format(len(self.model.blocks)))
             model = self.model.build(TensorflowGenerator.input_shape, num_classes)
@@ -153,9 +153,9 @@ class TensorflowGenerator(object):
                 print("#### model is not valid ####")
                 return 
 
-            return   
+            #return   
             
-            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=25)
+            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=5)
 
             history = model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                     batch_size=batch_size,

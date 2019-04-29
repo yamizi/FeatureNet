@@ -19,10 +19,10 @@ import random
 class KerasFeatureVector(object):
 
     features = []
-    attributes = []
+    attributes = [0,0,0,0]
     accuracy = None
 
-    def __init__(self, features, attributes, accuracy):
+    def __init__(self, accuracy, attributes, features):
         self.features = features
         self.attributes = attributes
         self.accuracy= accuracy
@@ -35,13 +35,17 @@ class KerasFeatureVector(object):
     def cross_over(self, second_vector, crossover_type="onepoint"):
         if crossover_type=="onepoint":
             point = random.randint(0, len(self.features))
-            return KerasFeatureVector(self.features[0:point]+second_vector.features[point:], [], 0)
+            return KerasFeatureVector(0, [0,0, 0, 0], self.features[0:point]+second_vector.features[point:])
 
     def to_vector(self):
-        return self.attributes + self.features
+        return [self.accuracy]+ self.attributes + self.features
+
+    @staticmethod
+    def from_vector(vect):
+        return KerasFeatureVector(vect[0], [vect[1],vect[2], vect[3], vect[4]], vect[5:])
 
     def __str__(self):
-        return "{}:{}".format(";".join(self.attributes), self.accuracy)
+        return "{}:{}".format(";".join([str(i) for i in self.attributes]), self.accuracy)
 
     @property
     def fitness(self):
@@ -53,6 +57,7 @@ class KerasFeatureModel(object):
     outputs = []
     optimizers = []
     features = []
+    features_label=  []
     nb_flops  = 0
     nb_params = 0
     model = None
@@ -74,7 +79,7 @@ class KerasFeatureModel(object):
 
     
     def to_vector(self):
-        return KerasFeatureVector(self.features, [len(self.blocks),len(self.model.layers), self.nb_params, self.nb_flops], self.accuracy)
+        return KerasFeatureVector(self.accuracy, [len(self.blocks),len(self.model.layers), self.nb_params, self.nb_flops], self.features)
 
         
     def build(self, input_shape, output_shape):
@@ -107,20 +112,24 @@ class KerasFeatureModel(object):
         
         except Exception as e:
             print("error",e)
-            raise e
+            return None
         
         self.model = model
         return model
 
 
     @staticmethod
-    def parse_feature_model(feature_model, name=None, depth=1, features=None):
+    def parse_feature_model(feature_model, name=None, depth=1, product_features=None, features_label=None):
 
         print("building keras model from feature model tree")
         model = KerasFeatureModel(name=name)
 
-        if features:
-            model.features = [1 if x.isdigit() and int(x)>0 else 0 for x in features]
+        if product_features:
+            model.features = [1 if str(x).isdigit() and int(x)>0 else 0 for x in product_features]
+        
+        if features_label:
+            model.features_label = features_label
+
         model.blocks = []
 
         if len(feature_model)==0:

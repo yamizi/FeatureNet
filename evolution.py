@@ -11,9 +11,9 @@ baseurl= "./pledge_product/"
 baseurl= "../products/"
 base_products = "100Products" 
 base_products = "100products_full_5x5"
-nb_base_products = 4
+nb_base_products = 100
 training_epochs = 12
-evolution_epochs = 20
+evolution_epochs = 100
 survival_rate = 0.5
 
 def sort_select(list_vectors, survival_rate=0.5):
@@ -38,8 +38,8 @@ def evolve(initial_population, survival_rate=0.5):
     return current_population
 
 
-def train(prod,training_epochs, dataset, e, features):
-        tensorflow = TensorflowGenerator(prod,training_epochs, dataset, features)
+def train(prod,training_epochs, dataset, e, original_product, features):
+        tensorflow = TensorflowGenerator(prod,training_epochs, dataset, product_features = original_product,features_label=features)
         e.accuracy = tensorflow.model.accuracy
 
 
@@ -65,7 +65,7 @@ def run(inputfile=None,outputfile=None):
    else:
       inputfile = baseurl+base_products+"_initial"
       for index, (product, original_product) in enumerate(initial_product_set.format_products()):
-         tensorflow = TensorflowGenerator(product,training_epochs, dataset, initial_product_set.features)
+         tensorflow = TensorflowGenerator(product,training_epochs, dataset, product_features=original_product, features_label=initial_product_set.features)
          initial_products_vectors.append(tensorflow.model.to_vector())
 
          if nb_base_products > 0 and index == nb_base_products:
@@ -74,9 +74,10 @@ def run(inputfile=None,outputfile=None):
 
    last_population = initial_products_vectors[:nb_base_products] if nb_base_products else initial_products_vectors
    f1 = open(inputfile+".json", 'a')
-   f1.write("\n{} {}".format(last_evolution_epoch+i,json.dumps([i.to_vector() for i in last_population])))
+   f1.write("\n{} {}".format(last_evolution_epoch,json.dumps([i.to_vector() for i in last_population])))
    f1.close()   
    
+   last_evolution_epoch = last_evolution_epoch+1
    for i in range(evolution_epochs):
       print("### evolution epoch {}".format(i+last_evolution_epoch))
       new_pop = evolve(last_population)
@@ -86,10 +87,12 @@ def run(inputfile=None,outputfile=None):
 
       for e in new_pop:
          if not e.accuracy:
+               product = initial_product_set.features.keys()
                prod, original_product  = initial_product_set.format_product(original_product=e.features)
-               p = multiprocessing.Process(target=train, args=(prod,training_epochs, dataset, e, initial_product_set.features))
-               p.start()
-               processes.append(p)
+               train(prod,training_epochs, dataset, e,original_product, initial_product_set.features)
+               #p = multiprocessing.Process(target=train, args=(prod,training_epochs, dataset, e, initial_product_set.features))
+               #p.start()
+               #processes.append(p)
 
       for p in processes:
          p.join()

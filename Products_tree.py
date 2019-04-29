@@ -44,6 +44,11 @@ class ProductSet(object):
 
         if not original_product:
             original_product =  self.products[prd_index]
+
+        else:
+            if isinstance(original_product[0], int):
+                nb_features = len(original_product)
+                original_product = [i * int(original_product[i]) for i in range(nb_features)]
             
         product = [abs(int(x)) for x in original_product if  str(x).isdigit() and int(x)>0]
 
