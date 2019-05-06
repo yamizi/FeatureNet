@@ -1,10 +1,10 @@
 #!/bin/bash -l
 
 #SBATCH -n 10   
-#SBATCH -N 2
+#SBATCH -N 4
 #SBATCH -p gpu
 #SBATCH --gres=gpu:4
-#SBATCH --time=0-23:00:00
+#SBATCH --time=2-23:00:00
 #SBATCH --qos=qos-gpu
 #SBATCH -C skylake
 #SBATCH -J FeatureModel2Keras
@@ -19,6 +19,6 @@ module load math/Keras/2.1.6-foss-2018a-TensorFlow-1.8.0-Python-3.6.4
 module load lib/TensorFlow/1.8.0-foss-2018a-Python-3.6.4-CUDA-9.1.85
 pip install --upgrade --user  keras
 
-python -u evolution.py > bash.out
+python -u pledge_evolution.py > bash_evol_pledge_cifar.out
 # Your more useful application can be started below!
 #  dos2unix job.sh sbatch job.sh

@@ -1,9 +1,9 @@
 import xml.etree.ElementTree as ET
 
-nb_cells = 5
-nb_blocks = 5
+nb_cells = 10
+nb_blocks = 1
 
-tree = ET.parse("C:\\Users\salah.ghamizi\Desktop\main_1block.xml")
+tree = ET.parse("C:\\Users\salah.ghamizi\Desktop\main_1block_light.xml")
 root = tree.getroot()
 
 child = root.getchildren()
@@ -38,7 +38,7 @@ for c in range(len(constraints_raw)):
     if constraint[1].find("[k]")==-1:
         constraints_full ="{}\n{}".format(constraints_full, c)
     elif constraint[0].find("CLC")!=-1:
-        
+        pass
     else:
         for k in range(nb_blocks):
             if constraint[1].find("[k+1]")!=-1 and k+1==nb_blocks:
@@ -59,4 +59,4 @@ for c in range(len(constraints_raw)):
                     constraint_id = constraint_id+1
 constraints.text = constraints_full+"\n"
 
-tree.write("C:\\Users\salah.ghamizi\Desktop\main_1block_extended.xml", encoding="UTF-8", xml_declaration=True)
+tree.write("C:\\Users\salah.ghamizi\Desktop\main_1block_10_cells.xml", encoding="UTF-8", xml_declaration=True)
