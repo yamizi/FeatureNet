@@ -3,17 +3,34 @@ import sys
 import validators
 
 class ProductSet(object):
+
+
+    @staticmethod
+    def filter_leaves(features, keep_list=None):
+        if not keep_list:
+            keep_list = ("Dense_features_", "Dense_activation_", "Convolution_kernel_","Convolution_stride_","Convolution_features_", "Convolution_activation_", "Pooling_kernel_","Pooling_stride_","Pooling_type_", "Pooling_padding_", "Dropout_0", "BatchNormalization","Activation_", "relativeCellIndex_", "Output_Block")
+            filtered = {k:features[k] for k in features.keys() if any(( features[k].find(keep) !=-1 for keep in keep_list))}
+
+        #features = sorted(features.items(), key = lambda kv:(kv[1], kv[0]))
+        filtered = {k:features[k] for k in features.keys() if len(k)>3}
+        
+        return filtered
+
+
     def __init__(self, url):
         self.features = {}
         self.constraints = []
         self.products = []
         self.nbFeatures = 0;
         self.nbProducts = 0;
+        self.last_products_url = "";
+
         if url:
             self.load_products_from_url(url)
 
     def load_products_from_url(self, url):
     
+        self.last_products_url = url 
         self.features = {}
         self._features_reverse = {}
         self.constraints = []
