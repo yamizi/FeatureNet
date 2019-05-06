@@ -79,7 +79,12 @@ class KerasFeatureModel(object):
 
     
     def to_vector(self):
-        return KerasFeatureVector(self.accuracy, [len(self.blocks),len(self.model.layers), self.nb_params, self.nb_flops], self.features)
+        if self.model:
+            nb_layers = len(self.model.layers)
+        else:
+            nb_layers = 0
+            
+        return KerasFeatureVector(self.accuracy, [len(self.blocks),nb_layers, self.nb_params, self.nb_flops], self.features)
 
         
     def build(self, input_shape, output_shape):
