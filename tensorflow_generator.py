@@ -70,7 +70,7 @@ class TensorflowGenerator(object):
     dataset = None
     input_shape = (0,0,0)
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None):
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False):
         #product_features is a list of enabled and disabled features based on the original feature model
         if product:
             batch_size = 128 #64
@@ -153,7 +153,14 @@ class TensorflowGenerator(object):
                 print("#### model is not valid ####")
                 return 
 
-            #return   
+            if no_train:
+                return   
+
+            self.model.nb_params = self.params = model.count_params()
+
+            if self.model.nb_params > 10000000:
+                print("#### model is bigger than 10M params")
+                return
             
             early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=5)
 
@@ -172,7 +179,6 @@ class TensorflowGenerator(object):
             
                 
             #self.model.nb_flops =  self.flops = get_flops()
-            self.model.nb_params = self.params = model.count_params()
             self.model.accuracy = self.accuracy = score[1]
             self.history = (history.history['acc'], history.history['val_acc'])
 
