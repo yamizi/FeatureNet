@@ -4,9 +4,14 @@ from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureVector
 from products_tree import ProductSet
 import random
+from keras.backend.tensorflow_backend import set_session
+from keras.backend.tensorflow_backend import clear_session
+from keras.backend.tensorflow_backend import get_session
+import tensorflow
+import gc
+
 
 base_path = '../products/'
-nb_product_perparent = 50
 training_epochs = 50
 evolution_epochs = 20
 
@@ -16,11 +21,6 @@ def run_pledge(input_file,nb_base_products, output_file):
    print("running pledge on {}".format(input_file))
    subprocess.check_call(params)
    return 
-   try:
-      subprocess.check_call(params)
-   except subprocess.CalledProcessError as e:
-      print(e)
-      #(retcode, cmd)
 
 def select(last_population,survival_count):
    labels = last_population.get("filtered_features_label")
@@ -64,76 +64,120 @@ def extract_leaves(output_file):
    return initial_product_set, last_population
 
 
+def reset_keras(classifier):
+    sess = get_session()
+    clear_session()
+    sess.close()
+    sess = get_session()
+
+    try:
+        del classifier  
+    except:
+        pass
+
+    print(gc.collect()) # if it's done something you should see a number being outputted
+
+    # use the same config as you used to create the session
+    config = tensorflow.ConfigProto()
+    #if hasattr(config, "gpu_options"):
+    #  config.gpu_options.per_process_gpu_memory_fraction = 1
+    #  config.gpu_options.visible_device_list = "0"
+    set_session(tensorflow.Session(config=config))
+
 def train_products(initial_product_set, output_file, last_population, dataset):
    print("training products in {}".format(output_file))
    for index, (product, original_product) in enumerate(initial_product_set.format_products()):
-      tensorflow = TensorflowGenerator(product,training_epochs, dataset, product_features=original_product, features_label=initial_product_set.features, no_train=False)
-            
+      print("### training product {}".format(index))
+      tensorflow = TensorflowGenerator(product,training_epochs, dataset, product_features=original_product, features_label=initial_product_set.features, no_train=False)    
       last_population["products"].append(tensorflow.model.to_vector())
+      reset_keras(tensorflow)
         
    return last_population
 
 def run(input_file=None,output_file=None, last_pdts_path="", nb_base_products=100, dataset="cifar"):
 
     
-    survival_count = min(100, nb_base_products)
+      survival_count = int(0.2*nb_base_products)
+      nb_product_perparent = 5
+      last_evolution_epoch = 0
 
-    last_evolution_epoch = 0
+      if not input_file:
+            input_file = '{}main_5_5.xml'.format(base_path)  
+            #input_file = '{}main_1block_10_cells.xml'.format(base_path)  
 
-    if not input_file:
-         input_file = '{}main_5_5.xml'.format(base_path)  
-         #input_file = '{}main_1block_10_cells.xml'.format(base_path)  
+      if not output_file:
+            output_file = '{}main_5_5_{}products.pdt'.format(base_path,nb_base_products)  
+            #output_file = '{}main_1blocks_10cells_{}products.pdt'.format(base_path,nb_base_products)  
 
-    if not output_file:
-         output_file = '{}main_5_5_{}products.pdt'.format(base_path,nb_base_products)  
-         #output_file = '{}main_1blocks_10cells_{}products.pdt'.format(base_path,nb_base_products)  
+      if not last_pdts_path:
+         p = output_file.find("products")
+         if p > -1:
+            last_pdts_path = "{}_{}.json".format(output_file[0:p],dataset )
+         else:
+            last_pdts_path = "{}_{}products_{}.json".format(output_file[:-4], nb_base_products,dataset)
+            #output_file = '{}main_1blocks_10cells_{}products.pdt'.format(base_path,nb_base_products) 
 
-    if os.path.isfile(output_file):
-        print("Skipping initial PLEDGE run")
-    else:
-        print("Initial PLEDGE run")
-        run_pledge(input_file,nb_base_products, output_file)
-   
-    product_set, last_population = extract_leaves(output_file)
-
-    if os.path.isfile(last_pdts_path):
-        print("Skipping initial training")
-        f1 = open(last_pdts_path, 'r')
-        vects = json.loads(f1.read())
-        last_population["products"] = [KerasFeatureVector.from_vector(vect) for vect in vects]
-
-    else:
-        last_population = train_products(product_set, output_file, last_population,dataset)
-        f1 = open(output_file[:-4]+".json", 'a')
-        f1.write(json.dumps([i.to_vector() for i in last_population["products"]]))
-        f1.close()   
-   
-    
-    #list of (mutant_ratio,mutant_prds) sum of count_ratio should equal 1
-    mutant_ratios = ((1, 0.2),  (0.5, 0.1), (0.5, 0.1), (0.5, 0.1), (0.5, 0.1), (0.5, 0.1), (0.25, 0.1), (0.25, 0.1), (0.25, 1))
-    mutant_ratios = ((0.5, 1),)
-
-    for evo in range(evolution_epochs):
-      print("### evolution epoch {}".format(evo+last_evolution_epoch))
-      new_pop, new_pop_labels = select(last_population, survival_count)
+      if os.path.isfile(output_file):
+         print("Skipping initial PLEDGE run")
+      else:
+         print("Initial PLEDGE run")
+         run_pledge(input_file,nb_base_products, output_file)
       
-      last_population["products"] = new_pop
-      for i in range(survival_count):
+      product_set, last_population = extract_leaves(output_file)
 
-         last_pdts_paths = []
-         
-         
-         for ratio_id, (ratio, nb_prd) in enumerate(mutant_ratios):
-            last_pdts_paths.append(mutate("{}_epoch{}_mutant{}_ratio{}".format(dataset, evo,i, ratio_id),new_pop_labels[i],input_file, nb_prd*nb_product_perparent,ratio))
-         
-         for mutants_pdts_path in last_pdts_paths:
-            pop = train_products(product_set, mutants_pdts_path, last_population,dataset)
+      if os.path.isfile(last_pdts_path):
+         print("Skipping initial training")
+         f1 = open(last_pdts_path, 'r')
+         vects = json.loads(f1.read())
+         last_population["products"] = [KerasFeatureVector.from_vector(vect) for vect in vects]
+
+      else:
+         output_file = train_products(product_set, output_file, last_population,dataset)
+         f1 = open(last_pdts_path, 'w')
+         f1.write(json.dumps([i.to_vector() for i in last_population["products"]]))
+         f1.close()   
+      
+      
+      #list of (mutant_ratio,mutant_prds) sum of count_ratio should equal 1
+      mutant_ratios = ((1, 0.2),  (0.5, 0.1), (0.5, 0.1), (0.5, 0.1), (0.5, 0.1), (0.5, 0.1), (0.25, 0.1), (0.25, 0.1), (0.25, 1))
+      mutant_ratios = ((0.5, 1),)
+
+      for evo in range(evolution_epochs):
+         print("### evolution epoch {}".format(evo+last_evolution_epoch))
+         new_pop, new_pop_labels = select(last_population, survival_count)
+         last_population["products"] = new_pop
+         print("### remaining top individuals {}".format(len(new_pop)))
+         for i in range(survival_count):
+
+            last_pdts_paths = []
+            print("### batch of product parent {}".format(i))
             
-            f1 = open(mutants_pdts_path[:-4]+".json", 'a')
-            f1.write(json.dumps([i.to_vector() for i in pop["products"]]))
-            f1.close()   
+            for ratio_id, (ratio, nb_prd) in enumerate(mutant_ratios):
+               last_pdts_paths.append(mutate("{}_epoch{}_mutant{}_ratio{}".format(dataset, evo,i, ratio_id),new_pop_labels[i],input_file, nb_prd*nb_product_perparent,ratio))
+            
+            for mutants_pdts_path in last_pdts_paths:
+               print("### batch of pledge sub-products {}".format(mutants_pdts_path))
+               pop = train_products(product_set, mutants_pdts_path, last_population,dataset)
+               
+               f1 = open(mutants_pdts_path[:-4]+".json", 'w')
+               f1.write(json.dumps([i.to_vector() for i in pop["products"]]))
+               f1.close()   
 
-            last_population["products"] = last_population["products"] + pop["products"] 
+               last_population["products"] = last_population["products"] + pop["products"] 
+
+
+         print("### remaining total individuals {}".format(len(last_population["products"])))
+
+         end = last_pdts_path.find("products")
+         if end > -1:
+            pdt_path = "{}_{}.json".format(last_pdts_path[0:end],evo )
+         else:
+            pdt_path = "{}_{}products_{}.json".format(last_pdts_path[:-4], nb_base_products,evo)
+
+         f1 = open(pdt_path, 'w')
+         f1.write(json.dumps([i.to_vector() for i in last_population["products"]]))
+         f1.close()  
+
 
 
 
@@ -156,7 +200,7 @@ def main(argv):
       elif opt in ("-p", "--pfile"):
          products_file = arg
 
-   run(input_file, input_file, last_pdts_path=products_file)
+   run(input_file, input_file, last_pdts_path=products_file, dataset="mnist")
    
 
 
