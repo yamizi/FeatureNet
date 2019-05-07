@@ -2,7 +2,7 @@
 """"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 from model.keras_model import KerasFeatureModel
-from keras.datasets import mnist, cifar10
+from keras.datasets import mnist, cifar10, cifar100
 import keras
 from keras import backend as K
 import tensorflow as tf
@@ -83,6 +83,9 @@ class TensorflowGenerator(object):
                     (x_train, y_train), (x_test, y_test) = mnist.load_data()
                 elif dataset=="cifar":
                     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+                elif dataset=="cifar100":
+                    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
+                    num_classes = 100
 
                 # input image dimensions
                 img_rows, img_cols, channels = x_train.shape[1], x_train.shape[2], x_train.shape[3] if len(x_train.shape) ==4 else 1
@@ -162,7 +165,7 @@ class TensorflowGenerator(object):
                 print("#### model is bigger than 10M params")
                 return
             
-            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=5)
+            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=12)
 
             history = model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                     batch_size=batch_size,
@@ -181,6 +184,7 @@ class TensorflowGenerator(object):
             #self.model.nb_flops =  self.flops = get_flops()
             self.model.accuracy = self.accuracy = score[1]
             self.history = (history.history['acc'], history.history['val_acc'])
+            
 
     def load_products(self, product):
         def build_rec(node, level=0):
