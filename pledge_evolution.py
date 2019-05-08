@@ -161,8 +161,9 @@ def run(input_file="",output_file="", last_pdts_path="", nb_base_products=50, da
             print("### batch of pledge sub-products {}".format(mutants_pdts_path))
             product_set.load_products_from_url(mutants_pdts_path)
             pop = train_products(product_set, mutants_pdts_path, dataset)
-            
+            pop = sorted(pop, key=lambda x: x.accuracy, reverse=True)
             f1 = open(mutants_pdts_path[:-4]+".json", 'w')
+            
             f1.write(json.dumps([i.to_vector() for i in pop]))
             f1.close()   
 
@@ -178,7 +179,8 @@ def run(input_file="",output_file="", last_pdts_path="", nb_base_products=50, da
          pdt_path = "{}_{}products_{}.json".format(last_pdts_path[:-4], nb_base_products,evo)
 
       f1 = open(pdt_path, 'w')
-      f1.write(json.dumps([i.to_vector() for i in last_population["products"]]))
+      pop = sorted(last_population["products"], key=lambda x: x.accuracy, reverse=True)
+      f1.write(json.dumps([i.to_vector() for i in pop]))
       f1.close()  
 
 
