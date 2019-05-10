@@ -1,6 +1,11 @@
 import re
-import sys
+import sys, os
 import validators
+
+
+class ProductSetError(Exception):
+    pass
+    
 
 class ProductSet(object):
 
@@ -30,6 +35,12 @@ class ProductSet(object):
 
     def load_products_from_url(self, url):
     
+        print("==> Loading products from {}".format(url))
+
+        if not os.path.isfile(url):
+            print("File not found")
+            raise ProductSetError()
+
         self.last_products_url = url 
         self.features = {}
         self._features_reverse = {}
