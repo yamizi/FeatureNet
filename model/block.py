@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from .mutation.mutable_block import MutableBlock
 from .node import Node
 from .cell import Cell
 from .output import Out, OutCell, OutBlock
 
-class Block(Node):
+class Block(MutableBlock, Node):
     def __init__(self, raw_dict=None, previous_block = None):
 
         self.is_root = True
