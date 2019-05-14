@@ -14,11 +14,12 @@ import tensorflow
 import gc
 import datetime
 import time
+from math import ceil
 
 
 pledge_path = '../products/PLEDGE.jar'
-base_path = '../products/run8'
-training_epochs = 300
+base_path = '../products'
+training_epochs = 25
 evolution_epochs = 20
 
 
@@ -28,11 +29,11 @@ def run_pledge(input_file, nb_base_products, output_file):
                      str(nb_base_products), '-o', output_file]
     start = time.time()
     print("running pledge {} on {}: {}".format(
-        pledge_path, input_file, datetime.datetime.now()))
+        pledge_path, params, datetime.datetime.now()))
     pledge_result = subprocess.check_call(params)
 
     end = time.time()
-    print("pledge result {} in {}ms".format(pledge_result, str(end-start)))
+    print("pledge result {} in {}s".format(pledge_result, str(end-start)))
     return
 
 
@@ -47,11 +48,12 @@ def select(last_population, survival_count):
     return products, products_labels
 
 
-def mutate(mutant_id, mutant_labels, initial_feature_model, nb_products, constraints_ratio=0.5):
+def mutate(mutant_path, mutant_labels, initial_feature_model, nb_products, constraints_ratio=0.5):
 
     mutant_labels = [
         mutant for mutant in mutant_labels if random.random() < constraints_ratio]
 
+    print("### mutate product from {} to {}".format(initial_feature_model, mutant_path))
     import xml.etree.ElementTree as ET
     tree = ET.parse(initial_feature_model)
     root = tree.getroot()
@@ -64,11 +66,19 @@ def mutate(mutant_id, mutant_labels, initial_feature_model, nb_products, constra
             "C{}:~Architecture  or  ~{}".format(nb_constraints+i-1, lbl))
 
     constraints.text = "\n".join(constraints_raw)
-    dst = "{}_{}.xml".format(initial_feature_model[:-4], mutant_id)
+    dst = "{}.xml".format(mutant_path)
     tree.write(dst, encoding="UTF-8", xml_declaration=True)
+    #text = ET.tostring(root,"unicode" )
+    #f = open(dst, 'w')
+    #f.write(text)
+    #f.close()
+
+    if not os.path.isfile(dst):
+        print("file {} not saved yet".format(dst))
+        raise Exception()
 
     output_file = "{}.{}".format(dst[:-4], "pdt")
-    run_pledge(dst, nb_products, output_file)
+    run_pledge(dst, int(nb_products), output_file)
 
     # possibility to generate multiple products each containing a different set of constraints
     return output_file
@@ -114,23 +124,29 @@ def train_products(initial_product_set, products_file, dataset):
     for index, (product, original_product) in enumerate(initial_product_set.format_products()):
         print("### training product {}".format(index))
         tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product,
-                                         features_label=initial_product_set.features, no_train=False)
-        last_population.append(tensorflow.model.to_vector())
+                                         features_label=initial_product_set.features, no_train=False, data_augmentation=False)
+
+        if tensorflow and hasattr(tensorflow,"model") and tensorflow.model:
+            last_population.append(tensorflow.model.to_vector())
+            
         reset_keras(tensorflow)
     end = time.time()
-    print("### training products over, took {}ms".format(str(end-start)))
+    print("### training products over, took {}s".format(str(end-start)))
     return last_population
 
 
 def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar"):
+
+    if not os.path.isdir(base_path):
+        os.mkdir(base_path)
 
     session_path = "{}/{}".format(base_path, dataset)
 
     if not os.path.isdir(session_path):
         os.mkdir(session_path)
 
-    survival_count = 10  # int(0.2*nb_base_products)
-    nb_product_perparent = 90
+    survival_count = int(0.1*nb_base_products)
+    nb_product_perparent =  int(0.9*nb_base_products)
     last_evolution_epoch = 0
 
     if not input_file:
@@ -171,11 +187,14 @@ def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_pro
         f1.close()
 
     # list of (mutant_ratio,mutant_prds) sum of count_ratio should equal 1
-    mutant_ratios = ((1, 0.2),  (0.5, 0.1), (0.5, 0.1), (0.5, 0.1),
-                     (0.5, 0.1), (0.5, 0.1), (0.25, 0.1), (0.25, 0.1), (0.25, 1))
+    mutant_ratios = [(1, 0.2),  (0.5, 0.2), (0.5, 0.2), (0.5, 0.2), (0.25, 0.2)]
     #mutant_ratios = ((0.5, 1),)
 
     for evo in range(evolution_epochs):
+        # The more we increase the epochs, the more we keep all the leaves
+        mutant_ratios[0] = (1, 0.2 +0.8*evo/(evolution_epochs-1))
+        mutant_ratios[1] = mutant_ratios[2] = mutant_ratios[3] =(0.5, 0.2*(evolution_epochs-evo)/evolution_epochs)
+
         print("### evolution epoch {}".format(evo+last_evolution_epoch))
         new_pop, new_pop_labels = select(last_population, survival_count)
         last_population["products"] = new_pop
@@ -185,8 +204,9 @@ def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_pro
             print("### batch of product parent {}".format(i))
 
             for batch_id, (ratio, nb_prd) in enumerate(mutant_ratios):
-                mutants_pdts_path = mutate("e{}_m{}_b{}".format(
-                    evo, i, batch_id), new_pop_labels[i], last_pdts_path, nb_prd*nb_product_perparent, ratio)
+                mutant_id = "e{}_m{}_b{}".format(evo, i, batch_id)
+                mutant_path = "{}/{}".format(session_path, mutant_id)
+                mutants_pdts_path = mutate(mutant_path, new_pop_labels[i], input_file, max(3,ceil(nb_prd*nb_product_perparent)), ratio)
                 print("### batch of pledge sub-products {}".format(mutants_pdts_path))
                 try:
                     product_set.load_products_from_url(mutants_pdts_path)
@@ -196,8 +216,7 @@ def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_pro
 
                 pop = train_products(product_set, mutants_pdts_path, dataset)
                 pop = sorted(pop, key=lambda x: x.accuracy, reverse=True)
-                f1 = open("{}mutants_{}_{}.json".format(
-                    session_path, nb_base_products, dataset), 'w')
+                f1 = open("{}.json".format(mutant_path), 'w')
 
                 f1.write(json.dumps([i.to_vector() for i in pop]))
                 f1.close()
@@ -208,7 +227,7 @@ def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_pro
                      key=lambda x: x.accuracy, reverse=True)
         print("### remaining total individuals {} top accuracy: {}".format(
             len(pop), pop[0].accuracy))
-        pdt_path = "{}_{}products_{}.json".format(
+        pdt_path = "{}/{}products_{}.json".format(
             session_path, nb_base_products, evo)
         f1 = open(pdt_path, 'w')
         f1.write(json.dumps([i.to_vector() for i in pop]))
