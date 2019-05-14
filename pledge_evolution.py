@@ -239,17 +239,20 @@ def main(argv):
     output_file = ''
     products_file = ''
     base = base_path
+    nb_base_products=100
     dataset = "cifar"
     try:
-        opts, args = getopt.getopt(argv, "hd:b:i:o:p:", [
-                                   "dataset=", "bpath=", "ifile=", "ofile=", "pfile="])
+        opts, args = getopt.getopt(argv, "hnb:d:b:i:o:p:", [
+                                   "nb=","dataset=", "bpath=", "ifile=", "ofile=", "pfile="])
     except getopt.GetoptError:
         pass
     for opt, arg in opts:
         if opt == '-h':
             print(
-                'evolution.py -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
+                'evolution.py -nb <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
             sys.exit()
+        elif opt in ("-nb", "--nb"):
+            nb_base_products = int(arg)
         elif opt in ("-d", "--dataset"):
             dataset = arg
         elif opt in ("-b", "--bpath"):
@@ -262,7 +265,7 @@ def main(argv):
             products_file = arg
 
     run(base, input_file, output_file,
-        last_pdts_path=products_file, dataset=dataset)
+        last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products)
 
 
 if __name__ == "__main__":
