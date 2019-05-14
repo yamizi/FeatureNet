@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """"""
 from __future__ import absolute_import, division, print_function, unicode_literals
-
+import tensorflow as tf
 import keras.backend as k
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten
@@ -87,15 +87,24 @@ class KerasFeatureModel(object):
         return KerasFeatureVector(self.accuracy, [len(self.blocks),nb_layers, self.nb_params, self.nb_flops], self.features)
 
         
-    def build(self, input_shape, output_shape):
+    def build(self, input_shape, output_shape, max_parameters=20000000):
         self.outputs = []
 
         X_input = Input(input_shape)
         _inputs = [X_input]
         model = None
 
+        lr=1.e-2
+        n_steps=20
+        global_step = tf.Variable(0)    
+        global_step=1
+        learning_rate = tf.train.cosine_decay(
+            learning_rate=lr,
+            global_step=global_step,
+            decay_steps=n_steps
+        )
         self.optimizers.append(SGD(lr=0.1, momentum=0.9, decay=0.0001, nesterov=True))
-        self.optimizers = ["sgd"]
+        self.optimizers = [ "sgd", tf.train.RMSPropOptimizer(learning_rate=learning_rate)]
         
         try:
             print("Build Tensorflow model")
@@ -113,6 +122,12 @@ class KerasFeatureModel(object):
             model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
 
             #sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+
+            if model.count_params() > 20000000:
+                print("#### model is bigger than 20M params. Skipped")
+                model.summary()
+                return None 
+
             model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
         
         except Exception as e:
