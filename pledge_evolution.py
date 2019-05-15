@@ -225,10 +225,11 @@ def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_pro
 
         pop = sorted(last_population["products"],
                      key=lambda x: x.accuracy, reverse=True)
-        print("### remaining total individuals {} top accuracy: {}".format(
-            len(pop), pop[0].accuracy))
-        pdt_path = "{}/{}products_{}.json".format(
+       
+        pdt_path = "{}/{}products_e{}.json".format(
             session_path, nb_base_products, evo)
+        print("### remaining total individuals {} saved to {}. top accuracy: {}".format(
+            len(pop),pdt_path, pop[0].accuracy))
         f1 = open(pdt_path, 'w')
         f1.write(json.dumps([i.to_vector() for i in pop]))
         f1.close()

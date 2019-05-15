@@ -3,7 +3,7 @@
 from .node import Node
 from keras import backend as K
 from keras.layers import Dense, Conv2D
-from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
+from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D 
 from .output import Output, OutCell, OutBlock, Out
 
 class Input(Node):
@@ -210,8 +210,11 @@ class PoolingInput(Input):
                     self._padding="same"
                 return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
         if self._type=="global":
-            return input
-            #return GlobalMaxPooling2D(name=Node.get_name(self))(input)
+            #return input
+            if input.shape.ndims==4:
+                return GlobalAveragePooling2D(name=Node.get_name(self))(input)
+            else:
+                return input
 
         return input
 

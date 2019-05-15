@@ -5,7 +5,7 @@ import tensorflow as tf
 import keras.backend as k
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten
-from keras.layers import Input
+from keras.layers import Input, GlobalAveragePooling2D
 from keras.optimizers import SGD
 #from keras import optimizers
 
@@ -116,7 +116,8 @@ class KerasFeatureModel(object):
             out = out.content if hasattr(out,"content") else out
 
             if out.shape.ndims >2:
-                out = Flatten()(out)
+                #out = Flatten()(out)
+                out = GlobalAveragePooling2D()(out)
             self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]
             # Create model
             model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
@@ -132,6 +133,7 @@ class KerasFeatureModel(object):
         
         except Exception as e:
             print("error",e)
+            model.summary()
             return None
         
         self.model = model
