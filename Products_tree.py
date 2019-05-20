@@ -22,13 +22,14 @@ class ProductSet(object):
         return filtered
 
 
-    def __init__(self, url):
+    def __init__(self, url, binary_products = False):
         self.features = {}
         self.constraints = []
         self.products = []
         self.nbFeatures = 0;
         self.nbProducts = 0;
         self.last_products_url = "";
+        self.binary_products = binary_products
 
         if url:
             self.load_products_from_url(url)
@@ -60,26 +61,32 @@ class ProductSet(object):
             else:
 
                 product_features = line.split(";")
+                product_features = product_features[:-1]
+                if self.binary_products:
+                    product_features = sorted( product_features, key=lambda k: abs(int(k)))
+                    product_features =  [1 if str(x).isdigit() and int(x)>0 else 0 for x in product_features]
+
                 self.products.append(product_features) 
             line = f.readline()
         f.close()
         self.nbFeatures = len(self.features.keys())
         self.nbProducts = len(self.products)
 
-    def format_product(self,prd_index=0, original_product=None):
+    def format_product(self,prd_index=0, original_product=None, include_original=True, sort_features=False):
         #product = [self.features.get(str(x)) for x in self.products[index]]
         # to dict
-
+        
+        original_product =  self.products[prd_index] if not original_product else original_product
         if not original_product:
-            original_product =  self.products[prd_index]
+            return None
 
+        if self.binary_products:
+            nb_features = len(original_product)
+            product = [(i+1) for i in range(nb_features) if  int(original_product[i])>0]
         else:
-            if isinstance(original_product[0], int):
-                nb_features = len(original_product)
-                original_product = [i * int(original_product[i]) for i in range(nb_features)]
-            
-        product = [abs(int(x)) for x in original_product if  str(x).isdigit() and int(x)>0]
+            product = [abs(int(x)) for i,x in enumerate(original_product) if  str(x).isdigit() and int(x)>=0]
 
+    
         product_labels = {self.features[str(x)]:i for i,x in enumerate(product)}
         product_nodes = [{'label':self.features[str(x)],'id':x, "children":[]} for x in product]
 
@@ -96,7 +103,11 @@ class ProductSet(object):
         #only return nodes that represents the blocks
         prod =  [nodes for nodes in product_nodes if nodes.get("label").startswith("Block") and nodes.get("label").find("_")==-1]
 
-        return prod, original_product
+        if include_original:
+            sorted_features = sorted( original_product, key=lambda k: abs(int(k))) if sort_features else original_product
+            return prod, sorted_features
+        else:
+            return prod
     
 
     def light_product(self, prd_index=0, product=None):
@@ -115,10 +126,10 @@ class ProductSet(object):
 
 
     
-    def format_products(self):
+    def format_products(self, include_original=True, sort_features=False):
         prds = []
         for product in self.products:
-            prds.append(self.format_product(original_product=product))
+            prds.append(self.format_product(original_product=product, include_original=include_original,sort_features=sort_features))
             
         return prds
 

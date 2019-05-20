@@ -38,11 +38,11 @@ class KerasFeatureVector(object):
             return KerasFeatureVector(0, [0,0, 0, 0], self.features[0:point]+second_vector.features[point:])
 
     def to_vector(self):
-        return [self.accuracy]+ self.attributes + self.features
+        return [self.accuracy]+ [self.attributes] + self.features
 
     @staticmethod
     def from_vector(vect):
-        return KerasFeatureVector(vect[0], [vect[1],vect[2], vect[3], vect[4]], vect[5:])
+        return KerasFeatureVector(vect[0], vect[1], vect[2:])
 
     def __str__(self):
         return "{}:{}".format(";".join([str(i) for i in self.attributes]), self.accuracy)
@@ -78,7 +78,7 @@ class KerasFeatureModel(object):
         return params
 
     
-    def to_vector(self):
+    def to_kerasvector(self):
         if self.model:
             nb_layers = len(self.model.layers)
         else:
@@ -148,6 +148,7 @@ class KerasFeatureModel(object):
         model = KerasFeatureModel(name=name)
 
         if product_features:
+            #sorted_features = sorted( product_features, key=lambda k: abs(int(k)))
             model.features = [1 if str(x).isdigit() and int(x)>0 else 0 for x in product_features]
         
         if features_label:
