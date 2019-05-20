@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
-from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D
+from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D, Conv2D
 from .output import Output, OutCell, OutBlock, Out
 
 class Operation(Node):
@@ -99,7 +99,7 @@ class Drop(Operation):
             self._value =_value = 0.5
             #self.append_parameter("_value","__float__")
         else:
-            self._value = int(_value)
+            self._value = int(_value)/10
 
     def build(self,input):
         input = super(Drop, self).build(input)

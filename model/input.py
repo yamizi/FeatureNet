@@ -16,11 +16,8 @@ class Input(Node):
         pass
 
     def build(self, input, neighbour=None):
-        if type(input) is OutCell or type(input) is OutBlock or type(input) is Out:
-            return input.content
-        else:
-            return input
-
+        return input.content if hasattr(input,"content") and input.content else input
+        
     @staticmethod
     def parse_feature_model(feature_model):
 
@@ -129,7 +126,6 @@ class Input(Node):
                     if(len(child.get("children"))):
                         _features = Node.get_type(child.get("children")[0])
 
-
             input_element = ConvolutionInput(_kernel=_kernel,_stride=_stride, _padding=_padding,_activation=_activation,_features=_features, _type=_type, raw_dict=input)
         
         return input_element
@@ -152,7 +148,6 @@ class IdentityInput(Input):
 class DenseInput(Input):
     def __init__(self, _features, _activation, raw_dict=None):
         super(DenseInput, self).__init__(raw_dict=raw_dict)
-
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         if not _features:
             self.append_parameter("_features","__int__")
@@ -265,7 +260,6 @@ class ConvolutionInput(Input):
         input = super(ConvolutionInput, self).build(input)
         input = input.content if hasattr(input,"content") else input
         
-        
         if input.shape.ndims==4:
 
             if self._type == "normal":
@@ -277,13 +271,13 @@ class ConvolutionInput(Input):
             elif self._type == "depthwise":
                 return DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
         
-        elif input.shape.ndims==2:
+        elif input.shape.ndims==3:
             if self._type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
-                return Conv1D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                return Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
             elif self._type == "separable":
-                return SeparableConv1D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                return SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
                  
         return input
         
