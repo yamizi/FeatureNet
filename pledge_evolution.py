@@ -7,9 +7,7 @@ from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureVector
 from products_tree import ProductSet, ProductSetError
 import random
-from keras.backend.tensorflow_backend import set_session
-from keras.backend.tensorflow_backend import clear_session
-from keras.backend.tensorflow_backend import get_session
+
 import tensorflow
 import gc
 import datetime
@@ -24,26 +22,16 @@ training_epochs = 25
 evolution_epochs = 20
 
 
-def reset_keras(classifier):
-    sess = get_session()
-    clear_session()
-    sess.close()
-    sess = get_session()
-
-    try:
-        del classifier
-    except:
-        pass
+def reset_keras(classifier=None):
+    
+    if classifier:
+        try:
+            del classifier
+        except:
+            pass
 
     # if it's done something you should see a number being outputted
-    print(gc.collect())
-
-    # use the same config as you used to create the session
-    config = tensorflow.ConfigProto()
-    # if hasattr(config, "gpu_options"):
-    #  config.gpu_options.per_process_gpu_memory_fraction = 1
-    #  config.gpu_options.visible_device_list = "0"
-    set_session(tensorflow.Session(config=config))
+    print("cleaning memory {}".format(gc.collect()))
 
 def run_pledge(input_file, nb_base_products, output_file):
     params = ['java', '-jar', pledge_path, 'generate_products']
@@ -168,9 +156,6 @@ class PledgeEvolution(object):
     @staticmethod
     def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar"):
 
-        if not os.path.isdir(base_path):
-            os.mkdir(base_path)
-
         session_path = "{}/{}".format(base_path, dataset)
 
         if not os.path.isdir(session_path):
@@ -179,6 +164,7 @@ class PledgeEvolution(object):
         survival_count = int(0.1*nb_base_products)
         nb_product_perparent =  int(0.9*nb_base_products)
         last_evolution_epoch = 0
+        reset_keras()
 
         if not input_file:
             input_file = '{}/nas_2_5.xml'.format(base_path)
@@ -249,13 +235,28 @@ class PledgeEvolution(object):
             f1.write(json.dumps([i.to_vector() for i in pop]))
             f1.close()
 
+    @staticmethod
+    def end2end(base_path, nb_base_products, input_file="", output_file="", last_pdts_path="", dataset="cifar"):
+        from extender import generate_featuretree
+
+        _input_file = "main_1block_nas.xml"
+        print("End to end NAS Search from {} to {} products".format(_input_file, nb_base_products))
+
+        _nb_blocks,_nb_cells, _nb_products = nb_base_products
+        
+        input_file = input_file if input_file else "{}/nas{}_{}.xml".format(base_path, _nb_blocks,_nb_cells)
+        generate_featuretree(_input_file,input_file,int(_nb_blocks),int(_nb_cells))
+
+        PledgeEvolution.run(base_path, input_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products))
+
+
 
 def main(argv):
     input_file = ''
     output_file = ''
     products_file = ''
     base = base_path
-    nb_base_products=100
+    nb_base_products=[100]
     dataset = "cifar"
     try:
         opts, args = getopt.getopt(argv, "hn:d:b:i:o:p:", [
@@ -267,10 +268,10 @@ def main(argv):
         
         if opt == '-h':
             print(
-                'evolution.py -n <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
+                'pledge_evolution.py -n <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
             sys.exit()
         elif opt in ("-n", "--nb"):
-            nb_base_products = int(arg)
+            nb_base_products = arg.split("x")
         elif opt in ("-d", "--dataset"):
             dataset = arg
         elif opt in ("-b", "--bpath"):
@@ -282,8 +283,16 @@ def main(argv):
         elif opt in ("-p", "--pfile"):
             products_file = arg
 
-    PledgeEvolution.run(base, input_file, output_file,
-        last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products)
+
+    if not os.path.isdir(base):
+        os.mkdir(base)
+        
+    if len(nb_base_products) ==1:
+        PledgeEvolution.run(base, input_file, output_file,
+        last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]))
+    else:
+        PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
+        last_pdts_path=products_file, dataset=dataset )
 
 
 if __name__ == "__main__":
