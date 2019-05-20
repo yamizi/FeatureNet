@@ -6,12 +6,21 @@ from keras.datasets import mnist, cifar10, cifar100
 import keras
 from keras import backend as K
 import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+from keras.backend.tensorflow_backend import clear_session
+from keras.backend.tensorflow_backend import get_session
 import json
 import time
 from keras.callbacks import Callback, EarlyStopping
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
+#from keras.utils.training_utils import multi_gpu_model
+#from tensorflow.python.client import device_lib
 
+
+# def get_available_gpus():
+#     local_device_protos = device_lib.list_local_devices()
+#     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
 def get_flops():
     run_meta = tf.RunMetadata()
@@ -22,6 +31,18 @@ def get_flops():
                                 run_meta=run_meta, cmd='op', options=opts)
 
     return flops.total_float_ops
+
+def reset_keras():
+    sess = get_session()
+    clear_session()
+    sess.close()
+
+    # use the same config as you used to create the session
+    config = tf.ConfigProto() #allow_soft_placement=True, log_device_placement=True)
+    # if hasattr(config, "gpu_options"):
+    #  config.gpu_options.per_process_gpu_memory_fraction = 1
+    #  config.gpu_options.visible_device_list = "0"
+    set_session(tf.Session(config=config))
 
 class TimedStopping(Callback):
     '''Stop training when enough time has passed.
@@ -69,11 +90,19 @@ class TensorflowGenerator(object):
     history = ([],[])
     dataset = None
     input_shape = (0,0,0)
+    default_batchsize = 128
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False):
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128):
         #product_features is a list of enabled and disabled features based on the original feature model
+        
+        if batch_size ==0:
+            batch_size = TensorflowGenerator.default_batchsize
+
+        if clear_memory:
+            reset_keras()
+            
         if product:
-            batch_size = 64 #128 #64
+            
             num_classes = 10
 
             if TensorflowGenerator.dataset != dataset:
@@ -181,8 +210,8 @@ class TensorflowGenerator(object):
             #self.model.nb_flops =  self.flops = get_flops()
             self.model.accuracy = self.accuracy = score[1]
             self.history = (history.history['acc'], history.history['val_acc'])
-            
 
+            
     def load_products(self, product):
         def build_rec(node, level=0):
             #print("-"*level + node.get("label"))
