@@ -13,10 +13,7 @@ class Operation(Node):
         pass
 
     def build(self, input, neighbour=None):
-        if type(input) is OutCell or type(input) is OutBlock or type(input) is Out:
-            return input.content
-        else:
-            return input
+        return input.content if hasattr(input,"content") and input.content is not None else input
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -158,7 +155,10 @@ class Combination(Node):
         super(Combination, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
-        pass
+        source1 =  source1.content if hasattr(source1,"content") and source1.content is not None else source1
+        source2 =  source2.content if hasattr(source2,"content") and source2.content is not None else source2
+
+        return source1, source2
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -189,6 +189,8 @@ class Sum(Combination):
         super(Sum, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
+        source1, source2 = super(Sum, self).build(source1, source2)
+
         if source1.shape.dims == source2.shape.dims:
             return Add()([source1, source2])
         return source1
@@ -203,6 +205,8 @@ class Concat(Combination):
             self._axis = int(_axis)
 
     def build(self, source1, source2):
+        source1, source2 = super(Concat, self).build(source1, source2)
+
         if source1.shape.dims == source2.shape.dims:
             return Concatenate(axis=self._axis)([source1, source2])
         return source1
@@ -213,5 +217,6 @@ class Product(Combination):
 
     
     def build(self, source1, source2):
+        source1, source2 = super(Product, self).build(source1, source2)
         return Multiply()([source1, source2])
         

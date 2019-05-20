@@ -16,7 +16,7 @@ class Input(Node):
         pass
 
     def build(self, input, neighbour=None):
-        return input.content if hasattr(input,"content") and input.content else input
+        return input.content if hasattr(input,"content") and input.content is not None else input
         
     @staticmethod
     def parse_feature_model(feature_model):

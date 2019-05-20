@@ -9,6 +9,7 @@ from keras.layers import Input, GlobalAveragePooling2D
 from keras.optimizers import SGD
 #from keras import optimizers
 
+from keras.utils import multi_gpu_model
 from .block import Block
 from .output import Out
 from .cell import Cell
@@ -120,6 +121,8 @@ class KerasFeatureModel(object):
                 #out = GlobalAveragePooling2D()(out)
             self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]
             # Create model
+
+            #with tf.device('/cpu:0'):
             model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
 
             #sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
@@ -129,6 +132,10 @@ class KerasFeatureModel(object):
                 model.summary()
                 return None 
 
+            try:
+                model = multi_gpu_model(model, gpus=4)
+            except:
+                print("multi gpu not available")
             model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
         
         except Exception as e:
