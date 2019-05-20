@@ -50,8 +50,8 @@ def run_pledge(input_file, nb_base_products, output_file):
     params = params+['-fm', input_file, '-nbProds',
                     str(nb_base_products), '-o', output_file]
     start = time.time()
-    print("running pledge {} on {}: {}".format(
-        pledge_path, params, datetime.datetime.now()))
+    print("running pledge on {}: {}".format(
+        params, datetime.datetime.now()))
     pledge_result = subprocess.check_call(params)
 
     end = time.time()
@@ -69,7 +69,7 @@ class PledgeEvolution(object):
                         reverse=True)[:survival_count]
 
         products_labels = [[labels[k] for k in labels.keys(
-        ) if prd.features[int(k)] == 1] for prd in products]
+        ) if prd.features[int(k)-1] == 1] for prd in products]
         return products, products_labels
 
     @staticmethod
@@ -110,7 +110,7 @@ class PledgeEvolution(object):
 
     @staticmethod
     def extract_leaves(output_file):
-        initial_product_set = ProductSet(output_file)
+        initial_product_set = ProductSet(output_file,binary_products=True)
         filtered_features_label = ProductSet.filter_leaves(
             initial_product_set.features)
         last_population = {"filtered_features_label": [], "products": []}
@@ -119,10 +119,10 @@ class PledgeEvolution(object):
         return initial_product_set, last_population
 
     @staticmethod
-    def train_products(initial_product_set, products_file, dataset):
+    def train_products(initial_product_set, dataset):
         start = time.time()
-        print("### training products in {} for dataset {}: {}".format(
-            products_file, dataset, datetime.datetime.now()))
+        print("### training products for dataset {}: {}".format(
+            dataset, datetime.datetime.now()))
         last_population = []
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
@@ -130,7 +130,7 @@ class PledgeEvolution(object):
                                             features_label=initial_product_set.features, no_train=False, data_augmentation=False)
 
             if tensorflow and hasattr(tensorflow,"model") and tensorflow.model:
-                last_population.append(tensorflow.model.to_vector())
+                last_population.append(tensorflow.model.to_kerasvector())
                 
             reset_keras(tensorflow)
         end = time.time()
@@ -154,7 +154,7 @@ class PledgeEvolution(object):
                     print(e)
                     continue
 
-                pop = PledgeEvolution.train_products(product_set, mutants_pdts_path, dataset)
+                pop = PledgeEvolution.train_products(product_set, dataset)
                 pop = sorted(pop, key=lambda x: x.accuracy, reverse=True)
                 f1 = open("{}.json".format(mutant_path), 'w')
 
@@ -181,7 +181,7 @@ class PledgeEvolution(object):
         last_evolution_epoch = 0
 
         if not input_file:
-            input_file = '{}/main_5_5.xml'.format(base_path)
+            input_file = '{}/nas_2_5.xml'.format(base_path)
             #input_file = '{}main_1block_10_cells.xml'.format(base_path)
 
         if not output_file:
@@ -194,11 +194,6 @@ class PledgeEvolution(object):
                 session_path, nb_base_products)
             #output_file = '{}main_1blocks_10cells_{}products.pdt'.format(base_path,nb_base_products)
 
-        pattern = 'products_(\d+).json'
-        result = re.findall(pattern, last_pdts_path) 
-        if len(result):
-            last_evolution_epoch = int(result[0])+1
-
         if os.path.isfile(output_file):
             print("Skipping initial PLEDGE run, file found in {}".format(output_file))
         else:
@@ -207,6 +202,7 @@ class PledgeEvolution(object):
 
         product_set, last_population = PledgeEvolution.extract_leaves(output_file)
 
+        ## last_population["products"] is a list of KerasFeatureVector objects
         if os.path.isfile(last_pdts_path):
             print("Skipping initial training")
             f1 = open(last_pdts_path, 'r')
@@ -214,8 +210,13 @@ class PledgeEvolution(object):
             last_population["products"] = [
                 KerasFeatureVector.from_vector(vect) for vect in vects]
 
+            pattern = 'products_e(\d+).json'
+            result = re.findall(pattern, last_pdts_path) 
+            if len(result):
+                last_evolution_epoch = int(result[0])+1
+                
         else:
-            pop = PledgeEvolution.train_products(product_set, output_file, dataset)
+            pop = PledgeEvolution.train_products(product_set, dataset)
             last_population["products"] = last_population["products"] + pop
             f1 = open(last_pdts_path, 'w')
             f1.write(json.dumps([i.to_vector()
@@ -257,7 +258,7 @@ def main(argv):
     nb_base_products=100
     dataset = "cifar"
     try:
-        opts, args = getopt.getopt(argv, "hnb:d:b:i:o:p:", [
+        opts, args = getopt.getopt(argv, "hn:d:b:i:o:p:", [
                                    "nb=","dataset=", "bpath=", "ifile=", "ofile=", "pfile="])
     except getopt.GetoptError:
         pass
@@ -266,9 +267,9 @@ def main(argv):
         
         if opt == '-h':
             print(
-                'evolution.py -nb <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
+                'evolution.py -n <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
             sys.exit()
-        elif opt in ("-nb", "--nb"):
+        elif opt in ("-n", "--nb"):
             nb_base_products = int(arg)
         elif opt in ("-d", "--dataset"):
             dataset = arg
