@@ -155,9 +155,20 @@ class Combination(Node):
         super(Combination, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
+        self.parent_name = "{}+{}".format(source1.name,source2.name) if hasattr(source1,"name") else ""
+
         source1 =  source1.content if hasattr(source1,"content") and source1.content is not None else source1
         source2 =  source2.content if hasattr(source2,"content") and source2.content is not None else source2
 
+        if source1.shape.ndims==4 and source2.shape.ndims==4 and source1.shape.dims[3].value != source2.shape.dims[3].value:
+            (source1, source2) = (source1, source2) if source1.shape.dims[3] < source2.shape.dims[3] else (source2, source1)
+            dilatation_rate = 1
+            stride = source1.shape.dims[2].value / source2.shape.dims[2].value
+            if stride <1:
+                dilatation_rate = 1/stride
+                stride = 1
+            source2 =Conv2D(source1.shape.dims[3].value, 1, strides=int(stride), dilation_rate=int(dilatation_rate), name="Reg_"+Node.get_name(self))(source2)
+    
         return source1, source2
 
     @staticmethod
@@ -191,7 +202,7 @@ class Sum(Combination):
     def build(self, source1, source2):
         source1, source2 = super(Sum, self).build(source1, source2)
 
-        if source1.shape.dims == source2.shape.dims:
+        if source1.shape.as_list() == source2.shape.as_list():
             return Add()([source1, source2])
         return source1
         
@@ -207,7 +218,7 @@ class Concat(Combination):
     def build(self, source1, source2):
         source1, source2 = super(Concat, self).build(source1, source2)
 
-        if source1.shape.dims == source2.shape.dims:
+        if source1.shape.as_list() == source2.shape.as_list():
             return Concatenate(axis=self._axis)([source1, source2])
         return source1
 

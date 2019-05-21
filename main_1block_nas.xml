@@ -145,7 +145,6 @@
 												: Block[k]_Element[i]_Cell_Input2_Dense_activation_relu(Block[k]_Element[i]_Cell_Input2_Dense_activation_relu)
 							:m Block[k]_Element[i]_Cell_Operation1(Block[k]_Element[i]_Cell_Operation1)
 								:g [1,1]
-									: Block[k]_Element[i]_Cell_Operation1_Flatten(Block[k]_Element[i]_Cell_Operation1_Flatten)
 									: Block[k]_Element[i]_Cell_Operation1_Void(Block[k]_Element[i]_Cell_Operation1_Void)
 									: Block[k]_Element[i]_Cell_Operation1_BatchNormalization(Block[k]_Element[i]_Cell_Operation1_BatchNormalization)
 									: Block[k]_Element[i]_Cell_Operation1_Dropout(Block[k]_Element[i]_Cell_Operation1_Dropout)
@@ -156,7 +155,6 @@
 												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_0(Block[k]_Element[i]_Cell_Operation1_Dropout_value_0)
 							:m Block[k]_Element[i]_Cell_Operation2(Block[k]_Element[i]_Cell_Operation2)
 								:g [1,1]
-									: Block[k]_Element[i]_Cell_Operation2_Flatten(Block[k]_Element[i]_Cell_Operation2_Flatten)
 									: Block[k]_Element[i]_Cell_Operation2_Void(Block[k]_Element[i]_Cell_Operation2_Void)
 									: Block[k]_Element[i]_Cell_Operation2_BatchNormalization(Block[k]_Element[i]_Cell_Operation2_BatchNormalization)
 									: Block[k]_Element[i]_Cell_Operation2_Dropout(Block[k]_Element[i]_Cell_Operation2_Dropout)
