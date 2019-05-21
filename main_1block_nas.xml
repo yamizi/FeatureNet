@@ -24,11 +24,11 @@
 												: Block[k]_Element[i]_Cell_Input1_Convolution_kernel_5x5(Block[k]_Element[i]_Cell_Input1_Convolution_kernel_5x5)
 												: Block[k]_Element[i]_Cell_Input1_Convolution_kernel_1x7(Block[k]_Element[i]_Cell_Input1_Convolution_kernel_1x7)
 												: Block[k]_Element[i]_Cell_Input1_Convolution_kernel_7x1(Block[k]_Element[i]_Cell_Input1_Convolution_kernel_7x1)
-										:m Block[k]_Element[i]_Cell_Input1_Convolution_stride(Block[k]_Element[i]_Cell_Input1_Convolution_type)
+										:m Block[k]_Element[i]_Cell_Input1_Convolution_type(Block[k]_Element[i]_Cell_Input1_Convolution_type)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input1_Convolution_type_normal(Block[k]_Element[i]_Cell_Input1_Convolution_type_normal)
-												: Block[k]_Element[i]_Cell_Input1_Convolution_type_separable(Block[k]_Element[i]_Cell_Input1_Convolution_stride_separable)
-												: Block[k]_Element[i]_Cell_Input1_Convolution_type_depthwise(Block[k]_Element[i]_Cell_Input1_Convolution_stride_depthwise)
+												: Block[k]_Element[i]_Cell_Input1_Convolution_type_separable(Block[k]_Element[i]_Cell_Input1_Convolution_type_separable)
+												: Block[k]_Element[i]_Cell_Input1_Convolution_type_depthwise(Block[k]_Element[i]_Cell_Input1_Convolution_type_depthwise)
 										:m Block[k]_Element[i]_Cell_Input1_Convolution_features(Block[k]_Element[i]_Cell_Input1_Convolution_features)
 										:m Block[k]_Element[i]_Cell_Input1_Convolution_stride(Block[k]_Element[i]_Cell_Input1_Convolution_stride)
 											:g [1,1]
@@ -42,7 +42,6 @@
 												: Block[k]_Element[i]_Cell_Input1_Convolution_features_128(Block[k]_Element[i]_Cell_Input1_Convolution_features_128)
 										:m Block[k]_Element[i]_Cell_Input1_Convolution_padding(Block[k]_Element[i]_Cell_Input1_Convolution_padding)
 											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Convolution_padding_valid(Block[k]_Element[i]_Cell_Input1_Convolution_padding_valid)
 												: Block[k]_Element[i]_Cell_Input1_Convolution_padding_same(Block[k]_Element[i]_Cell_Input1_Convolution_padding_same)
 										:m Block[k]_Element[i]_Cell_Input1_Convolution_activation(Block[k]_Element[i]_Cell_Input1_Convolution_activation)
 											:g [1,1]
@@ -63,11 +62,9 @@
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input1_Pooling_type_max(Block[k]_Element[i]_Cell_Input1_Pooling_type_max)
 												: Block[k]_Element[i]_Cell_Input1_Pooling_type_average(Block[k]_Element[i]_Cell_Input1_Pooling_type_average)
-												: Block[k]_Element[i]_Cell_Input1_Pooling_type_dilated(Block[k]_Element[i]_Cell_Input1_Pooling_type_dilated)
 												: Block[k]_Element[i]_Cell_Input1_Pooling_type_global(Block[k]_Element[i]_Cell_Input1_Pooling_type_global)
 										:m Block[k]_Element[i]_Cell_Input1_Pooling_padding(Block[k]_Element[i]_Cell_Input1_Pooling_padding)
 											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Pooling_padding_valid(Block[k]_Element[i]_Cell_Input1_Pooling_padding_valid)
 												: Block[k]_Element[i]_Cell_Input1_Pooling_padding_same(Block[k]_Element[i]_Cell_Input1_Pooling_padding_same)
 									: Block[k]_Element[i]_Cell_Input1_Dense(Block[k]_Element[i]_Cell_Input1_Dense)
 										:m Block[k]_Element[i]_Cell_Input1_Dense_features(Block[k]_Element[i]_Cell_Input1_Dense_features)
@@ -110,7 +107,6 @@
 												: Block[k]_Element[i]_Cell_Input2_Convolution_features_128(Block[k]_Element[i]_Cell_Input2_Convolution_features_128)
 										:m Block[k]_Element[i]_Cell_Input2_Convolution_padding(Block[k]_Element[i]_Cell_Input2_Convolution_padding)
 											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Convolution_padding_valid(Block[k]_Element[i]_Cell_Input2_Convolution_padding_valid)
 												: Block[k]_Element[i]_Cell_Input2_Convolution_padding_same(Block[k]_Element[i]_Cell_Input2_Convolution_padding_same)
 										:m Block[k]_Element[i]_Cell_Input2_Convolution_activation(Block[k]_Element[i]_Cell_Input2_Convolution_activation)
 											:g [1,1]
@@ -134,7 +130,6 @@
 												: Block[k]_Element[i]_Cell_Input2_Pooling_type_global(Block[k]_Element[i]_Cell_Input2_Pooling_type_global)
 										:m Block[k]_Element[i]_Cell_Input2_Pooling_padding(Block[k]_Element[i]_Cell_Input2_Pooling_padding)
 											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Pooling_padding_valid(Block[k]_Element[i]_Cell_Input2_Pooling_padding_valid)
 												: Block[k]_Element[i]_Cell_Input2_Pooling_padding_same(Block[k]_Element[i]_Cell_Input2_Pooling_padding_same)
 									: Block[k]_Element[i]_Cell_Input2_Dense(Block[k]_Element[i]_Cell_Input2_Dense)
 										:m Block[k]_Element[i]_Cell_Input2_Dense_features(Block[k]_Element[i]_Cell_Input2_Dense_features)
@@ -156,9 +151,9 @@
 									: Block[k]_Element[i]_Cell_Operation1_Dropout(Block[k]_Element[i]_Cell_Operation1_Dropout)
 										:o Block[k]_Element[i]_Cell_Operation1_Dropout_value(Block[k]_Element[i]_Cell_Operation1_Dropout_value)
 											:g [1,1]
-												: Block[k]_Element[i]_Cell_Operation1_Dropout_0_4(Block[k]_Element[i]_Cell_Operation1_Dropout_0_4)
-												: Block[k]_Element[i]_Cell_Operation1_Dropout_0_5(Block[k]_Element[i]_Cell_Operation1_Dropout_0_5)
-												: Block[k]_Element[i]_Cell_Operation1_Dropout_0_7(Block[k]_Element[i]_Cell_Operation1_Dropout_0_7)
+												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_5(Block[k]_Element[i]_Cell_Operation1_Dropout_value_5)
+												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_3(Block[k]_Element[i]_Cell_Operation1_Dropout_value_3)
+												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_0(Block[k]_Element[i]_Cell_Operation1_Dropout_value_0)
 							:m Block[k]_Element[i]_Cell_Operation2(Block[k]_Element[i]_Cell_Operation2)
 								:g [1,1]
 									: Block[k]_Element[i]_Cell_Operation2_Flatten(Block[k]_Element[i]_Cell_Operation2_Flatten)
@@ -167,9 +162,9 @@
 									: Block[k]_Element[i]_Cell_Operation2_Dropout(Block[k]_Element[i]_Cell_Operation2_Dropout)
 										:o Block[k]_Element[i]_Cell_Operation2_Dropout_value(Block[k]_Element[i]_Cell_Operation2_Dropout_value)
 											:g [1,1]
-												: Block[k]_Element[i]_Cell_Operation2_Dropout_0_4(Block[k]_Element[i]_Cell_Operation2_Dropout_0_4)
-												: Block[k]_Element[i]_Cell_Operation2_Dropout_0_5(Block[k]_Element[i]_Cell_Operation2_Dropout_0_5)
-												: Block[k]_Element[i]_Cell_Operation2_Dropout_0_7(Block[k]_Element[i]_Cell_Operation2_Dropout_0_7)
+												: Block[k]_Element[i]_Cell_Operation2_Dropout_value_5(Block[k]_Element[i]_Cell_Operation2_Dropout_value_5)
+												: Block[k]_Element[i]_Cell_Operation2_Dropout_value_3(Block[k]_Element[i]_Cell_Operation2_Dropout_value_3)
+												: Block[k]_Element[i]_Cell_Operation2_Dropout_value_0(Block[k]_Element[i]_Cell_Operation2_Dropout_value_0)
 							:m Block[k]_Element[i]_Cell_Combination(Block[k]_Element[i]_Cell_Combination)
 								:g [1,1]
 									: Block[k]_Element[i]_Cell_Combination_Concat(Block[k]_Element[i]_Cell_Combination_Concat)
@@ -183,8 +178,6 @@
 												: Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_0(Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_0)
 												: Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_1(Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_1)
 												: Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_2(Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_2)
-												: Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_3(Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_3)
-												: Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_4(Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_4)
 </feature_tree>
     <constraints>
 C1:~Block[k+1]  or  Block[k]

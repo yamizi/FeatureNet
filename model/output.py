@@ -63,12 +63,13 @@ class OutBlock(Output):
 class OutCell(Output):
     def __init__(self, _relativeCellIndex=None, raw_dict=None):
         super(OutCell, self).__init__(raw_dict=raw_dict)
+        #_relativeCellIndex = 0
         if not _relativeCellIndex:
-            self._relativeCellIndex = 0
+            self._relativeCellIndex = 1
         else:
-            self._relativeCellIndex = int(_relativeCellIndex)
+            self._relativeCellIndex = int(_relativeCellIndex)+1
             if self._relativeCellIndex > 0 :
-                #print("skip {} cells".format(self._relativeCellIndex))
+                #print("{} skips {} cells".format(self.get_name(),self._relativeCellIndex-1))
                 pass
 
         self.currentIndex = self._relativeCellIndex

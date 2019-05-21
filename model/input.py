@@ -16,6 +16,7 @@ class Input(Node):
         pass
 
     def build(self, input, neighbour=None):
+        self.parent_name = input.name if hasattr(input,"name") else ""
         return input.content if hasattr(input,"content") and input.content is not None else input
         
     @staticmethod
@@ -168,8 +169,8 @@ class PoolingInput(Input):
     def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None):
         super(PoolingInput, self).__init__(raw_dict=raw_dict)
 
-        typeAcceptedValues = ("max","average","dilated","global")
-        paddingAcceptedValues = ("valid", "same")
+        typeAcceptedValues = ("max","average","global")
+        paddingAcceptedValues = ("same",)# ("valid", "same")
 
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
@@ -191,6 +192,7 @@ class PoolingInput(Input):
 
             if not _padding or str(_padding) not in paddingAcceptedValues:
                 self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+                self._padding = paddingAcceptedValues[0]
             else:
                 self._padding = _padding
 
@@ -208,12 +210,10 @@ class PoolingInput(Input):
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
-        if self._type=="global":
-            #return input
-            if input.shape.ndims==4:
+            if self._type=="global":
+                #return input
                 return GlobalAveragePooling2D(name=Node.get_name(self))(input)
-            else:
-                return input
+                
 
         return input
 
@@ -222,7 +222,7 @@ class ConvolutionInput(Input):
         super(ConvolutionInput, self).__init__(raw_dict=raw_dict)
 
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
-        paddingAcceptedValues = ("valid","same")
+        paddingAcceptedValues = ("same",) #("valid","same")
         typeAcceptedValues = ("normal","separable","depthwise")
 
         if not _type or str(_type) not in typeAcceptedValues:
@@ -253,6 +253,7 @@ class ConvolutionInput(Input):
 
         if not _padding or str(_padding) not in paddingAcceptedValues:
             self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+            self._padding = paddingAcceptedValues[0]
         else:
             self._padding = _padding
         
