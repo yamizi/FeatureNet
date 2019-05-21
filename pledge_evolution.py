@@ -245,7 +245,7 @@ class PledgeEvolution(object):
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
         
         input_file = input_file if input_file else "{}/nas{}_{}.xml".format(base_path, _nb_blocks,_nb_cells)
-        generate_featuretree(_input_file,input_file,int(_nb_blocks),int(_nb_cells))
+        generate_featuretree(_input_file,input_file,int(_nb_cells),int(_nb_blocks))
 
         PledgeEvolution.run(base_path, input_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products))
 

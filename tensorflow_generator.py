@@ -78,6 +78,7 @@ class TimedStopping(Callback):
         
 
 class TensorflowGenerator(object):
+    model_graph = ""
     accuracy = 0
     training_time = 0
     params = 0
@@ -189,6 +190,10 @@ class TensorflowGenerator(object):
             
             if no_train:
                 model.summary()
+
+                if TensorflowGenerator.model_graph:
+                    from keras.utils import plot_model
+                    plot_model(model, to_file='{}.png'.format(TensorflowGenerator.model_graph))
                 return  
                 
             early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=25)
