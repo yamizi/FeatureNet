@@ -30,7 +30,7 @@ class Cell(Node):
 
     def build_tensorflow_model(self, inputs):
 
-        last_inputs = inputs #[input for input in inputs if  input is not Output and input.currentIndex ==0]
+        last_inputs = [input for input in inputs if not hasattr(input,"content") or input.currentIndex ==0]
 
         i1 = self.input1.build(last_inputs[0] if len(last_inputs)>0 else None)
         i1 = self.operation1.build(i1)
@@ -39,7 +39,7 @@ class Cell(Node):
             combination = i1
         else:
             i2 = self.input2.build(last_inputs[1] if len(last_inputs)>1 else last_inputs[0] if len(last_inputs)>0 else None, i1)
-            i2 = self.operation1.build(i2)
+            i2 = self.operation2.build(i2)
             combination = self.combination.build(i1,i2)
 
         output = self.output.build(combination)
@@ -47,9 +47,9 @@ class Cell(Node):
         if type(self.output) is OutCell and self.output.currentIndex>-1:           
             inputs.insert(0, output)
         if type(self.output) is Out:
-            outputs = [output.content]
+            outputs.insert(0, output.content)
 
-        return outputs, inputs
+        return outputs
 
     def get_custom_parameters(self):
         my_params = self.customizable_parameters
@@ -62,6 +62,7 @@ class Cell(Node):
 
     @staticmethod
     def parse_feature_model(feature_model):
+        feature_model["children"] = reversed(feature_model["children"])
         cell = Cell(raw_dict=feature_model)
 
         for cell_element_dict in feature_model.get("children"):

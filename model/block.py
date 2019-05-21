@@ -32,39 +32,37 @@ class Block(Node):
 
     def build_tensorflow_model(self, inputs):
         
+        block_input = inputs[0]
         outputs = []
         for cell in self.cells:
-            _outputs, _inputs = cell.build_tensorflow_model(inputs)
+            _outputs = cell.build_tensorflow_model(inputs)
             
             #Reputting cell inputs that have planned in previous cells 
-            for i in _inputs:
-                if type(i) is OutCell and i.currentIndex>0:
+            for i in inputs:
+                if type(i) is OutCell and i.currentIndex>=0:
                     i.currentIndex = i.currentIndex-1
-                    if i.currentIndex==0:
-                        _inputs.insert(0,i)
             
-            if len(outputs)==0:
-                outputs = outputs + _outputs
-            # We only keep one output
+            outputs = outputs + _outputs
+            # To handle multiple outputs if the feature model includes multiples
             
         #Cleaning the input stack from the Output who are directed to cells or to be logged out
-        _inputs = [i for i in inputs if (i is not Out and i is not OutCell)]
-        #Reputting block inputs that have been planned in previous cells 
-        for i in _inputs:
-            if i is OutBlock:
-                i.currentIndex = i.currentIndex-1
-                if i.currentIndex==0:
-                    _inputs.insert(i)
-       
-        return outputs, _inputs 
+        _inputs = [i for i in inputs if i is OutBlock]
+        if len(_inputs) ==0:
+            inputs[0].currentIndex = 0
+            _inputs = [inputs[0]]
+        
+        _inputs.append(block_input)
+
+        return outputs 
 
 
     @staticmethod
     def parse_feature_model(feature_model):
-       
+        
         block = Block(raw_dict=feature_model)
-
+        
         for cell_dict in feature_model.get("children"):
+            
             if len(cell_dict.get("children")):
                 cell_type = cell_dict.get("children")[0].get("label")
                 cell_type = cell_type[cell_type.rfind("_")+1:]

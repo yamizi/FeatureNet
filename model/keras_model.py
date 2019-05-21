@@ -110,7 +110,7 @@ class KerasFeatureModel(object):
         try:
             print("Build Tensorflow model")
             for block in self.blocks:
-                _outputs, _inputs = block.build_tensorflow_model(_inputs)
+                _outputs = block.build_tensorflow_model(_inputs)
                 self.outputs = self.outputs + _outputs
 
             out = self.outputs[-1] if len(self.outputs) else  _inputs[0]
@@ -139,7 +139,10 @@ class KerasFeatureModel(object):
             model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0] if len(self.optimizers) else "sgd")
         
         except Exception as e:
+            import traceback
             print("error",e)
+            print (traceback.format_exc())
+            
             if model:
                 model.summary()
             return None
@@ -172,6 +175,7 @@ class KerasFeatureModel(object):
         else: 
             for i in range(depth):
                 for block_dict in feature_model:
+                    block_dict["children"] = reversed(block_dict["children"])
                     block = Block.parse_feature_model(block_dict)
                     model.blocks.append(block)
 
