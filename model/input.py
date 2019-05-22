@@ -161,7 +161,7 @@ class DenseInput(Input):
 
     def build(self, input, neighbour=None):
         input = super(DenseInput, self).build(input)
-        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(input.content if hasattr(input,"content") else input)
+        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(input)
 
 
 class PoolingInput(Input):
@@ -217,7 +217,7 @@ class PoolingInput(Input):
         return input
 
 class ConvolutionInput(Input):
-    def __init__(self, _kernel, _stride, _features, _padding, _activation, _type, raw_dict=None):
+    def __init__(self, _kernel, _stride, _features, _padding, _activation, _type="normal", raw_dict=None):
         super(ConvolutionInput, self).__init__(raw_dict=raw_dict)
 
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")

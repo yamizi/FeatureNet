@@ -110,7 +110,7 @@ class KerasFeatureModel(object):
         try:
             print("Build Tensorflow model")
             for block in self.blocks:
-                _outputs = block.build_tensorflow_model(_inputs)
+                _inputs, _outputs = block.build_tensorflow_model(_inputs)
                 self.outputs = self.outputs + _outputs
 
             out = self.outputs[-1] if len(self.outputs) else  _inputs[0]
@@ -207,22 +207,22 @@ class KerasFeatureModel(object):
         block1 = Block()
         cell11 = Cell(input1 = ConvolutionInput((5,5),(1,1),6,"same", "tanh"))
         block1.append_cell(cell11)
-        cell12 = Cell(input1 = PoolingInput((2,2),(1,1),"average", "valid"), output=OutBlock())
+        cell12 = Cell(input1 = PoolingInput((2,2),(1,1),"average", "valid"))
         block1.append_cell(cell12)
 
         block2 = Block()
         cell21 = Cell(input1 = ConvolutionInput((5,5),(1,1),16,"same", "tanh"))
         block2.append_cell(cell21)
-        cell22 = Cell(input1 = PoolingInput((2,2),(2,2),"average", "valid"), output=OutBlock())
+        cell22 = Cell(input1 = PoolingInput((2,2),(2,2),"average", "valid"))
         block2.append_cell(cell22)
 
 
         block3 = Block()
-        cell31 = Cell(input1 = ConvolutionInput((5,5),(1,1),120,"valid", "tanh"), operation1=Flat(), output=OutBlock())
+        cell31 = Cell(input1 = ConvolutionInput((5,5),(1,1),120,"valid", "tanh"))
         block3.append_cell(cell31)
 
         block4 = Block()
-        cell41 = Cell(input1 = DenseInput(84, "tanh"), output=Out())
+        cell41 = Cell(input1 = DenseInput(84, "tanh"))
         block4.append_cell(cell41)
 
         blocks.extend([block1, block2, block3, block4])
