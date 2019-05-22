@@ -117,18 +117,6 @@
 										:m Block[k]_Element[i]_Cell_Input2_Pooling_padding(Block[k]_Element[i]_Cell_Input2_Pooling_padding)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input2_Pooling_padding_same(Block[k]_Element[i]_Cell_Input2_Pooling_padding_same)
-									: Block[k]_Element[i]_Cell_Input2_Dense(Block[k]_Element[i]_Cell_Input2_Dense)
-										:m Block[k]_Element[i]_Cell_Input2_Dense_features(Block[k]_Element[i]_Cell_Input2_Dense_features)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Dense_features_16(Block[k]_Element[i]_Cell_Input2_Dense_features_16)
-												: Block[k]_Element[i]_Cell_Input2_Dense_features_96(Block[k]_Element[i]_Cell_Input2_Dense_features_96)
-												: Block[k]_Element[i]_Cell_Input2_Dense_features_256(Block[k]_Element[i]_Cell_Input2_Dense_features_256)
-												: Block[k]_Element[i]_Cell_Input2_Dense_features_512(Block[k]_Element[i]_Cell_Input2_Dense_features_512)
-												: Block[k]_Element[i]_Cell_Input2_Dense_features_1024(Block[k]_Element[i]_Cell_Input2_Dense_features_1024)
-										:m Block[k]_Element[i]_Cell_Input2_Dense_activation(Block[k]_Element[i]_Cell_Input2_Dense_activation)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Dense_activation_tanh(Block[k]_Element[i]_Cell_Input2_Dense_activation_softmax)
-												: Block[k]_Element[i]_Cell_Input2_Dense_activation_relu(Block[k]_Element[i]_Cell_Input2_Dense_activation_relu)
 							:m Block[k]_Element[i]_Cell_Operation1(Block[k]_Element[i]_Cell_Operation1)
 								:g [1,1]
 									: Block[k]_Element[i]_Cell_Operation1_Void(Block[k]_Element[i]_Cell_Operation1_Void)
