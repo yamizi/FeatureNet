@@ -161,8 +161,9 @@ class PledgeEvolution(object):
         if not os.path.isdir(session_path):
             os.mkdir(session_path)
 
-        survival_count = int(0.1*nb_base_products)
-        nb_product_perparent =  int(0.9*nb_base_products)
+        survival_rate = 0.05
+        survival_count = int(survival_rate*nb_base_products)
+        nb_product_perparent =  int((nb_base_products-survival_count) / survival_count)
         last_evolution_epoch = 0
         reset_keras()
 
@@ -210,13 +211,14 @@ class PledgeEvolution(object):
             f1.close()
 
         # list of (mutant_ratio,mutant_prds) sum of count_ratio should equal 1
-        mutant_ratios = [(1, 0.2),  (0.5, 0.2), (0.5, 0.2), (0.5, 0.2), (0.25, 0.2)]
+        #mutant_ratios = [(1, 0.2),  (0.5, 0.2), (0.5, 0.2), (0.5, 0.2), (0.25, 0.2)]
+        mutant_ratios = [(1, 0.2),  (0.5, 0.3),(0.5, 0.3), (0.25, 0.2)]
         #mutant_ratios = ((0.5, 1),)
 
         for evo in range(evolution_epochs):
             # The more we increase the epochs, the more we keep all the leaves
-            mutant_ratios[0] = (1, 0.2 +0.8*evo/(evolution_epochs-1))
-            mutant_ratios[1] = mutant_ratios[2] = mutant_ratios[3] =(0.5, 0.2*(evolution_epochs-evo)/evolution_epochs)
+            #mutant_ratios[0] = (1, 0.2 +0.8*evo/(evolution_epochs-1))
+            #mutant_ratios[1] = mutant_ratios[2] = mutant_ratios[3] =(0.5, 0.2*(evolution_epochs-evo)/evolution_epochs)
 
             print("### evolution epoch {}".format(evo+last_evolution_epoch))
             new_pop, new_pop_labels = PledgeEvolution.select(last_population, survival_count)
