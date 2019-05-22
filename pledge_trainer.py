@@ -52,7 +52,7 @@ def train_model_from_json(pledge_output_file,products_file,index=None,export_fil
         tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, features_label=initial_product_set.features, batch_size=batch_size)
         print("original accuracy {} new accuracy {}".format(keras_product.accuracy, tensorflow.model.accuracy))
         vector_pdt = tensorflow.model.to_kerasvector()
-        vectors_export.append([vector_pdt.to_vector()])
+        vectors_export.append(vector_pdt.to_vector())
 
     if export_file:
         f1 = open(export_file, 'w')
