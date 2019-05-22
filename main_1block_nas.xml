@@ -62,22 +62,9 @@
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input1_Pooling_type_max(Block[k]_Element[i]_Cell_Input1_Pooling_type_max)
 												: Block[k]_Element[i]_Cell_Input1_Pooling_type_average(Block[k]_Element[i]_Cell_Input1_Pooling_type_average)
-												: Block[k]_Element[i]_Cell_Input1_Pooling_type_global(Block[k]_Element[i]_Cell_Input1_Pooling_type_global)
 										:m Block[k]_Element[i]_Cell_Input1_Pooling_padding(Block[k]_Element[i]_Cell_Input1_Pooling_padding)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input1_Pooling_padding_same(Block[k]_Element[i]_Cell_Input1_Pooling_padding_same)
-									: Block[k]_Element[i]_Cell_Input1_Dense(Block[k]_Element[i]_Cell_Input1_Dense)
-										:m Block[k]_Element[i]_Cell_Input1_Dense_features(Block[k]_Element[i]_Cell_Input1_Dense_features)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Dense_features_16(Block[k]_Element[i]_Cell_Input1_Dense_features_16)
-												: Block[k]_Element[i]_Cell_Input1_Dense_features_96(Block[k]_Element[i]_Cell_Input1_Dense_features_96)
-												: Block[k]_Element[i]_Cell_Input1_Dense_features_256(Block[k]_Element[i]_Cell_Input1_Dense_features_256)
-												: Block[k]_Element[i]_Cell_Input1_Dense_features_512(Block[k]_Element[i]_Cell_Input1_Dense_features_512)
-												: Block[k]_Element[i]_Cell_Input1_Dense_features_1024(Block[k]_Element[i]_Cell_Input1_Dense_features_1024)
-										:m Block[k]_Element[i]_Cell_Input1_Dense_activation(Block[k]_Element[i]_Cell_Input1_Dense_activation)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Dense_activation_relu(Block[k]_Element[i]_Cell_Input1_Dense_activation_relu)
-												: Block[k]_Element[i]_Cell_Input1_Dense_activation_relu(Block[k]_Element[i]_Cell_Input1_Dense_activation_softmax)
 							:m Block[k]_Element[i]_Cell_Input2(Block[k]_Element[i]_Cell_Input2)
 								:g [1,1]
 									: Block[k]_Element[i]_Cell_Input2_Convolution(Block[k]_Element[i]_Cell_Input2_Convolution)
@@ -127,7 +114,6 @@
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input2_Pooling_type_max(Block[k]_Element[i]_Cell_Input2_Pooling_type_max)
 												: Block[k]_Element[i]_Cell_Input2_Pooling_type_average(Block[k]_Element[i]_Cell_Input2_Pooling_type_average)
-												: Block[k]_Element[i]_Cell_Input2_Pooling_type_global(Block[k]_Element[i]_Cell_Input2_Pooling_type_global)
 										:m Block[k]_Element[i]_Cell_Input2_Pooling_padding(Block[k]_Element[i]_Cell_Input2_Pooling_padding)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input2_Pooling_padding_same(Block[k]_Element[i]_Cell_Input2_Pooling_padding_same)
@@ -151,7 +137,6 @@
 										:o Block[k]_Element[i]_Cell_Operation1_Dropout_value(Block[k]_Element[i]_Cell_Operation1_Dropout_value)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_5(Block[k]_Element[i]_Cell_Operation1_Dropout_value_5)
-												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_3(Block[k]_Element[i]_Cell_Operation1_Dropout_value_3)
 												: Block[k]_Element[i]_Cell_Operation1_Dropout_value_0(Block[k]_Element[i]_Cell_Operation1_Dropout_value_0)
 							:m Block[k]_Element[i]_Cell_Operation2(Block[k]_Element[i]_Cell_Operation2)
 								:g [1,1]
@@ -161,7 +146,6 @@
 										:o Block[k]_Element[i]_Cell_Operation2_Dropout_value(Block[k]_Element[i]_Cell_Operation2_Dropout_value)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Operation2_Dropout_value_5(Block[k]_Element[i]_Cell_Operation2_Dropout_value_5)
-												: Block[k]_Element[i]_Cell_Operation2_Dropout_value_3(Block[k]_Element[i]_Cell_Operation2_Dropout_value_3)
 												: Block[k]_Element[i]_Cell_Operation2_Dropout_value_0(Block[k]_Element[i]_Cell_Operation2_Dropout_value_0)
 							:m Block[k]_Element[i]_Cell_Combination(Block[k]_Element[i]_Cell_Combination)
 								:g [1,1]
