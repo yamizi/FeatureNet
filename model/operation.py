@@ -93,14 +93,14 @@ class Drop(Operation):
     def __init__(self, _value, raw_dict=None):
         super(Drop, self).__init__(raw_dict=raw_dict)
         if not _value:
-            self._value =_value = 0.5
+            self._value =_value = 0
             #self.append_parameter("_value","__float__")
         else:
             self._value = int(_value)/10
 
     def build(self,input):
         input = super(Drop, self).build(input)
-        return Dropout(self._value)(input)
+        return Dropout(self._value)(input) if self._value else input
 
 class Padding(Operation):
     def __init__(self, _fillValue=None, _fillSize=None, raw_dict=None):

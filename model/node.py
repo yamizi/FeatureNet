@@ -5,8 +5,8 @@ class Node(object):
         self.parent_name = ""
         self.raw_dict = raw_dict
         self.customizable_parameters = {}
-        self.uniqid = str(uuid.uuid1())[:5]
-        print(self.get_name())
+        self.uniqid = str(uuid.uuid1())[:10]
+        #print(self.get_name())
 
     def get_name(self, raw_dict=None):
         if self.raw_dict:
