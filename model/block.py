@@ -34,8 +34,10 @@ class Block(Node):
         
         block_input = inputs[0]
         outputs = []
-        for cell in self.cells:
-            _outputs = cell.build_tensorflow_model(inputs)
+        nb_cells =len(self.cells)
+        for i, cell in enumerate(self.cells):
+            max_relative_index = nb_cells -i
+            _outputs = cell.build_tensorflow_model(inputs,max_relative_index)
             
             #Reputting cell inputs that have planned in previous cells 
             for i in inputs:
@@ -45,15 +47,18 @@ class Block(Node):
             outputs = outputs + _outputs
             # To handle multiple outputs if the feature model includes multiples
             
-        #Cleaning the input stack from the Output who are directed to cells or to be logged out
+        #Cleaning the input stack from the Output who are directed to cells or to be logged out => Keeping only BlockOutput
+        #If no Block Output defined, building a new one based on the last cell
         _inputs = [i for i in inputs if i is OutBlock]
         if len(_inputs) ==0:
-            inputs[0].currentIndex = 0
-            _inputs = [inputs[0]]
+            outBlock = OutBlock()
+            outBlock.parent_name = self.get_name()
+            outBlock.build(inputs[0].content)
+            _inputs = [outBlock]
         
         _inputs.append(block_input)
 
-        return outputs 
+        return _inputs, outputs 
 
 
     @staticmethod

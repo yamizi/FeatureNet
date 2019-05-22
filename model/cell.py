@@ -28,7 +28,7 @@ class Cell(Node):
         self.combination = output_combination
         super(Cell, self).__init__(raw_dict=raw_dict)
 
-    def build_tensorflow_model(self, inputs):
+    def build_tensorflow_model(self, inputs, max_relative_index):
 
         last_inputs = [input for input in inputs if not hasattr(input,"content") or input.currentIndex ==0]
 
@@ -42,6 +42,7 @@ class Cell(Node):
             i2 = self.operation2.build(i2)
             combination = self.combination.build(i1,i2)
 
+        self.output.currentIndex = min(max_relative_index,self.output.currentIndex)
         output = self.output.build(combination)
         outputs = []
         if type(self.output) is OutCell and self.output.currentIndex>-1:           
