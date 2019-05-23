@@ -197,13 +197,15 @@ class TensorflowGenerator(object):
                 return  
                 
             early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=25)
-
+            callbacks=[timed, early_stopping]
+            print("training with batch size {} epochs {} callbacks {} dataset {} data augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
+            
             history = model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                     batch_size=batch_size,
                     epochs=epochs,
                     verbose=0,
                     validation_data=(TensorflowGenerator.X_test, TensorflowGenerator.Y_test), 
-                    callbacks=[timed, early_stopping])
+                    callbacks=callbacks)
             
             self.training_time = time.time() - begin_training
             score = model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
