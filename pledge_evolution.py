@@ -18,7 +18,7 @@ import re
 
 pledge_path = '../products/PLEDGE.jar'
 base_path = '../products'
-training_epochs = 25
+base_training_epochs = 25
 evolution_epochs = 20
 
 
@@ -107,26 +107,29 @@ class PledgeEvolution(object):
         return initial_product_set, last_population
 
     @staticmethod
-    def train_products(initial_product_set, dataset):
+    def train_products(initial_product_set, dataset,training_epochs, max_products=0):
         start = time.time()
         print("### training products for dataset {}: {}".format(
             dataset, datetime.datetime.now()))
         last_population = []
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
-            tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product,
+            tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
                                             features_label=initial_product_set.features, no_train=False, data_augmentation=False)
 
             if tensorflow and hasattr(tensorflow,"model") and tensorflow.model:
                 last_population.append(tensorflow.model.to_kerasvector())
-                
             reset_keras(tensorflow)
+
+            if max_products>0 and index==max_products:
+                break
+
         end = time.time()
         print("### training products over, took {}s".format(str(end-start)))
         return last_population
 
     @staticmethod
-    def evolve(survival_count,mutant_ratios, evo, session_path, new_pop_labels,input_file, nb_product_perparent, product_set, dataset, last_population  ):
+    def evolve(survival_count,mutant_ratios, evo, session_path, new_pop_labels,input_file, nb_product_perparent, product_set, dataset, last_population, training_epochs  ):
         for i in range(survival_count):
 
             print("### batch of product parent {}".format(i))
@@ -142,7 +145,7 @@ class PledgeEvolution(object):
                     print(e)
                     continue
 
-                pop = PledgeEvolution.train_products(product_set, dataset)
+                pop = PledgeEvolution.train_products(product_set, dataset,training_epochs)
                 pop = sorted(pop, key=lambda x: x.accuracy, reverse=True)
                 f1 = open("{}.json".format(mutant_path), 'w')
 
@@ -154,7 +157,7 @@ class PledgeEvolution(object):
         return last_population
 
     @staticmethod
-    def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar"):
+    def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar", training_epochs=25):
 
         session_path = "{}/{}".format(base_path, dataset)
 
@@ -203,7 +206,7 @@ class PledgeEvolution(object):
                 last_evolution_epoch = int(result[0])+1
                 
         else:
-            pop = PledgeEvolution.train_products(product_set, dataset)
+            pop = PledgeEvolution.train_products(product_set, dataset, training_epochs, nb_base_products)
             last_population["products"] = last_population["products"] + pop
             f1 = open(last_pdts_path, 'w')
             f1.write(json.dumps([i.to_vector()
@@ -225,7 +228,7 @@ class PledgeEvolution(object):
             last_population["products"] = new_pop
             print("### remaining top individuals {}".format(len(new_pop)))
             
-            last_population = PledgeEvolution.evolve(survival_count,mutant_ratios, evo, session_path, new_pop_labels,input_file, nb_product_perparent, product_set, dataset, last_population  )
+            last_population = PledgeEvolution.evolve(survival_count,mutant_ratios, evo, session_path, new_pop_labels,input_file, nb_product_perparent, product_set, dataset, last_population , training_epochs )
             pop = sorted(last_population["products"],
                         key=lambda x: x.accuracy, reverse=True)
         
@@ -238,7 +241,7 @@ class PledgeEvolution(object):
             f1.close()
 
     @staticmethod
-    def end2end(base_path, nb_base_products, input_file="", output_file="", last_pdts_path="", dataset="cifar"):
+    def end2end(base_path, nb_base_products, input_file="", output_file="", last_pdts_path="", dataset="cifar", training_epochs=25):
         from extender import generate_featuretree
 
         _input_file = "main_1block_nas.xml"
@@ -249,7 +252,7 @@ class PledgeEvolution(object):
         input_file = input_file if input_file else "{}/nas{}_{}.xml".format(base_path, _nb_blocks,_nb_cells)
         generate_featuretree(_input_file,input_file,int(_nb_cells),int(_nb_blocks))
 
-        PledgeEvolution.run(base_path, input_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products))
+        PledgeEvolution.run(base_path, input_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
 
 
 
@@ -260,9 +263,11 @@ def main(argv):
     base = base_path
     nb_base_products=[100]
     dataset = "cifar"
+    training_epochs = base_training_epochs
+    
     try:
-        opts, args = getopt.getopt(argv, "hn:d:b:i:o:p:", [
-                                   "nb=","dataset=", "bpath=", "ifile=", "ofile=", "pfile="])
+        opts, args = getopt.getopt(argv, "hn:d:b:i:o:p:t:", [
+                                   "nb=","dataset=", "bpath=", "ifile=", "ofile=", "pfile=", "training_epoch="])
     except getopt.GetoptError:
         pass
     print("arguments {}".format(opts))
@@ -270,7 +275,7 @@ def main(argv):
         
         if opt == '-h':
             print(
-                'pledge_evolution.py -n <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file>')
+                'pledge_evolution.py -n <nb_architectures> -d <dataset> -b <base_path> -i <input_file> -o <output_file> -p <products_file> -t <training_epoch>')
             sys.exit()
         elif opt in ("-n", "--nb"):
             nb_base_products = arg.split("x")
@@ -284,17 +289,18 @@ def main(argv):
             output_file = arg
         elif opt in ("-p", "--pfile"):
             products_file = arg
-
+        elif opt in ("-t", "--training_epoch"):
+            training_epochs = int(arg)
 
     if not os.path.isdir(base):
         os.mkdir(base)
         
     if len(nb_base_products) ==1:
         PledgeEvolution.run(base, input_file, output_file,
-        last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]))
+        last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]), training_epochs=training_epochs)
     else:
         PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
-        last_pdts_path=products_file, dataset=dataset )
+        last_pdts_path=products_file, dataset=dataset, training_epochs=training_epochs )
 
 
 if __name__ == "__main__":
