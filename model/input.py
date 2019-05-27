@@ -16,6 +16,7 @@ class Input(Node):
         pass
 
     def build(self, input, neighbour=None):
+        self._stride = 1
         return input.content if hasattr(input,"content") and input.content is not None else input
         
     @staticmethod
