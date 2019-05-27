@@ -15,7 +15,7 @@ class Output(Node):
         return None
 
     def build(self, input):
-        self.content = input
+        self.content = input.content if hasattr(input,"content") and input.content is not None else input
         return self
         
 
@@ -74,9 +74,7 @@ class OutCell(Output):
             self._relativeCellIndex = 1
         else:
             self._relativeCellIndex = int(_relativeCellIndex)+1
-            if self._relativeCellIndex > 0 :
-                #print("{} skips {} cells".format(self.get_name(),self._relativeCellIndex-1))
-                pass
+            #print("{} skips {} cells".format(self.get_name(),self._relativeCellIndex-1))
 
         self.currentIndex = self._relativeCellIndex
 
