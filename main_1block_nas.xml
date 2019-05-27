@@ -8,6 +8,16 @@
 				:m Input(Input)
 				:m Output(Output)
 				:o Block[k](Block[k])
+					:m Block[k]_stride(Block[k]_stride)
+						:g [1,1]
+							: Block[k]_stride_2x2(Block[k]_stride_2x2)
+							: Block[k]_stride_1x1(Block[k]_stride_1x1)
+					:m Block[k]_features(Block[k]_features)
+						:g [1,1]
+							: Block[k]_features_2(Block[k]_features_8)
+							: Block[k]_features_4(Block[k]_features_4)
+							: Block[k]_features_0.5(Block[k]_features_0.5)
+							: Block[k]_features_0.25(Block[k]_features_0.25)
 					:o Block[k]_Element[i](Block[k]_Element[i])
 						:o Block[k]_Element[i]_Cell(Block[k]_Element[i]_Cell)
 							:m Block[k]_Element[i]_Cell_Input1(Block[k]_Element[i]_Cell_Input1)
@@ -29,17 +39,6 @@
 												: Block[k]_Element[i]_Cell_Input1_Convolution_type_normal(Block[k]_Element[i]_Cell_Input1_Convolution_type_normal)
 												: Block[k]_Element[i]_Cell_Input1_Convolution_type_separable(Block[k]_Element[i]_Cell_Input1_Convolution_type_separable)
 												: Block[k]_Element[i]_Cell_Input1_Convolution_type_depthwise(Block[k]_Element[i]_Cell_Input1_Convolution_type_depthwise)
-										:m Block[k]_Element[i]_Cell_Input1_Convolution_features(Block[k]_Element[i]_Cell_Input1_Convolution_features)
-										:m Block[k]_Element[i]_Cell_Input1_Convolution_stride(Block[k]_Element[i]_Cell_Input1_Convolution_stride)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Convolution_stride_2x2(Block[k]_Element[i]_Cell_Input1_Convolution_stride_2x2)
-												: Block[k]_Element[i]_Cell_Input1_Convolution_stride_1x1(Block[k]_Element[i]_Cell_Input1_Convolution_stride_1x1)
-										:m Block[k]_Element[i]_Cell_Input1_Convolution_features(Block[k]_Element[i]_Cell_Input1_Convolution_features)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Convolution_features_8(Block[k]_Element[i]_Cell_Input1_Convolution_features_8)
-												: Block[k]_Element[i]_Cell_Input1_Convolution_features_16(Block[k]_Element[i]_Cell_Input1_Convolution_features_16)
-												: Block[k]_Element[i]_Cell_Input1_Convolution_features_64(Block[k]_Element[i]_Cell_Input1_Convolution_features_64)
-												: Block[k]_Element[i]_Cell_Input1_Convolution_features_128(Block[k]_Element[i]_Cell_Input1_Convolution_features_128)
 										:m Block[k]_Element[i]_Cell_Input1_Convolution_padding(Block[k]_Element[i]_Cell_Input1_Convolution_padding)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input1_Convolution_padding_same(Block[k]_Element[i]_Cell_Input1_Convolution_padding_same)
@@ -48,23 +47,6 @@
 												: Block[k]_Element[i]_Cell_Input1_Convolution_activation_relu(Block[k]_Element[i]_Cell_Input1_Convolution_activation_relu)
 									: Block[k]_Element[i]_Cell_Input1_Identity(Block[k]_Element[i]_Cell_Input1_Identity)
 									: Block[k]_Element[i]_Cell_Input1_Zeros(Block[k]_Element[i]_Cell_Input1_Zeros)
-									: Block[k]_Element[i]_Cell_Input1_Pooling(Block[k]_Element[i]_Cell_Input1_Pooling)
-										:m Block[k]_Element[i]_Cell_Input1_Pooling_kernel(Block[k]_Element[i]_Cell_Input1_Pooling_kernel)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Pooling_kernel_1x1(Block[k]_Element[i]_Cell_Input1_Pooling_kernel_1x1)
-												: Block[k]_Element[i]_Cell_Input1_Pooling_kernel_2x2(Block[k]_Element[i]_Cell_Input1_Pooling_kernel_2x2)
-												: Block[k]_Element[i]_Cell_Input1_Pooling_kernel_3x3(Block[k]_Element[i]_Cell_Input1_Pooling_kernel_3x3)
-										:m Block[k]_Element[i]_Cell_Input1_Pooling_stride(Block[k]_Element[i]_Cell_Input1_Pooling_stride)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Pooling_stride_1x1(Block[k]_Element[i]_Cell_Input1_Pooling_stride_1x1)
-												: Block[k]_Element[i]_Cell_Input1_Pooling_stride_2x2(Block[k]_Element[i]_Cell_Input1_Pooling_stride_2x2)
-										:m Block[k]_Element[i]_Cell_Input1_Pooling_type(Block[k]_Element[i]_Cell_Input1_Pooling_type)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Pooling_type_max(Block[k]_Element[i]_Cell_Input1_Pooling_type_max)
-												: Block[k]_Element[i]_Cell_Input1_Pooling_type_average(Block[k]_Element[i]_Cell_Input1_Pooling_type_average)
-										:m Block[k]_Element[i]_Cell_Input1_Pooling_padding(Block[k]_Element[i]_Cell_Input1_Pooling_padding)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input1_Pooling_padding_same(Block[k]_Element[i]_Cell_Input1_Pooling_padding_same)
 							:m Block[k]_Element[i]_Cell_Input2(Block[k]_Element[i]_Cell_Input2)
 								:g [1,1]
 									: Block[k]_Element[i]_Cell_Input2_Convolution(Block[k]_Element[i]_Cell_Input2_Convolution)
@@ -77,21 +59,11 @@
 												: Block[k]_Element[i]_Cell_Input2_Convolution_kernel_3x3(Block[k]_Element[i]_Cell_Input2_Convolution_kernel_3x3)
 												: Block[k]_Element[i]_Cell_Input2_Convolution_kernel_1x5(Block[k]_Element[i]_Cell_Input2_Convolution_kernel_1x5)
 												: Block[k]_Element[i]_Cell_Input2_Convolution_kernel_5x1(Block[k]_Element[i]_Cell_Input2_Convolution_kernel_5x1)
-										:m Block[k]_Element[i]_Cell_Input2_Convolution_stride(Block[k]_Element[i]_Cell_Input2_Convolution_stride)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Convolution_stride_1x1(Block[k]_Element[i]_Cell_Input2_Convolution_stride_1x1)
-												: Block[k]_Element[i]_Cell_Input2_Convolution_stride_2x2(Block[k]_Element[i]_Cell_Input2_Convolution_stride_2x2)
 										:m Block[k]_Element[i]_Cell_Input2_Convolution_type(Block[k]_Element[i]_Cell_Input2_Convolution_type)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input2_Convolution_type_normal(Block[k]_Element[i]_Cell_Input2_Convolution_type_normal)
 												: Block[k]_Element[i]_Cell_Input2_Convolution_type_separable(Block[k]_Element[i]_Cell_Input2_Convolution_type_separable)
 												: Block[k]_Element[i]_Cell_Input2_Convolution_type_depthwise(Block[k]_Element[i]_Cell_Input2_Convolution_type_depthwise)
-										:m Block[k]_Element[i]_Cell_Input2_Convolution_features(Block[k]_Element[i]_Cell_Input2_Convolution_features)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Convolution_features_8(Block[k]_Element[i]_Cell_Input2_Convolution_features_8)
-												: Block[k]_Element[i]_Cell_Input2_Convolution_features_16(Block[k]_Element[i]_Cell_Input2_Convolution_features_16)
-												: Block[k]_Element[i]_Cell_Input2_Convolution_features_64(Block[k]_Element[i]_Cell_Input2_Convolution_features_64)
-												: Block[k]_Element[i]_Cell_Input2_Convolution_features_128(Block[k]_Element[i]_Cell_Input2_Convolution_features_128)
 										:m Block[k]_Element[i]_Cell_Input2_Convolution_padding(Block[k]_Element[i]_Cell_Input2_Convolution_padding)
 											:g [1,1]
 												: Block[k]_Element[i]_Cell_Input2_Convolution_padding_same(Block[k]_Element[i]_Cell_Input2_Convolution_padding_same)
@@ -100,23 +72,6 @@
 												: Block[k]_Element[i]_Cell_Input2_Convolution_activation_relu(Block[k]_Element[i]_Cell_Input2_Convolution_activation_relu)
 									: Block[k]_Element[i]_Cell_Input2_Identity(Block[k]_Element[i]_Cell_Input2_Identity)
 									: Block[k]_Element[i]_Cell_Input2_Zeros(Block[k]_Element[i]_Cell_Input2_Zeros)
-									: Block[k]_Element[i]_Cell_Input2_Pooling(Block[k]_Element[i]_Cell_Input2_Pooling)
-										:m Block[k]_Element[i]_Cell_Input2_Pooling_kernel(Block[k]_Element[i]_Cell_Input2_Pooling_kernel)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Pooling_kernel_1x1(Block[k]_Element[i]_Cell_Input2_Pooling_kernel_1x1)
-												: Block[k]_Element[i]_Cell_Input2_Pooling_kernel_2x2(Block[k]_Element[i]_Cell_Input2_Pooling_kernel_2x2)
-												: Block[k]_Element[i]_Cell_Input2_Pooling_kernel_3x3(Block[k]_Element[i]_Cell_Input2_Pooling_kernel_3x3)
-										:m Block[k]_Element[i]_Cell_Input2_Pooling_stride(Block[k]_Element[i]_Cell_Input2_Pooling_stride)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Pooling_stride_1x1(Block[k]_Element[i]_Cell_Input2_Pooling_stride_1x1)
-												: Block[k]_Element[i]_Cell_Input2_Pooling_stride_2x2(Block[k]_Element[i]_Cell_Input2_Pooling_stride_2x2)
-										:m Block[k]_Element[i]_Cell_Input2_Pooling_type(Block[k]_Element[i]_Cell_Input2_Pooling_type)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Pooling_type_max(Block[k]_Element[i]_Cell_Input2_Pooling_type_max)
-												: Block[k]_Element[i]_Cell_Input2_Pooling_type_average(Block[k]_Element[i]_Cell_Input2_Pooling_type_average)
-										:m Block[k]_Element[i]_Cell_Input2_Pooling_padding(Block[k]_Element[i]_Cell_Input2_Pooling_padding)
-											:g [1,1]
-												: Block[k]_Element[i]_Cell_Input2_Pooling_padding_same(Block[k]_Element[i]_Cell_Input2_Pooling_padding_same)
 							:m Block[k]_Element[i]_Cell_Operation1(Block[k]_Element[i]_Cell_Operation1)
 								:g [1,1]
 									: Block[k]_Element[i]_Cell_Operation1_Void(Block[k]_Element[i]_Cell_Operation1_Void)
