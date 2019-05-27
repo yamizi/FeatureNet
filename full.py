@@ -8,7 +8,7 @@ import sys, getopt, os
 
 def run_tensorflow(product, url, index,datasets=[], epochs=12, depth=1, data_augmentation=False):
         for dataset in datasets:
-                logpath = "report_all_{2}epochs_{3}depth_{0}_{1}.txt".format(url,dataset, epochs, depth)
+                logpath = "{0}_{1}_{2}epochs_{3}.txt".format(url,dataset, epochs, depth)
                 tensorflow = TensorflowGenerator(product,epochs, dataset, depth=depth, data_augmentation=data_augmentation)
                 f2 = open(logpath,"a")
 
@@ -41,7 +41,7 @@ def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epoc
 
 
 def init(argv):
-    input_file = '1000Products'
+    input_file = './datasets/1000Products'
     depth=1
     datasets = ["cifar"]
     training_epochs = 600
@@ -57,12 +57,10 @@ def init(argv):
         
         if opt == '-h':
             print(
-                'full.py -i <input_file> -n <depth> -d <datasets> -t <training_epoch>')
+                'full.py -i <input_file> -d <datasets> -t <training_epoch>')
             sys.exit()
-        elif opt in ("-n", "--depth"):
-            depth = int(arg)
         elif opt in ("-d", "--dataset"):
-            datasets = arg.split(";")
+            datasets = arg.split(",")
         elif opt in ("-i", "--ifile"):
             input_file = arg
         elif opt in ("-t", "--training_epoch"):

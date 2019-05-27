@@ -41,13 +41,12 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     top_cifar = [59, 63, 143,  161, 203, 444, 477, 595, 634,  936]
-    main("1000Products", datasets=["cifar"], epochs=300, depth=1, data_augmentation=False)
+    main("./datasets/1000Products", datasets=["cifar"], epochs=300, depth=1, data_augmentation=False)
        
 
         
        
-        
-        
+                
 
         
 
