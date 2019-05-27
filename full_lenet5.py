@@ -44,10 +44,6 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     top_cifar = [59, 63, 143,  161, 203, 444, 477, 595, 634,  936]
-    top_cifar = []
-    # small architectures < 4M on CIFAR
-    #top_cifar = [59, 203, 477, 634, 63, 161, 936]
-    #main("100Products_lenet5_constrained", datasets=["cifar"], filter_indices=top_cifar,epochs=300, depth=1, data_augmentation=False, min_index=21)
 
     tensorflow = TensorflowGenerator("lenet5",300, "cifar", depth=1, data_augmentation=False)
     f2 = open("report_lenet5_featureNET.txt","a")

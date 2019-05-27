@@ -6,7 +6,6 @@ import json
 
 
 
-
 def run_tensorflow(product, url, index,datasets=[], epochs=12, depth=1, data_augmentation=False):
         for dataset in datasets:
                 logpath = "report_all_{2}epochs_{3}depth_{0}_{1}.txt".format(url,dataset, epochs, depth)
@@ -34,9 +33,6 @@ def main(target, min_index=0, max_index=0, filter_indices=[], datasets=None,epoc
                         f.close()
 
                         run_tensorflow(product, target, index, datasets, epochs, depth, data_augmentation=data_augmentation)
-                        #p = multiprocessing.Process(target=run_tensorflow, args=(product,))
-                        #p.start()
-                        #p.join()
 
                 if max_index!= 0 and index ==max_index:
                         break
@@ -45,10 +41,7 @@ if __name__ == "__main__":
     # execute only if run as a script
 
     top_cifar = [59, 63, 143,  161, 203, 444, 477, 595, 634,  936]
-    top_cifar = []
-    # small architectures < 4M on CIFAR
-    #top_cifar = [59, 203, 477, 634, 63, 161, 936]
-    main("1000Products", datasets=["cifar"], filter_indices=top_cifar,epochs=300, depth=1, data_augmentation=False, min_index=107)
+    main("1000Products", datasets=["cifar"], epochs=300, depth=1, data_augmentation=False)
        
 
         
