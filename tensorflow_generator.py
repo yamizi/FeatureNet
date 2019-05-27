@@ -11,9 +11,12 @@ from keras.backend.tensorflow_backend import clear_session
 from keras.backend.tensorflow_backend import get_session
 import json
 import time
-from keras.callbacks import Callback, EarlyStopping
+from keras.callbacks import Callback, EarlyStopping, LearningRateScheduler, ReduceLROnPlateau
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
+
+from keras.optimizers import Adam
+
 #from keras.utils.training_utils import multi_gpu_model
 #from tensorflow.python.client import device_lib
 
@@ -32,6 +35,30 @@ def get_flops():
 
     return flops.total_float_ops
 
+def lr_schedule(epoch):
+    """Learning Rate Schedule
+
+    Learning rate is scheduled to be reduced after 80, 120, 160, 180 epochs.
+    Called automatically every epoch as part of callbacks during training.
+
+    # Arguments
+        epoch (int): The number of epochs
+
+    # Returns
+        lr (float32): learning rate
+    """
+    lr = 1e-3
+    if epoch > 180:
+        lr *= 0.5e-3
+    elif epoch > 160:
+        lr *= 1e-3
+    elif epoch > 120:
+        lr *= 1e-2
+    elif epoch > 80:
+        lr *= 1e-1
+    #print('Learning rate: ', lr)
+    return lr
+    
 def reset_keras():
     sess = get_session()
     clear_session()
@@ -39,9 +66,6 @@ def reset_keras():
 
     # use the same config as you used to create the session
     config = tf.ConfigProto() #allow_soft_placement=True, log_device_placement=True)
-    # if hasattr(config, "gpu_options"):
-    #  config.gpu_options.per_process_gpu_memory_fraction = 1
-    #  config.gpu_options.visible_device_list = "0"
     set_session(tf.Session(config=config))
 
 class TimedStopping(Callback):
@@ -186,7 +210,13 @@ class TensorflowGenerator(object):
                 print("#### model is not valid ####")
                 return 
 
+            optimizers = [  Adam(lr=lr_schedule(0)), "sgd"]
+            losss = ['categorical_crossentropy']
+            print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
+            model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
+
             self.model.nb_params = self.params = model.count_params()
+            print('model blocks,layers,params,flops: {} '.format(self.model.to_kerasvector()))
             
             if no_train:
                 model.summary()
@@ -196,9 +226,16 @@ class TensorflowGenerator(object):
                     plot_model(model, to_file='{}.png'.format(TensorflowGenerator.model_graph))
                 return  
                 
-            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.01, patience=25)
-            callbacks=[timed, early_stopping]
-            print("training with batch size {} epochs {} callbacks {} dataset {} data augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
+            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.005, patience=50)
+            lr_scheduler = LearningRateScheduler(lr_schedule)
+
+            lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
+                                cooldown=0,
+                                patience=5,
+                                min_lr=0.5e-6)
+                                
+            callbacks=[timed, early_stopping, lr_reducer, lr_scheduler]
+            print("training with batch size {} epochs {} callbacks {} dataset {} data-augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
             
             history = model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                     batch_size=batch_size,
@@ -211,7 +248,6 @@ class TensorflowGenerator(object):
             score = model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
             print('Test loss:', score[0])
             print('Test accuracy:', score[1])
-            print('model params:', model.count_params())
             
                 
             #self.model.nb_flops =  self.flops = get_flops()
