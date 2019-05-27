@@ -53,7 +53,8 @@ class Block(Node):
         if len(_inputs) ==0:
             outBlock = OutBlock()
             outBlock.parent_name = self.get_name()
-            outBlock.build(inputs[0].content)
+
+            outBlock.build(inputs[0])
             _inputs = [outBlock]
         
         _inputs.append(block_input)

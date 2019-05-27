@@ -63,7 +63,7 @@ class Cell(Node):
 
     @staticmethod
     def parse_feature_model(feature_model):
-        feature_model["children"] = reversed(feature_model["children"])
+        feature_model["children"] = list(reversed(feature_model["children"]))
         cell = Cell(raw_dict=feature_model)
 
         for cell_element_dict in feature_model.get("children"):
