@@ -63,8 +63,9 @@ class KerasFeatureModel(object):
     nb_params = 0
     model = None
     accuracy = 0
-
-    losss = ['categorical_crossentropy']
+    
+    layers = {"pool":[],"conv":[]}
+    
 
 
     def __init__(self, name=""):
@@ -86,7 +87,6 @@ class KerasFeatureModel(object):
             nb_layers = 0
             
         return KerasFeatureVector(self.accuracy, [len(self.blocks),nb_layers, self.nb_params, self.nb_flops], self.features)
-
         
     def build(self, input_shape, output_shape, max_parameters=20000000):
         self.outputs = []
@@ -94,18 +94,6 @@ class KerasFeatureModel(object):
         X_input = Input(input_shape)
         _inputs = [X_input]
         model = None
-
-        lr=1.e-2
-        n_steps=20
-        global_step = tf.Variable(0)    
-        global_step=1
-        learning_rate = tf.train.cosine_decay(
-            learning_rate=lr,
-            global_step=global_step,
-            decay_steps=n_steps
-        )
-        self.optimizers.append(SGD(lr=0.1, momentum=0.9, decay=0.0001, nesterov=True))
-        self.optimizers = [ "sgd", tf.train.RMSPropOptimizer(learning_rate=learning_rate)]
         
         try:
             print("Build Tensorflow model")
@@ -120,15 +108,15 @@ class KerasFeatureModel(object):
                 out = Flatten()(out)
                 #out = GlobalAveragePooling2D()(out)
             self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]
-            # Create model
 
-            #with tf.device('/cpu:0'):
             model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
-
-            #sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-
             if model.count_params() > 20000000:
                 print("#### model is bigger than 20M params. Skipped")
+                model.summary()
+                return None 
+
+            if model.count_params() < 20000:
+                print("#### model is smaller than 20K params. Skipped")
                 model.summary()
                 return None 
 
@@ -137,9 +125,7 @@ class KerasFeatureModel(object):
             except:
                 print("multi gpu not available")
 
-            print("Compile Tensorflow model with loss:{}, optimizer {}".format(self.losss[0], self.optimizers[0]))
-            model.compile(loss=self.losss[0], metrics=['accuracy'], optimizer=self.optimizers[0])
-        
+            
         except Exception as e:
             import traceback
             print("error",e)
@@ -177,7 +163,7 @@ class KerasFeatureModel(object):
         else: 
             for i in range(depth):
                 for block_dict in feature_model:
-                    block_dict["children"] = reversed(block_dict["children"])
+                    block_dict["children"] = list(reversed(block_dict["children"]))
                     block = Block.parse_feature_model(block_dict)
                     model.blocks.append(block)
 
