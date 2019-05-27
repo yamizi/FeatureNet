@@ -204,7 +204,7 @@ class Sum(Combination):
 
         if source1.shape.as_list() == source2.shape.as_list():
             return Add()([source1, source2])
-        return source1
+        return source2  # we keep the biggest matrix
         
 class Concat(Combination):
     def __init__(self, _axis=None, raw_dict=None):
@@ -220,7 +220,7 @@ class Concat(Combination):
 
         if source1.shape.as_list() == source2.shape.as_list():
             return Concatenate(axis=self._axis)([source1, source2])
-        return source1
+        return source2 # we keep the biggest matrix
 
 class Product(Combination):
     def __init__(self, raw_dict=None):
