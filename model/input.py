@@ -7,17 +7,33 @@ from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D
 from .output import Output, OutCell, OutBlock, Out
 
 class Input(Node):
-    def __init__(self, raw_dict=None):
+    def __init__(self, raw_dict=None, stride=1, features=0):
         
         self.raw_dict = raw_dict
+        self._stride = stride
+        self._features = features
+        self._relative_features = None
         super(Input, self).__init__(raw_dict=raw_dict)
+
+    def set_stride(self,stride):
+        stride_x, stride_y = int(stride[0]), int(stride[1])
+        self._stride = (max(1,min(stride_x,2)), max(1,min(stride_y,2)))
+
+    def set_features(self,features, relative_features=False):
+        if relative_features:
+            self._relative_features = float(features)
+        else:
+            self._features =  max(1,min(int(features),1024))
 
     def build_tensorflow_model(self, model, source1, source2):
         pass
 
     def build(self, input, neighbour=None):
-        self._stride = 1
-        return input.content if hasattr(input,"content") and input.content is not None else input
+        input =  input.content if hasattr(input,"content") and input.content is not None else input
+        input_features = input.shape.as_list()[-1]
+        if self._relative_features:
+            self._features = int(input_features * self._relative_features)
+        return input
         
     @staticmethod
     def parse_feature_model(feature_model):
@@ -153,7 +169,7 @@ class DenseInput(Input):
         if not _features:
             self.append_parameter("_features","__int__")
         else:
-            self._features = min(512,int(_features))
+            self._features = int(_features)
 
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
@@ -244,7 +260,7 @@ class ConvolutionInput(Input):
         if not _features:
             self.append_parameter("_features","__int__")
         else:
-            self._features = min(128,int(_features))
+            self._features =int(_features)
 
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))

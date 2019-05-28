@@ -9,7 +9,7 @@ class Block(Node):
 
         self.is_root = True
         self.cells = []
-        self._features = 0.0
+        self._features = 0
         self._stride = 0
         
         if previous_block:
@@ -46,7 +46,7 @@ class Block(Node):
         nb_cells =len(self.cells)
         for i, cell in enumerate(self.cells):
             max_relative_index = nb_cells -i
-            _outputs = cell.build_tensorflow_model(inputs,max_relative_index)
+            _outputs = cell.build_tensorflow_model(inputs,max_relative_index, self._stride, self._features)
             
             #Reputting cell inputs that have planned in previous cells 
             for i in inputs:

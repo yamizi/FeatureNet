@@ -28,10 +28,18 @@ class Cell(Node):
         self.combination = output_combination
         super(Cell, self).__init__(raw_dict=raw_dict)
 
-    def build_tensorflow_model(self, inputs, max_relative_index):
+    def build_tensorflow_model(self, inputs, max_relative_index, block_stride, block_features):
 
         last_inputs = [input for input in inputs if not hasattr(input,"content") or input.currentIndex ==0]
 
+        if block_stride:
+            self.input1.set_stride(block_stride)
+            self.input2.set_stride(block_stride)
+
+        if block_features:
+            self.input1.set_features(block_features, True)
+            self.input2.set_features(block_features, True)
+        
         i1 = self.input1.build(last_inputs[0] if len(last_inputs)>0 else None)
         i1 = self.operation1.build(i1)
        
