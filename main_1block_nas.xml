@@ -14,10 +14,12 @@
 							: Block[k]_stride_1x1(Block[k]_stride_1x1)
 					:m Block[k]_features(Block[k]_features)
 						:g [1,1]
-							: Block[k]_features_2(Block[k]_features_800)
-							: Block[k]_features_4(Block[k]_features_400)
-							: Block[k]_features_0.5(Block[k]_features_50)
-							: Block[k]_features_0.25(Block[k]_features_25)
+							: Block[k]_features_800(Block[k]_features_800)
+							: Block[k]_features_400(Block[k]_features_400)
+							: Block[k]_features_200(Block[k]_features_200)
+							: Block[k]_features_100(Block[k]_features_100)
+							: Block[k]_features_50(Block[k]_features_50)
+							: Block[k]_features_25(Block[k]_features_25)
 					:o Block[k]_Element[i](Block[k]_Element[i])
 						:o Block[k]_Element[i]_Cell(Block[k]_Element[i]_Cell)
 							:m Block[k]_Element[i]_Cell_Input1(Block[k]_Element[i]_Cell_Input1)
@@ -105,11 +107,13 @@
 												: Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_2(Block[k]_Element[i]_Cell_Output_Cell_relativeCellIndex_2)
 </feature_tree>
     <constraints>
-C1:~Block[k+1]  or  Block[k]
-C2:~Block[k]_Element[i+1]  or  Block[k]_Element[i]
-C3:~Block[k]_Element[i]_Cell_Output_Block  or  Block[k+1]
-C4:~Block[k]_Element[i]_Cell_Output_Block  or  ~Block[k]_Element[i+1]
-C5:~Block[k]_Element[i]_Cell_Output_Cell  or  Block[k]_Element[i+1]
-C6:~Architecture  or  ~Block[k]_Element[i]_Cell_Input1_Zeros
+C1:~Architecture  or  Block1
+C2:~Block[k+1]  or  Block[k]
+C3:~Block[k]_Element[i+1]  or  Block[k]_Element[i]
+C4:~Block[k]_Element[i]_Cell_Output_Block  or  Block[k+1]
+C5:~Block[k]_Element[i]_Cell_Output_Block  or  ~Block[k]_Element[i+1]
+C6:~Block[k]_Element[i]_Cell_Output_Cell  or  Block[k]_Element[i+1]
+C7:~Architecture  or  ~Block[k]_Element[i]_Cell_Input1_Zeros
+
 </constraints>
 </feature_model>
