@@ -7,6 +7,10 @@ from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D
 from .output import Output, OutCell, OutBlock, Out
 
 class Input(Node):
+
+    min_features = 8
+    max_features = 2048
+    
     def __init__(self, raw_dict=None, stride=1, features=0):
         
         self.raw_dict = raw_dict
@@ -23,7 +27,7 @@ class Input(Node):
         if relative_features:
             self._relative_features = float(features)
         else:
-            self._features =  max(1,min(int(features),1024))
+            self._features =  max(Input.min_features,min(int(features),Input.max_features))
 
     def build_tensorflow_model(self, model, source1, source2):
         pass
@@ -32,7 +36,7 @@ class Input(Node):
         input =  input.content if hasattr(input,"content") and input.content is not None else input
         input_features = input.shape.as_list()[-1]
         if self._relative_features:
-            self._features = int(input_features * self._relative_features)
+            self._features = max(1,min(int(input_features * self._relative_features),1024))
         return input
         
     @staticmethod
