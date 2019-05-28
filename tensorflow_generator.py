@@ -220,7 +220,9 @@ class TensorflowGenerator(object):
             
             if no_train:
                 model.summary()
-
+                missing_params = self.model.get_custom_parameters()
+                for name,(node, params) in missing_params.items():
+                    print("{0}:{1}".format(name, params))
                 if TensorflowGenerator.model_graph:
                     from keras.utils import plot_model
                     plot_model(model, to_file='{}.png'.format(TensorflowGenerator.model_graph))

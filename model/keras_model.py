@@ -169,10 +169,6 @@ class KerasFeatureModel(object):
 
             model.blocks.sort(key = lambda a : a.get_name())
 
-            missing_params = model.get_custom_parameters()
-            for name,(node, params) in missing_params.items():
-                print("{0}:{1}".format(name, params))
-
         return model
 
 
