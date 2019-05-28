@@ -34,7 +34,8 @@ def generate_featuretree(input_file,output_file,nb_cells,nb_blocks):
         if len(constraint) < 2:
             continue
         if constraint[1].find("[k]")==-1:
-            constraints_full ="{}\n{}".format(constraints_full, c)
+            constraints_full ="{}\n{}".format(constraints_full, constraints_raw[c])
+            constraint_id = constraint_id+1
         elif constraint[0].find("CLC")!=-1:
             pass
         else:
