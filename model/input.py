@@ -36,7 +36,7 @@ class Input(Node):
         input =  input.content if hasattr(input,"content") and input.content is not None else input
         input_features = input.shape.as_list()[-1]
         if self._relative_features:
-            self._features = max(1,min(int(input_features * self._relative_features),1024))
+            self.set_features(input_features * self._relative_features)
         return input
         
     @staticmethod
