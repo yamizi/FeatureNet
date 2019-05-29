@@ -6,7 +6,7 @@ import os
 from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureVector
 from products_tree import ProductSet, ProductSetError
-import random
+import random, math
 
 import tensorflow
 import gc
@@ -159,13 +159,16 @@ class PledgeEvolution(object):
     @staticmethod
     def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar", training_epochs=25):
 
+        if not os.path.isdir(base_path):
+            os.mkdir(base_path)
+
         session_path = "{}/{}".format(base_path, dataset)
 
         if not os.path.isdir(session_path):
             os.mkdir(session_path)
 
         survival_rate = 0.05
-        survival_count = int(survival_rate*nb_base_products)
+        survival_count = math.ceil(survival_rate*nb_base_products)
         nb_product_perparent =  int((nb_base_products-survival_count) / survival_count)
         last_evolution_epoch = 0
         reset_keras()
@@ -244,15 +247,22 @@ class PledgeEvolution(object):
     def end2end(base_path, nb_base_products, input_file="", output_file="", last_pdts_path="", dataset="cifar", training_epochs=25):
         from extender import generate_featuretree
 
+        if not os.path.isdir(base_path):
+            os.mkdir(base_path)
+
         _input_file = "main_1block_nas.xml"
         print("End to end NAS Search from {} to {} products".format(_input_file, nb_base_products))
 
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
         
-        input_file = input_file if input_file else "{}/nas{}_{}.xml".format(base_path, _nb_blocks,_nb_cells)
-        generate_featuretree(_input_file,input_file,int(_nb_cells),int(_nb_blocks))
+        full_fm_file = input_file if input_file else "{}/nas{}_{}.xml".format(base_path, _nb_blocks,_nb_cells)
 
-        PledgeEvolution.run(base_path, input_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
+        if os.path.isfile(output_file):
+            print("Skipping full FM generation, file found in {}".format(full_fm_file))
+        else:
+            generate_featuretree(_input_file,full_fm_file,int(_nb_cells),int(_nb_blocks))
+
+        PledgeEvolution.run(base_path, full_fm_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
 
 
 
@@ -291,9 +301,6 @@ def main(argv):
             products_file = arg
         elif opt in ("-t", "--training_epoch"):
             training_epochs = int(arg)
-
-    if not os.path.isdir(base):
-        os.mkdir(base)
         
     if len(nb_base_products) ==1:
         PledgeEvolution.run(base, input_file, output_file,
