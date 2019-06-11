@@ -19,7 +19,7 @@ import re
 pledge_path = '../products/PLEDGE.jar'
 base_path = '../products'
 base_training_epochs = 25
-evolution_epochs = 20
+evolution_epochs = 50
 
 
 def reset_keras(classifier=None):
@@ -61,7 +61,7 @@ class PledgeEvolution(object):
         return products, products_labels
 
     @staticmethod
-    def mutate(mutant_path, mutant_labels, initial_feature_model, nb_products, constraints_ratio=0.5):
+    def generate_children(mutant_path, mutant_labels, initial_feature_model, nb_products, constraints_ratio=0.5):
 
         mutant_labels = [
             mutant for mutant in mutant_labels if random.random() < constraints_ratio]
@@ -81,10 +81,6 @@ class PledgeEvolution(object):
         constraints.text = "\n".join(constraints_raw)
         dst = "{}.xml".format(mutant_path)
         tree.write(dst, encoding="UTF-8", xml_declaration=True)
-        #text = ET.tostring(root,"unicode" )
-        #f = open(dst, 'w')
-        #f.write(text)
-        #f.close()
 
         if not os.path.isfile(dst):
             print("file {} not saved yet".format(dst))
@@ -137,7 +133,7 @@ class PledgeEvolution(object):
             for batch_id, (ratio, nb_prd) in enumerate(mutant_ratios):
                 mutant_id = "e{}_m{}_b{}".format(evo, i, batch_id)
                 mutant_path = "{}/{}".format(session_path, mutant_id)
-                mutants_pdts_path = PledgeEvolution.mutate(mutant_path, new_pop_labels[i], input_file, max(3,ceil(nb_prd*nb_product_perparent)), ratio)
+                mutants_pdts_path = PledgeEvolution.generate_children(mutant_path, new_pop_labels[i], input_file, max(3,ceil(nb_prd*nb_product_perparent)), ratio)
                 print("### batch of pledge sub-products {}".format(mutants_pdts_path))
                 try:
                     product_set.load_products_from_url(mutants_pdts_path)
@@ -218,13 +214,13 @@ class PledgeEvolution(object):
 
         # list of (mutant_ratio,mutant_prds) sum of count_ratio should equal 1
         #mutant_ratios = [(1, 0.2),  (0.5, 0.2), (0.5, 0.2), (0.5, 0.2), (0.25, 0.2)]
-        mutant_ratios = [(1, 0.2),  (0.5, 0.3),(0.5, 0.3), (0.25, 0.2)]
-        #mutant_ratios = ((0.5, 1),)
+        #mutant_ratios = [(1, 0.2),  (0.5, 0.3),(0.5, 0.3), (0.25, 0.2)]
+        
+        mutant_ratios = [(0.2, 0.5),(0.2, 0.5)]
 
         for evo in range(evolution_epochs):
             # The more we increase the epochs, the more we keep all the leaves
-            #mutant_ratios[0] = (1, 0.2 +0.8*evo/(evolution_epochs-1))
-            #mutant_ratios[1] = mutant_ratios[2] = mutant_ratios[3] =(0.5, 0.2*(evolution_epochs-evo)/evolution_epochs)
+            mutant_ratios[1] = mutant_ratios[0] = (0.2+ 0.75*evo/evolution_epochs,0.5) 
 
             print("### evolution epoch {}".format(evo+last_evolution_epoch))
             new_pop, new_pop_labels = PledgeEvolution.select(last_population, survival_count)
