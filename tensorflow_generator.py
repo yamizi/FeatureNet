@@ -115,7 +115,7 @@ class TensorflowGenerator(object):
     history = ([],[])
     dataset = None
     input_shape = (0,0,0)
-    default_batchsize = 128
+    default_batchsize = 64
 
     def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128):
         #product_features is a list of enabled and disabled features based on the original feature model
@@ -228,7 +228,7 @@ class TensorflowGenerator(object):
                     plot_model(model, to_file='{}.png'.format(TensorflowGenerator.model_graph))
                 return  
                 
-            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.005, patience=50)
+            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.005, patience=100)
             lr_scheduler = LearningRateScheduler(lr_schedule)
 
             lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
