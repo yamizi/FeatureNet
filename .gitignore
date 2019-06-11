@@ -9,3 +9,5 @@ plots/
 *.pdt
 *.out
 *.sh
+NASNet/*
+model_graphs/*

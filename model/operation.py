@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
-from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D
+from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D, Conv2D
 from .output import Output, OutCell, OutBlock, Out
 
 class Operation(Node):
@@ -13,10 +13,7 @@ class Operation(Node):
         pass
 
     def build(self, input, neighbour=None):
-        if type(input) is OutCell or type(input) is OutBlock or type(input) is Out:
-            return input.content
-        else:
-            return input
+        return input.content if hasattr(input,"content") and input.content is not None else input
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -96,14 +93,14 @@ class Drop(Operation):
     def __init__(self, _value, raw_dict=None):
         super(Drop, self).__init__(raw_dict=raw_dict)
         if not _value:
-            self._value =_value = 0.5
+            self._value =_value = 0
             #self.append_parameter("_value","__float__")
         else:
-            self._value = int(_value)
+            self._value = int(_value)/10
 
     def build(self,input):
         input = super(Drop, self).build(input)
-        return Dropout(self._value)(input)
+        return Dropout(self._value)(input) if self._value else input
 
 class Padding(Operation):
     def __init__(self, _fillValue=None, _fillSize=None, raw_dict=None):
@@ -158,7 +155,21 @@ class Combination(Node):
         super(Combination, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
-        pass
+        self.parent_name = "{}+{}".format(source1.name,source2.name) if hasattr(source1,"name") else ""
+
+        source1 =  source1.content if hasattr(source1,"content") and source1.content is not None else source1
+        source2 =  source2.content if hasattr(source2,"content") and source2.content is not None else source2
+
+        if source1.shape.ndims==4 and source2.shape.ndims==4 and source1.shape.dims[3].value != source2.shape.dims[3].value:
+            (source1, source2) = (source1, source2) if source1.shape.dims[3] < source2.shape.dims[3] else (source2, source1)
+            dilatation_rate = 1
+            stride = source1.shape.dims[2].value / source2.shape.dims[2].value
+            if stride <1:
+                dilatation_rate = 1/stride
+                stride = 1
+            source2 =Conv2D(source1.shape.dims[3].value, 1, strides=int(stride), dilation_rate=int(dilatation_rate), name="Reg_"+Node.get_name(self))(source2)
+    
+        return source1, source2
 
     @staticmethod
     def parse_feature_model(feature_model):
@@ -189,9 +200,11 @@ class Sum(Combination):
         super(Sum, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
-        if source1.shape.dims == source2.shape.dims:
+        source1, source2 = super(Sum, self).build(source1, source2)
+
+        if source1.shape.as_list() == source2.shape.as_list():
             return Add()([source1, source2])
-        return source1
+        return source2  # we keep the biggest matrix
         
 class Concat(Combination):
     def __init__(self, _axis=None, raw_dict=None):
@@ -203,9 +216,11 @@ class Concat(Combination):
             self._axis = int(_axis)
 
     def build(self, source1, source2):
-        if source1.shape.dims == source2.shape.dims:
+        source1, source2 = super(Concat, self).build(source1, source2)
+
+        if source1.shape.as_list() == source2.shape.as_list():
             return Concatenate(axis=self._axis)([source1, source2])
-        return source1
+        return source2 # we keep the biggest matrix
 
 class Product(Combination):
     def __init__(self, raw_dict=None):
@@ -213,5 +228,6 @@ class Product(Combination):
 
     
     def build(self, source1, source2):
+        source1, source2 = super(Product, self).build(source1, source2)
         return Multiply()([source1, source2])
         

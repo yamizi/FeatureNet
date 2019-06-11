@@ -2,25 +2,43 @@
 
 from .node import Node
 from keras import backend as K
-from keras.layers import Dense, Conv2D
-from keras.layers import AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D 
+from keras.layers import Dense, Conv2D, SeparableConv2D, DepthwiseConv2D, Conv1D, SeparableConv1D
+from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D 
 from .output import Output, OutCell, OutBlock, Out
 
 class Input(Node):
-    def __init__(self, raw_dict=None):
+
+    min_features = 8
+    max_features = 2048
+    
+    def __init__(self, raw_dict=None, stride=1, features=0):
         
         self.raw_dict = raw_dict
+        self._stride = stride
+        self._features = features
+        self._relative_features = None
         super(Input, self).__init__(raw_dict=raw_dict)
+
+    def set_stride(self,stride):
+        stride_x, stride_y = int(stride[0]), int(stride[1])
+        self._stride = (max(1,min(stride_x,2)), max(1,min(stride_y,2)))
+
+    def set_features(self,features, relative_features=False):
+        if relative_features:
+            self._relative_features = float(features)
+        else:
+            self._features =  max(Input.min_features,min(int(features),Input.max_features))
 
     def build_tensorflow_model(self, model, source1, source2):
         pass
 
     def build(self, input, neighbour=None):
-        if type(input) is OutCell or type(input) is OutBlock or type(input) is Out:
-            return input.content
-        else:
-            return input
-
+        input =  input.content if hasattr(input,"content") and input.content is not None else input
+        input_features = input.shape.as_list()[-1]
+        if self._relative_features:
+            self.set_features(input_features * self._relative_features)
+        return input
+        
     @staticmethod
     def parse_feature_model(feature_model):
 
@@ -121,12 +139,15 @@ class Input(Node):
                     if(len(child.get("children"))):
                         _activation = Node.get_type(child.get("children")[0])
 
+                elif(element_type == "type"):
+                    if(len(child.get("children"))):
+                        _type = Node.get_type(child.get("children")[0])
+
                 elif(element_type == "features"):
                     if(len(child.get("children"))):
                         _features = Node.get_type(child.get("children")[0])
 
-
-            input_element = ConvolutionInput(_kernel=_kernel,_stride=_stride, _padding=_padding,_activation=_activation,_features=_features,raw_dict=input)
+            input_element = ConvolutionInput(_kernel=_kernel,_stride=_stride, _padding=_padding,_activation=_activation,_features=_features, _type=_type, raw_dict=input)
         
         return input_element
 
@@ -148,12 +169,11 @@ class IdentityInput(Input):
 class DenseInput(Input):
     def __init__(self, _features, _activation, raw_dict=None):
         super(DenseInput, self).__init__(raw_dict=raw_dict)
-
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         if not _features:
             self.append_parameter("_features","__int__")
         else:
-            self._features = min(512,int(_features))
+            self._features = int(_features)
 
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
@@ -162,15 +182,15 @@ class DenseInput(Input):
 
     def build(self, input, neighbour=None):
         input = super(DenseInput, self).build(input)
-        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(input.content if hasattr(input,"content") else input)
+        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(input)
 
 
 class PoolingInput(Input):
     def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None):
         super(PoolingInput, self).__init__(raw_dict=raw_dict)
 
-        typeAcceptedValues = ("max","average","dilated","global")
-        paddingAcceptedValues = ("valid", "same")
+        typeAcceptedValues = ("max","average","global")
+        paddingAcceptedValues = ("same",)# ("valid", "same")
 
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
@@ -192,6 +212,7 @@ class PoolingInput(Input):
 
             if not _padding or str(_padding) not in paddingAcceptedValues:
                 self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+                self._padding = paddingAcceptedValues[0]
             else:
                 self._padding = _padding
 
@@ -209,18 +230,26 @@ class PoolingInput(Input):
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
-        if self._type=="global":
-            return input
-            #return GlobalMaxPooling2D(name=Node.get_name(self))(input)
+            if self._type=="global":
+                #return input
+                return GlobalAveragePooling2D(name=Node.get_name(self))(input)
+                
 
         return input
 
 class ConvolutionInput(Input):
-    def __init__(self, _kernel, _stride, _features, _padding, _activation, raw_dict=None):
+    def __init__(self, _kernel, _stride, _features, _padding, _activation, _type="normal", raw_dict=None):
         super(ConvolutionInput, self).__init__(raw_dict=raw_dict)
 
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
-        paddingAcceptedValues = ("valid","same")
+        paddingAcceptedValues = ("same",) #("valid","same")
+        typeAcceptedValues = ("normal","separable","depthwise")
+
+        if not _type or str(_type) not in typeAcceptedValues:
+            self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
+            self._type = "normal"
+        else:
+            self._type = _type
 
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
@@ -235,7 +264,7 @@ class ConvolutionInput(Input):
         if not _features:
             self.append_parameter("_features","__int__")
         else:
-            self._features = min(128,int(_features))
+            self._features =int(_features)
 
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
@@ -244,6 +273,7 @@ class ConvolutionInput(Input):
 
         if not _padding or str(_padding) not in paddingAcceptedValues:
             self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
+            self._padding = paddingAcceptedValues[0]
         else:
             self._padding = _padding
         
@@ -252,8 +282,23 @@ class ConvolutionInput(Input):
         input = input.content if hasattr(input,"content") else input
         
         if input.shape.ndims==4:
-            if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
-                    self._padding="same"
-            return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+
+            if self._type == "normal":
+                if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                        self._padding="same"
+                return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+            elif self._type == "separable":
+                return SeparableConv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+            elif self._type == "depthwise":
+                return DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+        
+        elif input.shape.ndims==3:
+            if self._type == "normal":
+                if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                        self._padding="same"
+                return Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+            elif self._type == "separable":
+                return SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                 
         return input
         

@@ -10,6 +10,8 @@ class Block(MutableBlock, Node):
 
         self.is_root = True
         self.cells = []
+        self._features = 0
+        self._stride = 0
         
         if previous_block:
             self.previous_block = previous_block
@@ -19,6 +21,13 @@ class Block(MutableBlock, Node):
 
     def append_cell(self, cell):
         self.cells.append(cell)
+
+
+    def set_stride(self,stride_str):
+        self._stride = stride_str.split("x")
+
+    def set_features(self,features_str):
+        self._features = int(features_str)/100
 
     def get_custom_parameters(self):
         params = {}
@@ -33,47 +42,61 @@ class Block(MutableBlock, Node):
 
     def build_tensorflow_model(self, inputs):
         
+        block_input = inputs[0]
         outputs = []
-        for cell in self.cells:
-            _outputs, _inputs = cell.build_tensorflow_model(inputs)
+        nb_cells =len(self.cells)
+        for i, cell in enumerate(self.cells):
+            max_relative_index = nb_cells -i
+            _outputs = cell.build_tensorflow_model(inputs,max_relative_index, self._stride, self._features)
             
             #Reputting cell inputs that have planned in previous cells 
-            for i in _inputs:
-                if type(i) is OutCell and i.currentIndex>0:
+            for i in inputs:
+                if type(i) is OutCell and i.currentIndex>=0:
                     i.currentIndex = i.currentIndex-1
-                    if i.currentIndex==0:
-                        _inputs.insert(0,i)
             
-            if len(outputs)==0:
-                outputs = outputs + _outputs
-            # We only keep one output
+            outputs = outputs + _outputs
+            # To handle multiple outputs if the feature model includes multiples
             
-        #Cleaning the input stack from the Output who are directed to cells or to be logged out
-        _inputs = [i for i in inputs if (i is not Out and i is not OutCell)]
-        #Reputting block inputs that have been planned in previous cells 
-        for i in _inputs:
-            if i is OutBlock:
-                i.currentIndex = i.currentIndex-1
-                if i.currentIndex==0:
-                    _inputs.insert(i)
-       
-        return outputs, _inputs 
+        #Cleaning the input stack from the Output who are directed to cells or to be logged out => Keeping only BlockOutput
+        #If no Block Output defined, building a new one based on the last cell
+        _inputs = [i for i in inputs if i is OutBlock]
+        if len(_inputs) ==0:
+            outBlock = OutBlock()
+            outBlock.parent_name = self.get_name()
+
+            outBlock.build(inputs[0])
+            _inputs = [outBlock]
+        
+        _inputs.append(block_input)
+
+        return _inputs, outputs 
 
 
     @staticmethod
     def parse_feature_model(feature_model):
-       
+        
         block = Block(raw_dict=feature_model)
-
+        
         for cell_dict in feature_model.get("children"):
-            if len(cell_dict.get("children")):
-                cell_type = cell_dict.get("children")[0].get("label")
-                cell_type = cell_type[cell_type.rfind("_")+1:]
-                cell_type = ''.join([i for i in cell_type if not i.isdigit()])
+            element_type = cell_dict.get("label")
+            element_type = element_type[element_type.rfind("_")+1:]
+            if element_type=="stride":
+                stride = cell_dict.get("children")[0].get("label")
+                block.set_stride(stride[stride.rfind("_")+1:])
+            elif element_type=="features":
+                feature = cell_dict.get("children")[0].get("label")
+                block.set_features(feature[feature.rfind("_")+1:])
+
+            elif len(cell_dict.get("children")):
+
                 
-                if cell_type=="Cell":
-                    cell = Cell.parse_feature_model(cell_dict.get("children")[0])
-                    block.cells.append(cell)
+                        cell_type = cell_dict.get("children")[0].get("label")
+                        cell_type = cell_type[cell_type.rfind("_")+1:]
+                        cell_type = ''.join([i for i in cell_type if not i.isdigit()])
+                
+                        if cell_type=="Cell":
+                            cell = Cell.parse_feature_model(cell_dict.get("children")[0])
+                            block.cells.append(cell)
         
         block.cells.sort(key = lambda a : a.get_name())
         return block

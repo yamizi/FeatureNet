@@ -28,10 +28,18 @@ class Cell(Node):
         self.combination = output_combination
         super(Cell, self).__init__(raw_dict=raw_dict)
 
-    def build_tensorflow_model(self, inputs):
+    def build_tensorflow_model(self, inputs, max_relative_index, block_stride, block_features):
 
-        last_inputs = inputs #[input for input in inputs if  input is not Output and input.currentIndex ==0]
+        last_inputs = [input for input in inputs if not hasattr(input,"content") or input.currentIndex ==0]
 
+        if block_stride:
+            self.input1.set_stride(block_stride)
+            self.input2.set_stride(block_stride)
+
+        if block_features:
+            self.input1.set_features(block_features, True)
+            self.input2.set_features(block_features, True)
+        
         i1 = self.input1.build(last_inputs[0] if len(last_inputs)>0 else None)
         i1 = self.operation1.build(i1)
        
@@ -39,17 +47,18 @@ class Cell(Node):
             combination = i1
         else:
             i2 = self.input2.build(last_inputs[1] if len(last_inputs)>1 else last_inputs[0] if len(last_inputs)>0 else None, i1)
-            i2 = self.operation1.build(i2)
+            i2 = self.operation2.build(i2)
             combination = self.combination.build(i1,i2)
 
+        self.output.currentIndex = min(max_relative_index,self.output.currentIndex)
         output = self.output.build(combination)
         outputs = []
         if type(self.output) is OutCell and self.output.currentIndex>-1:           
             inputs.insert(0, output)
         if type(self.output) is Out:
-            outputs = [output.content]
+            outputs.insert(0, output.content)
 
-        return outputs, inputs
+        return outputs
 
     def get_custom_parameters(self):
         my_params = self.customizable_parameters
@@ -62,6 +71,7 @@ class Cell(Node):
 
     @staticmethod
     def parse_feature_model(feature_model):
+        feature_model["children"] = list(reversed(feature_model["children"]))
         cell = Cell(raw_dict=feature_model)
 
         for cell_element_dict in feature_model.get("children"):

@@ -8,8 +8,14 @@ class Output(Node):
     def __init__(self, raw_dict=None):
         super(Output, self).__init__(raw_dict=raw_dict)
 
+    @property
+    def shape(self):
+        if self.content is not None:
+            return self.content.shape
+        return None
+
     def build(self, input):
-        self.content = input
+        self.content = input.content if hasattr(input,"content") and input.content is not None else input
         return self
         
 
@@ -53,7 +59,7 @@ class OutBlock(Output):
     def __init__(self, _relativeBlockIndex=None,  raw_dict=None):
         super(OutBlock, self).__init__(raw_dict=raw_dict)
         if not _relativeBlockIndex:
-            self._relativeBlockIndex = 1
+            self._relativeBlockIndex = 0
         else:
             self._relativeBlockIndex = int(_relativeBlockIndex)
 
@@ -63,18 +69,13 @@ class OutBlock(Output):
 class OutCell(Output):
     def __init__(self, _relativeCellIndex=None, raw_dict=None):
         super(OutCell, self).__init__(raw_dict=raw_dict)
+        #_relativeCellIndex = 0
         if not _relativeCellIndex:
-            self._relativeCellIndex = 0
+            self._relativeCellIndex = 1
         else:
-            self._relativeCellIndex = int(_relativeCellIndex)
-            if self._relativeCellIndex > 0 :
-                #print("skip {} cells".format(self._relativeCellIndex))
-                pass
+            self._relativeCellIndex = int(_relativeCellIndex)+1
+            #print("{} skips {} cells".format(self.get_name(),self._relativeCellIndex-1))
 
         self.currentIndex = self._relativeCellIndex
 
-    @property
-    def shape(self):
-        if self.content is not None:
-            return self.content.shape
-        return None
+
