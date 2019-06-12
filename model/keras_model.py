@@ -7,7 +7,8 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten
 from keras.layers import Input, GlobalAveragePooling2D
 from keras.optimizers import SGD
-#from keras import optimizers
+
+from .mutation.mutable_model import MutableModel
 
 from keras.utils import multi_gpu_model
 from .block import Block
@@ -52,7 +53,7 @@ class KerasFeatureVector(object):
     def fitness(self):
         return 0 if self.accuracy is None else self.accuracy 
 
-class KerasFeatureModel(object):
+class KerasFeatureModel(MutableModel):
     
     blocks = []
     outputs = []
@@ -164,7 +165,7 @@ class KerasFeatureModel(object):
             for i in range(depth):
                 for block_dict in feature_model:
                     block_dict["children"] = list(reversed(block_dict["children"]))
-                    block = Block.parse_feature_model(block_dict)
+                    block = Block.parse_feature_model(block_dict, model)
                     model.blocks.append(block)
 
             model.blocks.sort(key = lambda a : a.get_name())

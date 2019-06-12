@@ -6,7 +6,7 @@ from .cell import Cell
 from .output import Out, OutCell, OutBlock
 
 class Block(MutableBlock, Node):
-    def __init__(self, raw_dict=None, previous_block = None):
+    def __init__(self, raw_dict=None, previous_block = None, parent_model=None):
 
         self.is_root = True
         self.cells = []
@@ -17,9 +17,13 @@ class Block(MutableBlock, Node):
             self.previous_block = previous_block
             self.is_root = False
 
+        if parent_model:
+            self.parent_model = parent_model
+
         super(Block, self).__init__(raw_dict=raw_dict)
 
     def append_cell(self, cell):
+        cell.parent_block = self.parent_block
         self.cells.append(cell)
 
 
@@ -73,9 +77,9 @@ class Block(MutableBlock, Node):
 
 
     @staticmethod
-    def parse_feature_model(feature_model):
+    def parse_feature_model(feature_model, parent_model=None):
         
-        block = Block(raw_dict=feature_model)
+        block = Block(raw_dict=feature_model, parent_model=parent_model)
         
         for cell_dict in feature_model.get("children"):
             element_type = cell_dict.get("label")
@@ -96,7 +100,7 @@ class Block(MutableBlock, Node):
                 
                         if cell_type=="Cell":
                             cell = Cell.parse_feature_model(cell_dict.get("children")[0])
-                            block.cells.append(cell)
+                            block.append_cell(cell)
         
         block.cells.sort(key = lambda a : a.get_name())
         return block

@@ -2,6 +2,9 @@ import uuid
 class Node(object):
     content = None
     parent = None
+    parent_model = None
+    
+     
     def __init__(self, raw_dict=None):
         self.parent_name = ""
         self.raw_dict = raw_dict

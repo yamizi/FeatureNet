@@ -7,6 +7,8 @@ from .operation import Operation, Combination, Sum, Void
 class Cell(Node):
     def __init__(self, raw_dict=None, input1=None, operation1=None, input2=None, operation2=None, output=None, output_combination=None):
 
+        self._parent_block = None
+
         if not input1:
             input1 = IdentityInput()
         if not input2:
@@ -27,6 +29,16 @@ class Cell(Node):
         self.output = output
         self.combination = output_combination
         super(Cell, self).__init__(raw_dict=raw_dict)
+
+    @property
+    def parent_block(self):
+        return self._parent_block
+
+    @parent_block.setter
+    def parent_block(self, value):
+        self._parent_block = value
+        self.parent_model = value.parent_model
+
 
     def build_tensorflow_model(self, inputs, max_relative_index, block_stride, block_features):
 
