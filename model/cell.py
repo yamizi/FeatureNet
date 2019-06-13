@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .node import Node
-from .input import Input, ZerosInput, IdentityInput
+from .input import Input, ZerosInput, IdentityInput, ConvolutionInput
 from .output import Output, OutCell, OutBlock, Out
 from .operation import Operation, Combination, Sum, Void
 
@@ -80,6 +80,13 @@ class Cell(Node):
 
         params = {**params, **self.input1.get_custom_parameters(), **self.input2.get_custom_parameters() , **self.operation1.get_custom_parameters(), **self.operation2.get_custom_parameters() , **self.combination.get_custom_parameters()}
         return params
+
+    @staticmethod
+    def base_cell():
+        i = ConvolutionInput((3,3),(1,1),8,"same","relu")
+        cell = Cell(input1=i)
+
+        return cell
 
     @staticmethod
     def parse_feature_model(feature_model):

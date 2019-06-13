@@ -6,6 +6,8 @@ from .cell import Cell
 from .output import Out, OutCell, OutBlock
 
 class Block(MutableBlock, Node):
+
+    
     def __init__(self, raw_dict=None, previous_block = None, parent_model=None):
 
         self.is_root = True
@@ -19,6 +21,8 @@ class Block(MutableBlock, Node):
 
         if parent_model:
             self.parent_model = parent_model
+
+        self.attributes = {"strides_values":self.append_cell,"features_multiplier_values":self.set_stride}
 
         super(Block, self).__init__(raw_dict=raw_dict)
 
@@ -75,6 +79,12 @@ class Block(MutableBlock, Node):
 
         return _inputs, outputs 
 
+    @staticmethod
+    def base_block():
+        block = Block()
+        cell = Cell.base_cell()
+        block.append_cell(cell)
+        return block
 
     @staticmethod
     def parse_feature_model(feature_model, parent_model=None):
