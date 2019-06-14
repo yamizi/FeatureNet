@@ -11,12 +11,14 @@ class Input(Node):
     min_features = 8
     max_features = 2048
     
-    def __init__(self, raw_dict=None, stride=1, features=0):
+    def __init__(self, raw_dict=None, stride=1, features=0, cell=None):
         
         self.raw_dict = raw_dict
         self._stride = stride
         self._features = features
         self._relative_features = None
+
+        self.parent_cell = cell
         super(Input, self).__init__(raw_dict=raw_dict)
 
     def set_stride(self,stride):
@@ -29,14 +31,15 @@ class Input(Node):
         else:
             self._features =  max(Input.min_features,min(int(features),Input.max_features))
 
-    def build_tensorflow_model(self, model, source1, source2):
-        pass
-
     def build(self, input, neighbour=None):
         input =  input.content if hasattr(input,"content") and input.content is not None else input
         input_features = input.shape.as_list()[-1]
         if self._relative_features:
             self.set_features(input_features * self._relative_features)
+
+        if not self._features:
+            self._features = Input.min_features
+            
         return input
         
     @staticmethod
@@ -108,7 +111,7 @@ class Input(Node):
             _stride = None
             _type = None
             _padding = None
-            _activation = None
+            _activation = "relu"
             _features = None
 
             for child in input.get("children"):
@@ -152,23 +155,23 @@ class Input(Node):
         return input_element
 
 class ZerosInput(Input):
-    def __init__(self, raw_dict=None):
-        super(ZerosInput, self).__init__(raw_dict=raw_dict)
+    def __init__(self, raw_dict=None, cell=None):
+        super(ZerosInput, self).__init__(raw_dict=raw_dict, cell=cell)
         
     def build(self, input, neighbour=None):
         shape = neighbour.shape
         return K.zeros(shape)
 
 class IdentityInput(Input):
-    def __init__(self, raw_dict=None):
-        super(IdentityInput, self).__init__(raw_dict=raw_dict)
+    def __init__(self, raw_dict=None, cell=None):
+        super(IdentityInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
     def build(self, input, neighbour=None):
         return input
 
 class DenseInput(Input):
-    def __init__(self, _features, _activation, raw_dict=None):
-        super(DenseInput, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _features, _activation, raw_dict=None, cell=None):
+        super(DenseInput, self).__init__(raw_dict=raw_dict, cell=cell)
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         if not _features:
             self.append_parameter("_features","__int__")
@@ -186,8 +189,8 @@ class DenseInput(Input):
 
 
 class PoolingInput(Input):
-    def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None):
-        super(PoolingInput, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None, cell=None):
+        super(PoolingInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         typeAcceptedValues = ("max","average","global")
         paddingAcceptedValues = ("same",)# ("valid", "same")
@@ -238,8 +241,8 @@ class PoolingInput(Input):
         return input
 
 class ConvolutionInput(Input):
-    def __init__(self, _kernel, _stride, _features, _padding, _activation, _type="normal", raw_dict=None):
-        super(ConvolutionInput, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _kernel, _stride, _features, _padding, _activation, _type="normal", raw_dict=None, cell=None):
+        super(ConvolutionInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         paddingAcceptedValues = ("same",) #("valid","same")

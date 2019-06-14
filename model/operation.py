@@ -5,9 +5,9 @@ from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, 
 from .output import Output, OutCell, OutBlock, Out
 
 class Operation(Node):
-    def __init__(self,  raw_dict=None):
+    def __init__(self,  raw_dict=None, cell=None):
+        self.parent_cell = cell
         super(Operation, self).__init__(raw_dict=raw_dict)
-        
 
     def build_tensorflow_model(self, model, source1, source2):
         pass
@@ -73,8 +73,8 @@ class Operation(Node):
         return operation_element
         
 class Flat(Operation):
-    def __init__(self, raw_dict=None):
-        super(Flat, self).__init__(raw_dict=raw_dict)
+    def __init__(self, raw_dict=None, cell=None):
+        super(Flat, self).__init__(raw_dict=raw_dict, cell=cell)
 
     def build(self,input):
         input = super(Flat, self).build(input)
@@ -83,15 +83,15 @@ class Flat(Operation):
         return input
 
 class Void(Operation):
-    def __init__(self, raw_dict=None):
-        super(Void, self).__init__(raw_dict=raw_dict)
+    def __init__(self, raw_dict=None, cell=None):
+        super(Void, self).__init__(raw_dict=raw_dict, cell=cell)
 
     def build(self,input):
         return input
 
 class Drop(Operation):
-    def __init__(self, _value, raw_dict=None):
-        super(Drop, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _value, raw_dict=None, cell=None):
+        super(Drop, self).__init__(raw_dict=raw_dict, cell=cell)
         if not _value:
             self._value =_value = 0
             #self.append_parameter("_value","__float__")
@@ -103,8 +103,8 @@ class Drop(Operation):
         return Dropout(self._value)(input) if self._value else input
 
 class Padding(Operation):
-    def __init__(self, _fillValue=None, _fillSize=None, raw_dict=None):
-        super(Padding, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _fillValue=None, _fillSize=None, raw_dict=None, cell=None):
+        super(Padding, self).__init__(raw_dict=raw_dict, cell=cell)
 
         _fillValue = 0
         
@@ -126,8 +126,8 @@ class Padding(Operation):
         return input
 
 class BatchNorm(Operation):
-    def __init__(self, _axis=None, raw_dict=None):
-        super(BatchNorm, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _axis=None, raw_dict=None, cell=None):
+        super(BatchNorm, self).__init__(raw_dict=raw_dict, cell=cell)
         _axis = 1
         if not _axis:
             self.append_parameter("_axis","__int__")
@@ -139,8 +139,8 @@ class BatchNorm(Operation):
         return BatchNormalization(axis = self._axis)(input)
 
 class Active(Operation):
-    def __init__(self, _method=None, raw_dict=None):
-        super(Active, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _method=None, raw_dict=None, cell=None):
+        super(Active, self).__init__(raw_dict=raw_dict, cell=cell)
 
         _method = "relu"
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
@@ -151,7 +151,8 @@ class Active(Operation):
 
 
 class Combination(Node):
-    def __init__(self, raw_dict=None):
+    def __init__(self, raw_dict=None, cell=None):
+        self.parent_cell = cell
         super(Combination, self).__init__(raw_dict=raw_dict)
 
     def build(self, source1, source2):
@@ -196,8 +197,8 @@ class Combination(Node):
 
 
 class Sum(Combination):
-    def __init__(self,  raw_dict=None):
-        super(Sum, self).__init__(raw_dict=raw_dict)
+    def __init__(self,  raw_dict=None, cell=None):
+        super(Sum, self).__init__(raw_dict=raw_dict, cell=cell)
 
     def build(self, source1, source2):
         source1, source2 = super(Sum, self).build(source1, source2)
@@ -207,8 +208,8 @@ class Sum(Combination):
         return source2  # we keep the biggest matrix
         
 class Concat(Combination):
-    def __init__(self, _axis=None, raw_dict=None):
-        super(Concat, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _axis=None, raw_dict=None, cell=None):
+        super(Concat, self).__init__(raw_dict=raw_dict, cell=cell)
         _axis = 1
         if not _axis:
             self.append_parameter("_axis","__int__")
@@ -223,8 +224,8 @@ class Concat(Combination):
         return source2 # we keep the biggest matrix
 
 class Product(Combination):
-    def __init__(self, raw_dict=None):
-        super(Product, self).__init__(raw_dict=raw_dict)
+    def __init__(self, raw_dict=None, cell=None):
+        super(Product, self).__init__(raw_dict=raw_dict, cell=cell)
 
     
     def build(self, source1, source2):

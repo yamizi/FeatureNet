@@ -5,7 +5,8 @@ from .node import Node
 class Output(Node):
 
     currentIndex =0
-    def __init__(self, raw_dict=None):
+    def __init__(self, raw_dict=None, cell=None):
+        self.parent_cell = cell
         super(Output, self).__init__(raw_dict=raw_dict)
 
     @property
@@ -52,12 +53,12 @@ class Output(Node):
 
 
 class Out(Output):
-    def __init__(self,  raw_dict=None):
-        super(Out, self).__init__(raw_dict=raw_dict)
+    def __init__(self,  raw_dict=None, cell=None):
+        super(Out, self).__init__(raw_dict=raw_dict, cell=cell)
         
 class OutBlock(Output):
-    def __init__(self, _relativeBlockIndex=None,  raw_dict=None):
-        super(OutBlock, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _relativeBlockIndex=None,  raw_dict=None, cell=None):
+        super(OutBlock, self).__init__(raw_dict=raw_dict, cell=cell)
         if not _relativeBlockIndex:
             self._relativeBlockIndex = 0
         else:
@@ -67,8 +68,8 @@ class OutBlock(Output):
 
 
 class OutCell(Output):
-    def __init__(self, _relativeCellIndex=None, raw_dict=None):
-        super(OutCell, self).__init__(raw_dict=raw_dict)
+    def __init__(self, _relativeCellIndex=None, raw_dict=None, cell=None):
+        super(OutCell, self).__init__(raw_dict=raw_dict, cell=cell)
         #_relativeCellIndex = 0
         if not _relativeCellIndex:
             self._relativeCellIndex = 1

@@ -43,3 +43,12 @@ class Node(object):
             element_type = ''.join([i for i in element_type if not i.isdigit()])
 
         return element_type.lower()
+    
+    @property
+    def parent_cell(self):
+        return self._parent_cell
+
+    @parent_cell.setter
+    def parent_cell(self, value):
+        self._parent_cell = value
+        self.parent_model = value.parent_model
