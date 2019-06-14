@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
+from .mutation.mutable_cell import MutableCell
 from .node import Node
 from .input import Input, ZerosInput, IdentityInput, ConvolutionInput
 from .output import Output, OutCell, OutBlock, Out
 from .operation import Operation, Combination, Sum, Void
 
-class Cell(Node):
+class Cell(MutableCell, Node):
     def __init__(self, raw_dict=None, input1=None, operation1=None, input2=None, operation2=None, output=None, output_combination=None):
 
         self._parent_block = None
 
         if not input1:
-            input1 = IdentityInput()
+            input1 = IdentityInput(cell=self)
         if not input2:
-            input2 = ZerosInput()
+            input2 = ZerosInput(cell=self)
         if not operation1:
-            operation1 = Void()
+            operation1 = Void(cell=self)
         if not operation2:
-            operation2 = Void()
+            operation2 = Void(cell=self)
         if not output_combination:
-            output_combination = Sum()
+            output_combination = Sum(cell=self)
         if not output:
-            output = OutCell()
+            output = OutCell(cell=self)
 
         self.input1 = input1
         self.input2 = input2
@@ -28,6 +29,7 @@ class Cell(Node):
         self.operation2 = operation2
         self.output = output
         self.combination = output_combination
+
         super(Cell, self).__init__(raw_dict=raw_dict)
 
     @property
@@ -119,6 +121,7 @@ class Cell(Node):
             
             if element:
                 setattr(cell, element_type, element)   
+                setattr(element, "parent_cell", cell)
             #print("settings {0} {1}".format(element_type, element.get_name())) 
   
         return cell

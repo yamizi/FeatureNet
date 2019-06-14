@@ -8,10 +8,10 @@ class MutableBlock(MutableBase):
     strides_values = ("1x1","2x2")
     features_multiplier_values = (800,400,200,100,50,25)
 
-    def __init__(self, raw_dict=None, previous_block = None):
+    def __init__(self, raw_dict=None, previous_block = None, parent_model=None):
 
         self.mutation_operators = (("mutate_add_cell",0.2),("mutate_cell",0.4),("mutate_block",0.3),("remove_remove_cell",0.1))
-        super(MutableBlock, self).__init__(raw_dict,previous_block)
+        super(MutableBlock, self).__init__(raw_dict,previous_block,parent_model)
 
 
     def mutate_add_block(self, block=None):
