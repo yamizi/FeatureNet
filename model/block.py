@@ -19,15 +19,12 @@ class Block(MutableBlock, Node):
             self.previous_block = previous_block
             self.is_root = False
 
-        if parent_model:
-            self.parent_model = parent_model
-
-        self.attributes = {"strides_values":self.append_cell,"features_multiplier_values":self.set_stride}
+        self.attributes = {"strides_values":self.set_stride,"features_multiplier_values":self.set_features}
 
         super(Block, self).__init__(raw_dict=raw_dict)
 
     def append_cell(self, cell):
-        cell.parent_block = self.parent_block
+        cell.parent_block = self
         self.cells.append(cell)
 
 

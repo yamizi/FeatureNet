@@ -11,17 +11,17 @@ class Cell(MutableCell, Node):
         self._parent_block = None
 
         if not input1:
-            input1 = IdentityInput(cell=self)
+            input1 = IdentityInput()
         if not input2:
-            input2 = ZerosInput(cell=self)
+            input2 = ZerosInput()
         if not operation1:
-            operation1 = Void(cell=self)
+            operation1 = Void()
         if not operation2:
-            operation2 = Void(cell=self)
+            operation2 = Void()
         if not output_combination:
-            output_combination = Sum(cell=self)
+            output_combination = Sum()
         if not output:
-            output = OutCell(cell=self)
+            output = OutCell()
 
         self.input1 = input1
         self.input2 = input2
@@ -29,6 +29,8 @@ class Cell(MutableCell, Node):
         self.operation2 = operation2
         self.output = output
         self.combination = output_combination
+
+        self.input1.parent_cell = self.input2.parent_cell = self.operation1.parent_cell = self.operation2.parent_cell = self.output.parent_cell = self.combination.parent_cell = self
 
         super(Cell, self).__init__(raw_dict=raw_dict)
 
