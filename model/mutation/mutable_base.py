@@ -9,7 +9,8 @@ class MutableBase(object):
         e,p =  zip(*self.mutation_operators)
         operation = getattr(self, choice(e, None, p))
 
-        operation()
+        result = operation()
+        print("mutation {}".format(result))
 
     def __init__(self, raw_dict=None, previous_block = None):
 

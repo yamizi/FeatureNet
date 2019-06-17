@@ -1,5 +1,5 @@
 from .mutable_base import MutableBase
-from model.cell import Cell
+from ..cell import Cell
 from numpy.random import choice
 
 class MutableBlock(MutableBase):
@@ -10,28 +10,35 @@ class MutableBlock(MutableBase):
 
     def __init__(self, raw_dict=None, previous_block = None, parent_model=None):
 
-        self.mutation_operators = (("mutate_add_cell",0.2),("mutate_cell",0.4),("mutate_block",0.3),("remove_remove_cell",0.1))
-        super(MutableBlock, self).__init__(raw_dict,previous_block,parent_model)
+        self.mutation_operators = (("mutate_add_cell",0.3),("mutate_cell",0.6),("mutate_remove_cell",0.1)) #("mutate_block",0.0),
+        super(MutableBlock, self).__init__(raw_dict,previous_block)
 
 
-    def mutate_add_block(self, block=None):
+    def mutate_add_cell(self):
         cell = Cell.base_cell()
         self.cells.append(cell)
 
-        return ("mutate_add_block",cell)
+        return ("mutate_add_cell",cell)
 
     def mutate_block(self):
-        attribute_to_mutate = getattr(self,choice(self.attributes.keys(), None))
-        attribute_value = choice(attribute_to_mutate, None)
+        choices = list(self.attributes.keys())
+        attribute_to_mutate = choice(choices, None)
+        attribute_value = choice(getattr(self,attribute_to_mutate), None)
         self.attributes[attribute_to_mutate](attribute_value)
 
         return ("mutate_block",attribute_to_mutate,attribute_value )
 
-    def mutate_cell(self, cell_index):
+    def mutate_cell(self, cell_index=None):
+        if cell_index is None:
+            cell_index  = choice(len(self.cells))
+
         cell = self.cells[cell_index]
         cell.mutate()
 
-    def mutate_remove_block(self, cell_index=None):
+    def mutate_remove_cell(self, cell_index=None):
+        if cell_index is None:
+            cell_index  = choice(len(self.cells))
+
         if cell_index >0 and cell_index<len(self.cells):
             del self.cells[cell_index]
-            return ("mutate_remove_block",cell_index)
+            return ("mutate_remove_cell",cell_index)
