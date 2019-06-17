@@ -71,6 +71,7 @@ class KerasFeatureModel(MutableModel):
 
     def __init__(self, name=""):
         self._name = name
+        super(KerasFeatureModel, self).__init__()
 
     def get_custom_parameters(self):
         params = {}

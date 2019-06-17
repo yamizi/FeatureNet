@@ -6,7 +6,9 @@ from keras.layers import Dense, Conv2D, SeparableConv2D, DepthwiseConv2D, Conv1D
 from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D 
 from .output import Output, OutCell, OutBlock, Out
 
-class Input(Node):
+from .mutation.mutable_input import MutableInput
+
+class Input(MutableInput, Node):
 
     min_features = 8
     max_features = 2048
@@ -170,9 +172,9 @@ class IdentityInput(Input):
         return input
 
 class DenseInput(Input):
-    def __init__(self, _features, _activation, raw_dict=None, cell=None):
+    def __init__(self, _features=128, _activation="relu", raw_dict=None, cell=None):
         super(DenseInput, self).__init__(raw_dict=raw_dict, cell=cell)
-        activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
+        activationAcceptedValues = ("tanh","relu","sigmoid","softmax", "none")
         if not _features:
             self.append_parameter("_features","__int__")
         else:
@@ -181,7 +183,7 @@ class DenseInput(Input):
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
         else:
-            self._activation = str(_activation)
+            self._activation = str(_activation) if _activation !="none" else None
 
     def build(self, input, neighbour=None):
         input = super(DenseInput, self).build(input)
@@ -189,7 +191,7 @@ class DenseInput(Input):
 
 
 class PoolingInput(Input):
-    def __init__(self, _kernel, _stride, _type, _padding, raw_dict=None, cell=None):
+    def __init__(self, _kernel=(3,3), _stride=(1,1), _type="max", _padding="same", raw_dict=None, cell=None):
         super(PoolingInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         typeAcceptedValues = ("max","average","global")
@@ -241,10 +243,10 @@ class PoolingInput(Input):
         return input
 
 class ConvolutionInput(Input):
-    def __init__(self, _kernel, _stride, _features, _padding, _activation, _type="normal", raw_dict=None, cell=None):
+    def __init__(self, _kernel=(3,3), _stride=(1,1), _features=8, _padding="same", _activation="relu", _type="normal", raw_dict=None, cell=None):
         super(ConvolutionInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
-        activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
+        activationAcceptedValues = ("tanh","relu","sigmoid","softmax", "none")
         paddingAcceptedValues = ("same",) #("valid","same")
         typeAcceptedValues = ("normal","separable","depthwise")
 
@@ -272,7 +274,7 @@ class ConvolutionInput(Input):
         if not _activation or str(_activation) not in activationAcceptedValues:
             self.append_parameter("_activation",'|'.join(str(i) for i in activationAcceptedValues))
         else:
-            self._activation = str(_activation)
+            self._activation = str(_activation) if _activation != "none" else None
 
         if not _padding or str(_padding) not in paddingAcceptedValues:
             self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))

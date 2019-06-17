@@ -2,7 +2,9 @@
 
 from .node import Node
 
-class Output(Node):
+from .mutation.mutable_output import MutableOutput
+
+class Output(MutableOutput, Node):
 
     currentIndex =0
     def __init__(self, raw_dict=None, cell=None):
@@ -68,6 +70,7 @@ class OutBlock(Output):
 
 
 class OutCell(Output):
+    
     def __init__(self, _relativeCellIndex=None, raw_dict=None, cell=None):
         super(OutCell, self).__init__(raw_dict=raw_dict, cell=cell)
         #_relativeCellIndex = 0
@@ -77,6 +80,8 @@ class OutCell(Output):
             self._relativeCellIndex = int(_relativeCellIndex)+1
             #print("{} skips {} cells".format(self.get_name(),self._relativeCellIndex-1))
 
+    def build(self, input):
+        super(OutCell, self).build(input)
         self.currentIndex = self._relativeCellIndex
-
+        return self
 

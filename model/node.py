@@ -5,11 +5,15 @@ class Node(object):
     parent_model = None
     
      
-    def __init__(self, raw_dict=None):
+    def __init__(self, raw_dict=None, parent_model=None):
         self.parent_name = ""
         self.raw_dict = raw_dict
         self.customizable_parameters = {}
         self.uniqid = str(uuid.uuid1())[:10]
+
+        if parent_model:
+            self.parent_model = parent_model
+
         #print(self.get_name())
 
     def get_name(self, raw_dict=None):
@@ -51,4 +55,5 @@ class Node(object):
     @parent_cell.setter
     def parent_cell(self, value):
         self._parent_cell = value
-        self.parent_model = value.parent_model
+        if value:
+            self.parent_model = value.parent_model
