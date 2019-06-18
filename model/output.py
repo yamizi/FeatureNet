@@ -7,9 +7,19 @@ from .mutation.mutable_output import MutableOutput
 class Output(MutableOutput, Node):
 
     currentIndex =0
+    _relativeBlockIndex=  None
+    _relativeCellIndex = None
+    
     def __init__(self, raw_dict=None, cell=None):
         self.parent_cell = cell
         super(Output, self).__init__(raw_dict=raw_dict)
+
+    def __deepcopy__(self, memo):
+        newone = type(self)()
+        newone._relativeBlockIndex = self._relativeBlockIndex
+        newone._relativeCellIndex = self._relativeCellIndex
+        newone.parent_cell = self.parent_cell
+        return newone
 
     @property
     def shape(self):
@@ -67,7 +77,6 @@ class OutBlock(Output):
             self._relativeBlockIndex = int(_relativeBlockIndex)
 
         self.currentIndex = self._relativeBlockIndex
-
 
 class OutCell(Output):
     

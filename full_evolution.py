@@ -4,7 +4,7 @@ import getopt
 import json, pickle
 import os
 from tensorflow_generator import TensorflowGenerator
-from model.keras_model import KerasFeatureVector
+from model.keras_model import KerasFeatureVector, KerasFeatureModel
 from products_tree import ProductSet, ProductSetError
 import random, math
 from numpy.random import choice
@@ -17,10 +17,9 @@ from math import ceil
 import re
 import copy 
 base_path = '../products'
-base_training_epochs = 25
+base_training_epochs = 1
 evolution_epochs = 50
 
-datasets_classes = {"mnist":10,"cifar":10,"cifar100":100}
 
 
 def reset_keras(classifier=None):
@@ -45,7 +44,7 @@ class FullEvolution(object):
         last_population_probability =  e_x / e_x.sum()
         
         for i in range(survival_count):
-            individual = choice(last_population, None, last_population_probability)
+            individual = choice(last_population, None, last_population_probability.tolist())
             fittest.append(individual)
         
         return fittest
@@ -57,7 +56,10 @@ class FullEvolution(object):
         for i in range(nb_product_perparent):
             mutations = np.random.uniform(size=nb_max_mutations)
             nb_mutations = len([e for e in mutations if e<mutation_ratio])
-            mutant = copy.deepcopy(nb_product_perparent[i])
+            blocks = parent.dump_blocks()
+            blocks = copy.deepcopy(blocks)
+            mutant = KerasFeatureModel.parse_blocks(blocks)
+            mutant.accuracy = 0
             for j in range(nb_mutations):
                 mutant.mutate()
 
@@ -119,6 +121,7 @@ class FullEvolution(object):
             print("Resuming training")
             f1 = open(last_pdts_path, 'r')
             last_population= pickle.load(f1)
+            last_population = [KerasFeatureModel.parse_blocks(e) for e in last_population]
 
             pattern = 'products_e(\d+).pickled'
             result = re.findall(pattern, last_pdts_path) 
@@ -137,9 +140,10 @@ class FullEvolution(object):
             last_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs )
             
             for model in last_population:
-                TensorflowGenerator.init_dataset(dataset)
-                model.build(TensorflowGenerator.input_shape, datasets_classes.get(dataset))
+                TensorflowGenerator.build(model,dataset)
+                TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
 
+            last_population = [x for x in last_population if x.accuracy>0]
             pop = sorted(last_population,
                         key=lambda x: x.accuracy, reverse=True)
         
@@ -148,7 +152,7 @@ class FullEvolution(object):
             print("### remaining total individuals {} saved to {}. top accuracy: {}".format(
                 len(pop),pdt_path, pop[0].accuracy))
             f1 = open(pdt_path, 'w')
-            pickle.dump( pop, f1)
+            #pickle.dump( [e.dump_blocks() for e in pop], f1)
             f1.close()
 
     
@@ -159,7 +163,7 @@ def main(argv):
     products_file = ''
     base = base_path
     nb_base_products=[100]
-    dataset = "cifar"
+    dataset = "mnist"
     training_epochs = base_training_epochs
     
     try:
@@ -189,3 +193,4 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+

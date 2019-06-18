@@ -141,6 +141,19 @@ class KerasFeatureModel(MutableModel):
         return model
 
 
+    def dump_blocks(self):
+        return {"blocks":self.blocks, "accuracy":self.accuracy}
+
+    @staticmethod
+    def parse_blocks(block_model, name=None):
+        print("building keras model from block list")
+        model = KerasFeatureModel(name=name)
+
+        model.blocks = block_model["blocks"]
+        model.accuracy = block_model["accuracy"]
+
+        return model
+
     @staticmethod
     def parse_feature_model(feature_model, name=None, depth=1, product_features=None, features_label=None):
 
