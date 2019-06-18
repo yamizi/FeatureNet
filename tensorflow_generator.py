@@ -117,6 +117,8 @@ class TensorflowGenerator(object):
     input_shape = (0,0,0)
     default_batchsize = 64
     num_classes = 10
+    
+    datasets_classes = {"mnist":10,"cifar":10,"cifar100":100}
 
     def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128):
         #product_features is a list of enabled and disabled features based on the original feature model
@@ -128,23 +130,15 @@ class TensorflowGenerator(object):
             reset_keras()
             
         if product:
-            TensorflowGenerator.init_dataset(dataset, data_augmentation)
-
-            timed = TimedStopping(self,None, 6000)
-            begin_training = time.time()    
             self.model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, product_features=product_features, features_label=features_label)
 
             print("====> Loading new feature model with {0} blocks".format(len(self.model.blocks)))
-            model = self.model.build(TensorflowGenerator.input_shape, TensorflowGenerator.num_classes)
+            model = TensorflowGenerator.build(self.model, dataset)
             
             if not model:
                 print("#### model is not valid ####")
                 return 
 
-            optimizers = [  Adam(lr=lr_schedule(0)), "sgd"]
-            losss = ['categorical_crossentropy']
-            print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
-            model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
 
             self.model.nb_params = self.params = model.count_params()
             print('model blocks,layers,params,flops: {} '.format(self.model.to_kerasvector()))
@@ -153,33 +147,60 @@ class TensorflowGenerator(object):
                 self.print()
                 return  
                 
-            early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.005, patience=100)
-            lr_scheduler = LearningRateScheduler(lr_schedule)
-
-            lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
-                                cooldown=0,
-                                patience=5,
-                                min_lr=0.5e-6)
-                                
-            callbacks=[timed, early_stopping, lr_reducer, lr_scheduler]
-            print("training with batch size {} epochs {} callbacks {} dataset {} data-augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
+            history, training_time, score = TensorflowGenerator.train(self.model, epochs, batch_size, data_augmentation,dataset)
             
-            history = model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
-                    batch_size=batch_size,
-                    epochs=epochs,
-                    verbose=0,
-                    validation_data=(TensorflowGenerator.X_test, TensorflowGenerator.Y_test), 
-                    callbacks=callbacks)
-            
-            self.training_time = time.time() - begin_training
-            score = model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
-            print('Test loss:', score[0])
-            print('Test accuracy:', score[1])
-            
-                
+            self.training_time = training_time
             #self.model.nb_flops =  self.flops = get_flops()
             self.model.accuracy = self.accuracy = score[1]
             self.history = (history.history['acc'], history.history['val_acc'])
+
+    @staticmethod
+    def build(model, dataset):
+        TensorflowGenerator.init_dataset(dataset)
+        keras_model =  model.build(TensorflowGenerator.input_shape, TensorflowGenerator.datasets_classes.get(dataset))
+
+        if not keras_model:
+            return keras_model
+
+        optimizers = [  Adam(lr=lr_schedule(0)), "sgd"]
+        losss = ['categorical_crossentropy']
+        print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
+        keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
+
+        return keras_model
+
+
+    @staticmethod
+    def train(model, epochs, batch_size, data_augmentation, dataset):
+        keras_model = model.model
+        begin_training = time.time()    
+            
+        early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.005, patience=100)
+        lr_scheduler = LearningRateScheduler(lr_schedule)
+        
+        timed = TimedStopping(model,None, 6000)
+        lr_reducer = ReduceLROnPlateau(factor=np.sqrt(0.1),
+                            cooldown=0,
+                            patience=5,
+                            min_lr=0.5e-6)
+                            
+        callbacks=[timed, early_stopping, lr_reducer, lr_scheduler]
+        print("training with batch size {} epochs {} callbacks {} dataset {} data-augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
+        
+        history = keras_model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
+                batch_size=batch_size,
+                epochs=epochs,
+                verbose=0,
+                validation_data=(TensorflowGenerator.X_test, TensorflowGenerator.Y_test), 
+                callbacks=callbacks)
+
+        training_time = time.time() - begin_training
+
+        score = keras_model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
+        print('Test loss:', score[0])
+        print('Test accuracy:', score[1])
+
+        return history, training_time, score
 
     @staticmethod
     def init_dataset(dataset, data_augmentation=False):
