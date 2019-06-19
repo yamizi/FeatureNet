@@ -139,9 +139,21 @@ class FullEvolution(object):
             
             last_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs )
             
-            for model in last_population:
-                TensorflowGenerator.build(model,dataset)
-                TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
+            for index,model in enumerate(last_population):
+                keras_model = TensorflowGenerator.build(model,dataset)
+                if not keras_model:
+                    print("#### model is not valid ####")
+                else: 
+                    TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
+                    TensorflowGenerator.eval_robustness(model)
+
+                pdt_path = "{}/{}products_e{}.json".format(
+                    session_path, nb_base_products, evo)
+                
+                f1 = open(pdt_path, 'a')
+                vect = model.to_kerasvector().to_vector()
+                f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
+                f1.close()
 
             last_population = [x for x in last_population if x.accuracy>0]
             pop = sorted(last_population,
@@ -162,7 +174,7 @@ def main(argv):
     output_file = ''
     products_file = ''
     base = base_path
-    nb_base_products=[100]
+    nb_base_products=[10]
     dataset = "mnist"
     training_epochs = base_training_epochs
     

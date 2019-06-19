@@ -62,6 +62,7 @@ class KerasFeatureModel(MutableModel):
     features_label=  []
     nb_flops  = 0
     nb_params = 0
+    robustness_score = 0
     model = None
     accuracy = 0
     
@@ -88,7 +89,7 @@ class KerasFeatureModel(MutableModel):
         else:
             nb_layers = 0
             
-        return KerasFeatureVector(self.accuracy, [len(self.blocks),nb_layers, self.nb_params, self.nb_flops], self.features)
+        return KerasFeatureVector(self.accuracy, [len(self.blocks),nb_layers, self.nb_params, self.nb_flops, self.robustness_score], self.features)
         
     def build(self, input_shape, output_shape, max_parameters=20000000):
         self.outputs = []
@@ -146,7 +147,7 @@ class KerasFeatureModel(MutableModel):
 
     @staticmethod
     def parse_blocks(block_model, name=None):
-        print("building keras model from block list")
+        #print("building keras model from block list")
         model = KerasFeatureModel(name=name)
 
         model.blocks = block_model["blocks"]
