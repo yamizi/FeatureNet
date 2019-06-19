@@ -5,6 +5,7 @@ from numpy.random import choice
 class MutableInput(MutableBase):
 
     attributes = {"strides_values":"_stride","features_values":"_features", "kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
+    attributes = {"kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
     strides_values = ((1,1),(2,2))
     kernel_values = ((1,1),(3,1),(1,3),(3,3),(5,1),(1,5),(5,5),(7,1),(1,7),(7,7))
     pool_type_values = ("max","average","global")

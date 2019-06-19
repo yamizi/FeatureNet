@@ -10,7 +10,7 @@ class MutableBlock(MutableBase):
 
     def __init__(self, raw_dict=None, previous_block = None, parent_model=None):
 
-        self.mutation_operators = (("mutate_add_cell",0.3),("mutate_cell",0.6),("mutate_remove_cell",0.1)) #("mutate_block",0.0),
+        self.mutation_operators = (("mutate_add_cell",0.3),("mutate_cell",0.3),("mutate_remove_cell",0.1),("mutate_block",0.3))
         super(MutableBlock, self).__init__(raw_dict,previous_block)
 
 
