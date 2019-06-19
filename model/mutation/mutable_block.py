@@ -55,7 +55,7 @@ class MutableBlock(MutableBase):
 
     def mutate_remove_cell(self,rate=1, cell_index=None):
 
-        if cell_index is not None and cell_index >0 and cell_index<len(self.cells):
+        if cell_index is not None and cell_index >=0 and cell_index<len(self.cells):
             del self.cells[cell_index]
             return ("mutate_remove_cell",cell_index)
 

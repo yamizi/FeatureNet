@@ -16,13 +16,14 @@ class MutableModel(MutableBase):
             return ("add_block",block)
 
     def mutate_block(self, rate=1, block_index=None):
+        print("index {}".format(block_index))
         if block_index is None:
             if MutableBase.mutation_stategy==MutationStrategies.CHOICE:
                 block_index  = choice(len(self.blocks))
-                return self.mutate_block(block_index)
+                return self.mutate_block(rate, block_index)
             else:
                 for block_index, block in enumerate(self.blocks):
-                    self.mutate_block(block_index)
+                    self.mutate_block(rate, block_index)
         else:
             block = self.blocks[block_index]
             return block.mutate()
@@ -31,13 +32,13 @@ class MutableModel(MutableBase):
         if block_index is None:
             if MutableBase.mutation_stategy==MutationStrategies.CHOICE:
                 block_index  = choice(len(self.blocks))
-                return self.mutate_remove_block(block_index)
+                return self.mutate_remove_block(rate,block_index)
             else:
                 for block_index, block in enumerate(self.blocks):
                     prob = rand()
                     if prob < rate:
-                        self.mutate_remove_block(block_index)
+                        self.mutate_remove_block(rate, block_index)
 
-        elif block_index >0 and block_index<len(self.blocks):
+        elif block_index >=0 and block_index<len(self.blocks):
             del self.blocks[block_index]
             return ("remove_block",block_index)
