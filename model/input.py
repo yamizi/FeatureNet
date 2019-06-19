@@ -10,7 +10,7 @@ from .mutation.mutable_input import MutableInput
 
 class Input(MutableInput, Node):
 
-    min_features = 8
+    min_features = 6
     max_features = 2048
     
     def __init__(self, raw_dict=None, stride=1, features=0, cell=None):
