@@ -7,25 +7,25 @@ class MutableCell(MutableBase):
         super(MutableCell, self).__init__(raw_dict)
 
 
-    def mutate_input1(self):
-        self.input1.mutate()
+    def mutate_input1(self,rate=1):
+        self.input1.mutate(rate)
         return ("cell","input1")
 
-    def mutate_input2(self):
-        self.input2.mutate()
+    def mutate_input2(self,rate=1):
+        self.input2.mutate(rate)
         return ("cell","input2")
 
-    def mutate_operation1(self):
+    def mutate_operation1(self,rate=1):
         self.operation1.mutate()
 
-    def mutate_operation2(self):
+    def mutate_operation2(self,rate=1):
         self.operation2.mutate()
 
-    def mutate_combination(self):
+    def mutate_combination(self,rate=1):
         self.combination.mutate()
 
-    def mutate_output(self):
-        self.output.mutate()
+    def mutate_output(self,rate=1):
+        self.output.mutate(rate)
         return ("cell","output")
 
     

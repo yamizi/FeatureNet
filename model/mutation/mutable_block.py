@@ -1,6 +1,6 @@
-from .mutable_base import MutableBase
+from .mutable_base import MutableBase, MutationStrategies
 from ..cell import Cell
-from numpy.random import choice
+from numpy.random import choice, rand
 
 class MutableBlock(MutableBase):
     cells = []
@@ -14,31 +14,58 @@ class MutableBlock(MutableBase):
         super(MutableBlock, self).__init__(raw_dict,previous_block)
 
 
-    def mutate_add_cell(self):
-        cell = Cell.base_cell()
-        self.cells.append(cell)
+    def mutate_add_cell(self, rate=1):
+        
+        prob = rand()
+        if prob < rate or MutableBase.mutation_stategy==MutationStrategies.CHOICE:
+            cell = Cell.base_cell()
+            self.cells.append(cell)
 
         return ("mutate_add_cell",cell)
 
-    def mutate_block(self):
+    def mutate_block(self, rate=1):
         choices = list(self.attributes.keys())
-        attribute_to_mutate = choice(choices, None)
-        attribute_value = choice(getattr(self,attribute_to_mutate), None)
-        self.attributes[attribute_to_mutate](attribute_value)
+        returns = []
+        if MutableBase.mutation_stategy==MutationStrategies.CHOICE:
+            attribute_to_mutate = choice(choices, None)
+            attribute_value = choice(getattr(self,attribute_to_mutate), None)
+            self.attributes[attribute_to_mutate](attribute_value)
 
-        return ("mutate_block",attribute_to_mutate,attribute_value )
+            returns.append(("mutate_block",attribute_to_mutate,attribute_value ))
+        else:
+            for attribute_to_mutate in choices:
+                prob = rand()
+                if prob < rate:
+                    attribute_value = choice(getattr(self,attribute_to_mutate), None)
+                    self.attributes[attribute_to_mutate](attribute_value)
+                    returns.append(("mutate_block",attribute_to_mutate,attribute_value ))
 
-    def mutate_cell(self, cell_index=None):
-        if cell_index is None:
+        return returns
+
+    def mutate_cell(self, rate=1, cell_index=None):
+        if cell_index is not None:
+            cell = self.cells[cell_index]
+            cell.mutate(rate)
+        elif MutableBase.mutation_stategy==MutationStrategies.CHOICE:
             cell_index  = choice(len(self.cells))
+            return self.mutate_cell(rate, cell_index)
+        else:
+            for cell_index, cell in enumerate(self.cells):
+                self.mutate_cell(rate, cell_index)
 
-        cell = self.cells[cell_index]
-        cell.mutate()
+    def mutate_remove_cell(self,rate=1, cell_index=None):
 
-    def mutate_remove_cell(self, cell_index=None):
-        if cell_index is None:
-            cell_index  = choice(len(self.cells))
-
-        if cell_index >0 and cell_index<len(self.cells):
+        if cell_index is not None and cell_index >0 and cell_index<len(self.cells):
             del self.cells[cell_index]
             return ("mutate_remove_cell",cell_index)
+
+        elif MutableBase.mutation_stategy==MutationStrategies.CHOICE:
+            cell_index  = choice(len(self.cells))
+            return self.mutate_remove_cell(rate, cell_index)
+        else:
+            for cell_index, cell in enumerate(self.cells):
+                prob = rand()
+                if prob < rate:
+                    return self.mutate_remove_cell(rate, cell_index)
+
+       

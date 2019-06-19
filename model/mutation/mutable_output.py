@@ -1,5 +1,5 @@
-from .mutable_base import MutableBase
-from numpy.random import choice
+from .mutable_base import MutableBase, MutationStrategies
+from numpy.random import choice, rand
 
 
 class MutableOutput(MutableBase):
@@ -14,22 +14,37 @@ class MutableOutput(MutableBase):
         super(MutableOutput, self).__init__()
 
 
-    def mutate_type(self):
-        from model.output import OutBlock, OutCell
-        outputs = (OutBlock, OutCell)
-        output = choice(outputs, None)()
+    def mutate_type(self,rate=1):
+        prob = rand()
+        if prob < rate or MutableBase.mutation_stategy==MutationStrategies.CHOICE:
+            from model.output import OutBlock, OutCell
+            outputs = (OutBlock, OutCell)
+            output = choice(outputs, None)()
 
-        #copy previous output attributes
-        output.parent_cell = self.parent_cell
-        for e in self.attributes.values():
-            setattr(output,e, getattr(self,e))
+            #copy previous output attributes
+            output.parent_cell = self.parent_cell
+            for e in self.attributes.values():
+                setattr(output,e, getattr(self,e))
 
-        self.parent_cell.output = output
-        return ("mutate_output_type",output )
+            self.parent_cell.output = output
+            return ("mutate_output_type",output )
+        return ("mutate_output_type",)
 
 
-    def mutate_attributes(self):
-        attribute_to_mutate = choice(list(self.attributes.keys()), None)
-        attribute_value = choice(getattr(self,attribute_to_mutate), None)
-        setattr(self, self.attributes[attribute_to_mutate],attribute_value)
-        return ("mutate_output_attribute",attribute_to_mutate, attribute_value )
+    def mutate_attributes(self,rate=1):
+        attrs = []
+        if MutableBase.mutation_stategy==MutationStrategies.CHOICE:
+            attribute_to_mutate = choice(list(self.attributes.keys()), None)
+            attribute_value = choice(getattr(self,attribute_to_mutate), None)
+            setattr(self, self.attributes[attribute_to_mutate],attribute_value)
+            attr =  [("mutate_output_attribute",attribute_to_mutate, attribute_value )]
+        else:
+            
+            for attribute_to_mutate in self.attributes.keys():
+                prob = rand()
+                if prob < rate:
+                    attribute_value = choice(getattr(self,attribute_to_mutate), None)
+                    setattr(self, self.attributes[attribute_to_mutate],attribute_value)
+                    attr.append(("mutate_output_attribute",attribute_to_mutate, attribute_value ))
+
+        return attrs
