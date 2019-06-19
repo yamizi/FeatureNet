@@ -43,6 +43,9 @@ class MutableBlock(MutableBase):
         return returns
 
     def mutate_cell(self, rate=1, cell_index=None):
+        if len(self.cells) ==0:
+            return ("mutate_cell",None)
+
         if cell_index is not None:
             cell = self.cells[cell_index]
             cell.mutate(rate)
@@ -54,7 +57,8 @@ class MutableBlock(MutableBase):
                 self.mutate_cell(rate, cell_index)
 
     def mutate_remove_cell(self,rate=1, cell_index=None):
-
+        if len(self.cells) ==0:
+            return ("mutate_remove_cell",None)
         if cell_index is not None and cell_index >=0 and cell_index<len(self.cells):
             del self.cells[cell_index]
             return ("mutate_remove_cell",cell_index)

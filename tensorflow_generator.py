@@ -14,7 +14,8 @@ import time
 from keras.callbacks import Callback, EarlyStopping, LearningRateScheduler, ReduceLROnPlateau
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
-
+from art.classifiers import KerasClassifier
+from art.metrics import empirical_robustness, clever_u
 from keras.optimizers import Adam
 
 #from keras.utils.training_utils import multi_gpu_model
@@ -145,10 +146,17 @@ class TensorflowGenerator(object):
                 
             history, training_time, score = TensorflowGenerator.train(self.model, epochs, batch_size, data_augmentation,dataset)
             
+            TensorflowGenerator.eval_robustness(self.model)
             self.params = self.model.nb_params
             self.training_time = training_time
             self.accuracy = self.model.accuracy
             self.history = (history.history['acc'], history.history['val_acc'])
+
+    @staticmethod
+    def eval_robustness(model):
+        keras_model = KerasClassifier(model=model.model, clip_values=(0, 255))
+        model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
+        print('model rebustness: {} '.format(model.robustness_score))
 
     @staticmethod
     def build(model, dataset):
@@ -163,7 +171,7 @@ class TensorflowGenerator(object):
         print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
         keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
 
-        model.nb_params =  model.count_params()
+        model.nb_params =  keras_model.count_params()
         print('model blocks,layers,params,flops: {} '.format(model.to_kerasvector()))
 
         return keras_model
@@ -200,9 +208,8 @@ class TensorflowGenerator(object):
         #model.nb_flops get_flops()
         model.accuracy =score[1]
         
-        print('Test loss: {} Test accuracy: {}', score[0],  score[1])
-        print('',)
-
+        print('Test loss: {} Test accuracy: {}'.format(score[0],  score[1]))
+        
         return history, training_time, score
 
     @staticmethod
