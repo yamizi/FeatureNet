@@ -138,10 +138,6 @@ class TensorflowGenerator(object):
             if not model:
                 print("#### model is not valid ####")
                 return 
-
-
-            self.model.nb_params = self.params = model.count_params()
-            print('model blocks,layers,params,flops: {} '.format(self.model.to_kerasvector()))
             
             if no_train:
                 self.print()
@@ -149,9 +145,9 @@ class TensorflowGenerator(object):
                 
             history, training_time, score = TensorflowGenerator.train(self.model, epochs, batch_size, data_augmentation,dataset)
             
+            self.params = self.model.nb_params
             self.training_time = training_time
-            #self.model.nb_flops =  self.flops = get_flops()
-            self.model.accuracy = self.accuracy = score[1]
+            self.accuracy = self.model.accuracy
             self.history = (history.history['acc'], history.history['val_acc'])
 
     @staticmethod
@@ -166,6 +162,9 @@ class TensorflowGenerator(object):
         losss = ['categorical_crossentropy']
         print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
         keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
+
+        model.nb_params =  model.count_params()
+        print('model blocks,layers,params,flops: {} '.format(model.to_kerasvector()))
 
         return keras_model
 
@@ -197,8 +196,12 @@ class TensorflowGenerator(object):
         training_time = time.time() - begin_training
 
         score = keras_model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
-        print('Test loss:', score[0])
-        print('Test accuracy:', score[1])
+        
+        #model.nb_flops get_flops()
+        model.accuracy =score[1]
+        
+        print('Test loss: {} Test accuracy: {}', score[0],  score[1])
+        print('',)
 
         return history, training_time, score
 
