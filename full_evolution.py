@@ -165,7 +165,7 @@ class FullEvolution(object):
                 f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
                 f1.close()
 
-            last_population = [x for x in mutant_population if x.accuracy>0]
+            last_population = [x for x in mutant_population if x.accuracy>0.1]
             pop = sorted(last_population,
                         key=lambda x: x.accuracy, reverse=True)
         
