@@ -8,6 +8,7 @@ class MutableBlock(MutableBase):
     strides_values = ("1x1","2x2")
     features_multiplier_values = (800,400,200,100,50,25)
 
+
     def __init__(self, raw_dict=None, previous_block = None, parent_model=None):
 
         self.mutation_operators = (("mutate_add_cell",0.3),("mutate_cell",0.3),("mutate_remove_cell",0.1),("mutate_block",0.3))
@@ -15,7 +16,9 @@ class MutableBlock(MutableBase):
 
 
     def mutate_add_cell(self, rate=1):
-        
+        if len(self.cells) ==MutableBase.MAX_NB_CELLS:
+            return ("mutate_add_cell",None)
+
         prob = rand()
         if prob < rate or MutableBase.mutation_stategy==MutationStrategies.CHOICE:
             cell = Cell.base_cell()

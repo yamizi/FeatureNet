@@ -9,6 +9,9 @@ class MutableModel(MutableBase):
         self.mutation_operators = [("mutate_add_block",0.3),("mutate_block",0.5),("mutate_remove_block",0.2)]
 
     def mutate_add_block(self, rate=1, block=None):
+        if len(self.blocks) ==MutableBase.MAX_NB_BLOCKS:
+            return ("add_block",None)
+
         prob = rand()
         if MutableBase.mutation_stategy==MutationStrategies.CHOICE or prob < rate:
             block = Block.base_block()

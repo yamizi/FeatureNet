@@ -10,6 +10,8 @@ class MutableBase(object):
     mutation_operators = []
     debug_mode = False
     mutation_stategy = MutationStrategies.CHOICE
+    MAX_NB_CELLS = 10
+    MAX_NB_BLOCKS = 20
     
     def mutate(self, rate=1):
         e,p =  zip(*self.mutation_operators)
