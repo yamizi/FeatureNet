@@ -16,7 +16,7 @@ from .output import Out
 from .cell import Cell
 
 import random
-
+import uuid
 
 class KerasFeatureVector(object):
 
@@ -72,6 +72,8 @@ class KerasFeatureModel(MutableModel):
 
 
     def __init__(self, name=""):
+        if not name:
+            name = str(uuid.uuid1())[:10]
         self._name = name
         super(KerasFeatureModel, self).__init__()
 
@@ -153,8 +155,8 @@ class KerasFeatureModel(MutableModel):
         #print("building keras model from block list")
         model = KerasFeatureModel(name=name)
 
-        model.blocks = block_model["blocks"]
-        model.accuracy = block_model["accuracy"]
+        model.blocks = block_model.get("blocks", [])
+        model.accuracy = block_model.get("accuracy", 0)
 
         return model
 
