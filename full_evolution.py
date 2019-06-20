@@ -5,6 +5,7 @@ import json, pickle
 import os
 from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureVector, KerasFeatureModel
+from model.mutation.mutable_base import MutableBase, MutationStrategies
 from products_tree import ProductSet, ProductSetError
 import random, math
 from numpy.random import choice
@@ -44,27 +45,29 @@ class FullEvolution(object):
         last_population_probability =  e_x / e_x.sum()
         
         for i in range(survival_count):
-            individual = choice(last_population, None, last_population_probability.tolist())
+            individual= choice(last_population, None, last_population_probability.tolist())
             fittest.append(individual)
         
         return fittest
 
     @staticmethod
-    def generate_children(parent, nb_product_perparent, mutation_ratio):
-        children = []
+    def generate_mutant(parent, mutation_ratio):
+        
         nb_max_mutations = 100
-        for i in range(nb_product_perparent):
+        if MutableBase.mutation_stategy==MutationStrategies.CHOICE :
             mutations = np.random.uniform(size=nb_max_mutations)
             nb_mutations = len([e for e in mutations if e<mutation_ratio])
-            blocks = parent.dump_blocks()
-            blocks = copy.deepcopy(blocks)
-            mutant = KerasFeatureModel.parse_blocks(blocks)
-            mutant.accuracy = 0
-            for j in range(nb_mutations):
-                mutant.mutate()
+        else:
+            nb_mutations = 1
+        blocks = parent.dump_blocks()
+        blocks = copy.deepcopy(blocks)
+        mutant = KerasFeatureModel.parse_blocks(blocks)
+        mutant.accuracy = 0
 
-            children.append(mutant)  
-        return children
+        for j in range(nb_mutations):
+            mutant.mutate(mutation_ratio)
+
+        return mutant
 
         
     @staticmethod
@@ -90,14 +93,19 @@ class FullEvolution(object):
         return last_population
 
     @staticmethod
-    def evolve(evo, session_path, nb_product_perparent, dataset, last_population, training_epochs, mutation_ratio=0.1  ):
-        for i in range(len(last_population)):
+    def evolve(evo, session_path, nb_product_perparent, dataset, new_pop, training_epochs, mutation_ratio=0.1  ):
+        len_pop = len(new_pop)
+        mutants = []
+        for i in range(len_pop):
+            individual1 = new_pop[i]
             print("### generating children of product {}".format(i))
+            for i in range(nb_product_perparent): 
+                individual2 = choice(new_pop)
+                individual = individual1.breed(individual2)
+                mutant = FullEvolution.generate_mutant(individual,mutation_ratio)
+                mutants.append(mutant)    
 
-            mutants = FullEvolution.generate_children(last_population[i],nb_product_perparent, mutation_ratio)
-            last_population = last_population+ mutants    
-
-        return last_population
+        return new_pop + mutants
 
     @staticmethod
     def run(base_path, last_pdts_path="",nb_base_products=100, dataset="cifar", training_epochs=25):
@@ -137,25 +145,27 @@ class FullEvolution(object):
 
             new_pop = FullEvolution.select(last_population, survival_count)
             
-            last_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs )
+            mutant_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs )
             
-            for index,model in enumerate(last_population):
-                keras_model = TensorflowGenerator.build(model,dataset)
-                if not keras_model:
-                    print("#### model is not valid ####")
-                else: 
-                    TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
-                    TensorflowGenerator.eval_robustness(model)
+            for index,model in enumerate(mutant_population):
+                if model.accuracy==0:
+                    #we do not train individuals preserved from previous generation
+                    keras_model = TensorflowGenerator.build(model,dataset)
+                    if not keras_model:
+                        print("#### model is not valid ####")
+                    else: 
+                        TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
+                        TensorflowGenerator.eval_robustness(model)
 
-                pdt_path = "{}/{}products_e{}.json".format(
-                    session_path, nb_base_products, evo)
-                
-                f1 = open(pdt_path, 'a')
-                vect = model.to_kerasvector().to_vector()
-                f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
-                f1.close()
+                    pdt_path = "{}/{}products_e{}.json".format(
+                        session_path, nb_base_products, evo)
+                    
+                    f1 = open(pdt_path, 'a')
+                    vect = model.to_kerasvector().to_vector()
+                    f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
+                    f1.close()
 
-            last_population = [x for x in last_population if x.accuracy>0]
+            last_population = [x for x in mutant_population if x.accuracy>0]
             pop = sorted(last_population,
                         key=lambda x: x.accuracy, reverse=True)
         
