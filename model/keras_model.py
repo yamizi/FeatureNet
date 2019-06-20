@@ -65,6 +65,7 @@ class KerasFeatureModel(MutableModel):
     robustness_score = 0
     model = None
     accuracy = 0
+    use_gpu = True
     
     layers = {"pool":[],"conv":[]}
     
@@ -123,10 +124,12 @@ class KerasFeatureModel(MutableModel):
                 model.summary()
                 return None 
 
-            try:
-                model = multi_gpu_model(model, gpus=4)
-            except:
-                print("multi gpu not available")
+            if KerasFeatureModel.use_gpu:
+                try:
+                    model = multi_gpu_model(model, gpus=4)
+                except:
+                    print("multi gpu not available")
+                    KerasFeatureModel.use_gpu = False
 
             
         except Exception as e:

@@ -168,7 +168,7 @@ class TensorflowGenerator(object):
 
         optimizers = [  Adam(lr=lr_schedule(0)), "sgd"]
         losss = ['categorical_crossentropy']
-        print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
+        #print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
         keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
 
         model.nb_params =  keras_model.count_params()
@@ -192,7 +192,7 @@ class TensorflowGenerator(object):
                             min_lr=0.5e-6)
                             
         callbacks=[timed, early_stopping, lr_reducer, lr_scheduler]
-        print("training with batch size {} epochs {} callbacks {} dataset {} data-augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
+        #print("training with batch size {} epochs {} callbacks {} dataset {} data-augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
         
         history = keras_model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                 batch_size=batch_size,

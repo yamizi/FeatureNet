@@ -17,7 +17,7 @@ from math import ceil
 import re
 import copy 
 base_path = '../products'
-base_training_epochs = 1
+base_training_epochs = 12
 evolution_epochs = 50
 
 
@@ -110,8 +110,8 @@ class FullEvolution(object):
         if not os.path.isdir(session_path):
             os.mkdir(session_path)
 
-        survival_rate = 0.05
-        survival_count = math.ceil(survival_rate*nb_base_products)
+        survival_rate = 0.1
+        survival_count = max(5,math.ceil(survival_rate*nb_base_products))
         nb_product_perparent =  int((nb_base_products-survival_count) / survival_count)
         last_evolution_epoch = 0
         reset_keras()
@@ -174,8 +174,8 @@ def main(argv):
     output_file = ''
     products_file = ''
     base = base_path
-    nb_base_products=[10]
-    dataset = "mnist"
+    nb_base_products=[20]
+    dataset = "cifar"
     training_epochs = base_training_epochs
     
     try:
