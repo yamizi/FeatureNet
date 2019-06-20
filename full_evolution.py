@@ -157,13 +157,13 @@ class FullEvolution(object):
                         TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
                         TensorflowGenerator.eval_robustness(model)
 
-                    pdt_path = "{}/{}products_e{}.json".format(
-                        session_path, nb_base_products, evo)
-                    
-                    f1 = open(pdt_path, 'a')
-                    vect = model.to_kerasvector().to_vector()
-                    f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
-                    f1.close()
+                pdt_path = "{}/{}products_e{}.json".format(
+                    session_path, nb_base_products, evo)
+                
+                f1 = open(pdt_path, 'a')
+                vect = model.to_kerasvector().to_vector()
+                f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
+                f1.close()
 
             last_population = [x for x in mutant_population if x.accuracy>0]
             pop = sorted(last_population,
