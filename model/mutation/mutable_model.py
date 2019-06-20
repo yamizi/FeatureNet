@@ -1,6 +1,7 @@
 from .mutable_base import MutableBase, MutationStrategies
 from ..block import Block
-
+import copy
+from math import floor,ceil
 from numpy.random import choice, rand
 
 class MutableModel(MutableBase):
@@ -47,3 +48,12 @@ class MutableModel(MutableBase):
         elif block_index >=0 and block_index<len(self.blocks):
             del self.blocks[block_index]
             return ("remove_block",block_index)
+
+    def breed(self, parent2, ratio=1.0):
+        from ..keras_model import KerasFeatureModel
+        blocks1 = copy.deepcopy(self.dump_blocks()["blocks"])
+        blocks2 = copy.deepcopy(parent2.dump_blocks()["blocks"])
+
+        blocks = blocks1[:floor(len(blocks1)*ratio)] + blocks2[:ceil(len(blocks2)*(1-ratio))]
+        mutant = KerasFeatureModel.parse_blocks({"blocks":blocks})
+        return mutant
