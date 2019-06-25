@@ -24,7 +24,11 @@ class MutableInput(MutableBase):
         prob = rand()
         if prob < rate or MutableBase.mutation_stategy==MutationStrategies.CHOICE:
             from model.input import ZerosInput, DenseInput, IdentityInput, PoolingInput, ConvolutionInput
-            inputs = (ZerosInput, DenseInput, IdentityInput, PoolingInput, ConvolutionInput)
+            inputs = [DenseInput, IdentityInput, PoolingInput, ConvolutionInput]
+
+            #We only allow second input to be zero
+            if self.parent_cell.input2 == self:
+                inputs.append(ZerosInput)
             input = choice(inputs, None)()
 
             #copy previous input attributes

@@ -161,7 +161,7 @@ class ZerosInput(Input):
         super(ZerosInput, self).__init__(raw_dict=raw_dict, cell=cell)
         
     def build(self, input, neighbour=None):
-        shape = neighbour.shape
+        shape = neighbour.shape if neighbour else input.shape
         return K.zeros(shape)
 
 class IdentityInput(Input):
