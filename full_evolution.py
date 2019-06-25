@@ -1,6 +1,3 @@
-import subprocess
-import sys
-import getopt
 import json, pickle
 import os
 from tensorflow_generator import TensorflowGenerator
@@ -17,9 +14,6 @@ import time
 from math import ceil
 import re
 import copy 
-base_path = '../products'
-base_training_epochs = 12
-evolution_epochs = 50
 
 
 
@@ -44,7 +38,13 @@ class FullEvolution(object):
         e_x = np.exp(x - np.max(x))
         last_population_probability =  e_x / e_x.sum()
         
-        for i in range(survival_count):
+        # We keep the top individuals + randomly picked with probability distribution
+        elitist_count = math.ceil(survival_count/4)
+        for i in range(elitist_count):
+            individual= last_population[i]
+            fittest.append(individual)
+        
+        for i in range(survival_count-elitist_count):
             individual= choice(last_population, None, last_population_probability.tolist())
             fittest.append(individual)
         
@@ -61,8 +61,7 @@ class FullEvolution(object):
             nb_mutations = 1
         blocks = parent.dump_blocks()
         blocks = copy.deepcopy(blocks)
-        mutant = KerasFeatureModel.parse_blocks(blocks)
-        mutant.accuracy = 0
+        mutant = KerasFeatureModel.parse_blocks({"blocks":blocks["blocks"]})
 
         for j in range(nb_mutations):
             mutant.mutate(mutation_ratio)
@@ -93,22 +92,25 @@ class FullEvolution(object):
         return last_population
 
     @staticmethod
-    def evolve(evo, session_path, nb_product_perparent, dataset, new_pop, training_epochs, mutation_ratio=0.1  ):
+    def evolve(evo, session_path, nb_product_perparent, dataset, new_pop, training_epochs, mutation_ratio=0.1, breed=True  ):
         len_pop = len(new_pop)
         mutants = []
         for i in range(len_pop):
             individual1 = new_pop[i]
-            print("### generating children of product {}".format(i))
-            for i in range(nb_product_perparent): 
-                individual2 = choice(new_pop)
-                individual = individual1.breed(individual2)
+            print("### generating children of product {}".format(individual1._name))
+            for i in range(nb_product_perparent):
+                if breed: 
+                    individual2 = choice(new_pop)
+                    individual = individual1.breed(individual2)
+                else:
+                    individual = individual1
                 mutant = FullEvolution.generate_mutant(individual,mutation_ratio)
                 mutants.append(mutant)    
 
         return new_pop + mutants
 
     @staticmethod
-    def run(base_path, last_pdts_path="",nb_base_products=100, dataset="cifar", training_epochs=25):
+    def run(base_path, last_pdts_path="",nb_base_products=100, dataset="cifar", training_epochs=25,mutation_rate = 0.1,survival_rate = 0.1, breed=True, evolution_epochs=50):
 
         if not os.path.isdir(base_path):
             os.mkdir(base_path)
@@ -118,9 +120,16 @@ class FullEvolution(object):
         if not os.path.isdir(session_path):
             os.mkdir(session_path)
 
-        survival_rate = 0.1
-        survival_count = max(5,math.ceil(survival_rate*nb_base_products))
-        nb_product_perparent =  int((nb_base_products-survival_count) / survival_count)
+        session_path = "{}/{}_{}_{}".format(session_path,training_epochs,mutation_rate,survival_rate)
+
+        if os.path.isdir(session_path) and not os.path.isfile(last_pdts_path):
+            session_path = "{}_{}".format(session_path, int(time.time()))
+        
+        os.mkdir(session_path)
+            
+            
+        survival_count = max(3,math.ceil(survival_rate*nb_base_products))
+        nb_product_perparent =  ceil((nb_base_products-survival_count) / survival_count)
         last_evolution_epoch = 0
         reset_keras()
 
@@ -145,7 +154,7 @@ class FullEvolution(object):
 
             new_pop = FullEvolution.select(last_population, survival_count)
             
-            mutant_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs )
+            mutant_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs, mutation_ratio=mutation_rate, breed=breed )
             
             for index,model in enumerate(mutant_population):
                 if model.accuracy==0:
@@ -162,57 +171,38 @@ class FullEvolution(object):
                 
                 f1 = open(pdt_path, 'a')
                 vect = model.to_kerasvector().to_vector()
-                f1.write("\r\n{}:{}".format(index, json.dumps(vect)))
+                f1.write("\r\n{} {}:{}".format(index,int(time.time()), json.dumps(vect)))
                 f1.close()
 
             last_population = [x for x in mutant_population if x.accuracy>0.1]
-            pop = sorted(last_population,
+            last_population = sorted(last_population,
                         key=lambda x: x.accuracy, reverse=True)
         
             pdt_path = "{}/{}products_e{}.pickled".format(
                 session_path, nb_base_products, evo)
             print("### remaining total individuals {} saved to {}. top accuracy: {}".format(
-                len(pop),pdt_path, pop[0].accuracy))
+                len(last_population),pdt_path, last_population[0].accuracy))
             f1 = open(pdt_path, 'w')
             #pickle.dump( [e.dump_blocks() for e in pop], f1)
             f1.close()
 
-    
 
-def main(argv):
+if __name__ == "__main__":
     input_file = ''
     output_file = ''
     products_file = ''
-    base = base_path
-    nb_base_products=[20]
+    base = '../products/local'
+    nb_base_products=5
     dataset = "cifar"
-    training_epochs = base_training_epochs
+    training_epochs = 1
+    mutation_rate = 0.1
+    survival_rate = 0.1
+    breed = True
+    evolution_epochs = 20
+
+    MutableBase.MAX_NB_CELLS = 5
+    MutableBase.MAX_NB_BLOCKS = 10
+    FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
     
-    try:
-        opts, args = getopt.getopt(argv, "hn:d:b:p:t:", [
-                                   "nb=","dataset=", "bpath=", "pfile=", "training_epoch="])
-    except getopt.GetoptError:
-        pass
-    print("arguments {}".format(opts))
-    for opt, arg in opts:
-        
-        if opt == '-h':
-            print(
-                'pledge_evolution.py -n <nb_architectures> -d <dataset> -b <base_path> -p <products_file> -t <training_epoch>')
-            sys.exit()
-        elif opt in ("-n", "--nb"):
-            nb_base_products = arg.split("x")
-        elif opt in ("-d", "--dataset"):
-            dataset = arg
-        elif opt in ("-b", "--bpath"):
-            base = arg
-        elif opt in ("-p", "--pfile"):
-            products_file = arg
-        elif opt in ("-t", "--training_epoch"):
-            training_epochs = int(arg)
 
-    FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]), training_epochs=training_epochs)
-
-if __name__ == "__main__":
-    main(sys.argv[1:])
 
