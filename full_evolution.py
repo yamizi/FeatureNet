@@ -166,6 +166,10 @@ class FullEvolution(object):
                         TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
                         TensorflowGenerator.eval_robustness(model)
 
+                        path = "{}/{}products_e{}_{}".format(session_path, nb_base_products, evo,model._name)
+
+                        TensorflowGenerator.export_png(keras_model, path)
+
                 pdt_path = "{}/{}products_e{}.json".format(
                     session_path, nb_base_products, evo)
                 
@@ -192,13 +196,13 @@ if __name__ == "__main__":
     output_file = ''
     products_file = ''
     base = '../products/local'
-    nb_base_products=5
+    nb_base_products=10
     dataset = "cifar"
     training_epochs = 1
     mutation_rate = 0.1
     survival_rate = 0.1
     breed = True
-    evolution_epochs = 20
+    evolution_epochs = 70
 
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10

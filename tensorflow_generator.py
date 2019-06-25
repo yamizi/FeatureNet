@@ -157,6 +157,8 @@ class TensorflowGenerator(object):
         keras_model = KerasClassifier(model=model.model, clip_values=(0, 255))
         begin_robustness = time.time() 
         model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
+        #model.robustness_score = float(clever_u(keras_model,TensorflowGenerator.X_test,10,100,0.1,1))
+        
         robustness_time = time.time() - begin_robustness
         print('model rebustness: {} time:{}'.format(model.robustness_score,robustness_time))
 
@@ -286,6 +288,11 @@ class TensorflowGenerator(object):
             TensorflowGenerator.Y_test = y_test
             TensorflowGenerator.dataset = dataset
 
+    @staticmethod
+    def export_png(model, path):
+        from keras.utils import plot_model
+        plot_model(model, to_file='{}.png'.format(path))
+
     def print(self, include_summary=True, invalid_params=True, export_png=True):
         model = self.model.model
         if include_summary:
@@ -297,8 +304,7 @@ class TensorflowGenerator(object):
                 print("{0}:{1}".format(name, params))
         
         if TensorflowGenerator.model_graph and export_png:
-            from keras.utils import plot_model
-            plot_model(model, to_file='{}.png'.format(TensorflowGenerator.model_graph))
+            TensorflowGenerator.export_png(model, TensorflowGenerator.model_graph)
             
     def load_products(self, product):
         def build_rec(node, level=0):
