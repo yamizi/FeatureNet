@@ -37,7 +37,7 @@ class MutableOutput(MutableBase):
             attribute_to_mutate = choice(list(self.attributes.keys()), None)
             attribute_value = choice(getattr(self,attribute_to_mutate), None)
             setattr(self, self.attributes[attribute_to_mutate],attribute_value)
-            attr =  [("mutate_output_attribute",attribute_to_mutate, attribute_value )]
+            attrs =  [("mutate_output_attribute",attribute_to_mutate, attribute_value )]
         else:
             
             for attribute_to_mutate in self.attributes.keys():
@@ -45,6 +45,6 @@ class MutableOutput(MutableBase):
                 if prob < rate:
                     attribute_value = choice(getattr(self,attribute_to_mutate), None)
                     setattr(self, self.attributes[attribute_to_mutate],attribute_value)
-                    attr.append(("mutate_output_attribute",attribute_to_mutate, attribute_value ))
+                    attrs.append(("mutate_output_attribute",attribute_to_mutate, attribute_value ))
 
         return attrs
