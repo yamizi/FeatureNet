@@ -137,7 +137,7 @@ class TensorflowGenerator(object):
             model = TensorflowGenerator.build(self.model, dataset)
             
             if not model:
-                print("#### model is not valid ####")
+                print("#### model {} is not valid ####".format(model.name))
                 return 
             
             if no_train:
@@ -155,8 +155,10 @@ class TensorflowGenerator(object):
     @staticmethod
     def eval_robustness(model):
         keras_model = KerasClassifier(model=model.model, clip_values=(0, 255))
+        begin_robustness = time.time() 
         model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
-        print('model rebustness: {} '.format(model.robustness_score))
+        robustness_time = time.time() - begin_robustness
+        print('model rebustness: {} time:{}'.format(model.robustness_score,robustness_time))
 
     @staticmethod
     def build(model, dataset):
@@ -208,7 +210,7 @@ class TensorflowGenerator(object):
         #model.nb_flops get_flops()
         model.accuracy =score[1]
         
-        print('Test loss: {} Test accuracy: {}'.format(score[0],  score[1]))
+        print('Test loss: {} Test accuracy: {} training_time {}'.format(score[0],  score[1], training_time))
         
         return history, training_time, score
 
