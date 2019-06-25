@@ -11,6 +11,8 @@ from keras.optimizers import SGD
 from .mutation.mutable_model import MutableModel
 
 from keras.utils import multi_gpu_model
+from tensorflow.python.client import device_lib
+
 from .block import Block
 from .output import Out
 from .cell import Cell
@@ -65,7 +67,7 @@ class KerasFeatureModel(MutableModel):
     robustness_score = 0
     model = None
     accuracy = 0
-    use_gpu = True
+    use_multigpu = True
     
     layers = {"pool":[],"conv":[]}
     
@@ -126,12 +128,16 @@ class KerasFeatureModel(MutableModel):
                 model.summary()
                 return None 
 
-            if KerasFeatureModel.use_gpu:
+            if KerasFeatureModel.use_multigpu:
                 try:
-                    model = multi_gpu_model(model, gpus=4)
-                except:
+                    local_device_protos = device_lib.list_local_devices()
+                    gpu_devices = [device for device in local_device_protos if device.device_type=="GPU"]
+                    if len(gpu_devices) <2:
+                        raise Exception()
+                    model = multi_gpu_model(model, gpus=len(gpu_devices))
+                except Exception as e:
                     print("multi gpu not available")
-                    KerasFeatureModel.use_gpu = False
+                    KerasFeatureModel.use_multigpu = False
 
             
         except Exception as e:
