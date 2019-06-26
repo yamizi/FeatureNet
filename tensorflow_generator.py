@@ -118,6 +118,8 @@ class TensorflowGenerator(object):
     input_shape = (0,0,0)
     default_batchsize = 64
     num_classes = 10
+
+    model_graph_export = True
     
     datasets_classes = {"mnist":10,"cifar":10,"cifar100":100}
 
@@ -154,10 +156,25 @@ class TensorflowGenerator(object):
 
     @staticmethod
     def eval_robustness(model):
-        keras_model = KerasClassifier(model=model.model, clip_values=(0, 255))
+        keras_model = model.model
+        if not keras_model:
+            return 
         begin_robustness = time.time() 
-        model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
-        #model.robustness_score = float(clever_u(keras_model,TensorflowGenerator.X_test,10,100,0.1,1))
+        try:
+
+            r_l1 = 40
+            r_l2 = 2
+            r_li = 0.1
+            nb_batches = 10
+            batch_size = 5
+
+            keras_model = KerasClassifier(model=keras_model, clip_values=(0, 255))
+            
+            model.robustness_score = clever_u(keras_model, TensorflowGenerator.X_test[-1], nb_batches, batch_size, r_l1, norm=1, pool_factor=3)
+            
+            #model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
+        except Exception as e:
+            print(e)
         
         robustness_time = time.time() - begin_robustness
         print('model rebustness: {} time:{}'.format(model.robustness_score,robustness_time))
@@ -290,8 +307,15 @@ class TensorflowGenerator(object):
 
     @staticmethod
     def export_png(model, path):
+        if not TensorflowGenerator.model_graph_export:
+            return
+
         from keras.utils import plot_model
-        plot_model(model, to_file='{}.png'.format(path))
+        try:
+            plot_model(model, to_file='{}.png'.format(path))
+        except Exception as e:
+            print(e)
+            TensorflowGenerator.model_graph_export = False
 
     def print(self, include_summary=True, invalid_params=True, export_png=True):
         model = self.model.model
