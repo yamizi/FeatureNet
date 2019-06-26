@@ -4,7 +4,10 @@ from .node import Node
 from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D, Conv2D
 from .output import Output, OutCell, OutBlock, Out
 
-class Operation(Node):
+from .mutation.mutable_operation import MutableOperation
+from .mutation.mutable_combination import MutableCombination
+
+class Operation(MutableOperation, Node):
     def __init__(self,  raw_dict=None, cell=None):
         self.parent_cell = cell
         super(Operation, self).__init__(raw_dict=raw_dict)
@@ -67,8 +70,14 @@ class Operation(Node):
             operation_element = BatchNorm(_axis=_axis, raw_dict=operation)
 
         elif operation_type=="activation":
+            _activation = None
+            for child in operation.get("children"):
+                element_type = Node.get_type(child)
+                if(element_type == "activation"):
+                    if(len(child.get("children"))):
+                        _activation = Node.get_type(child.get("children")[0])
             #operation_element = Void(operation)
-            operation_element = Active(raw_dict=operation)
+            operation_element = Active(_activation, raw_dict=operation)
 
         return operation_element
         
@@ -142,15 +151,19 @@ class Active(Operation):
     def __init__(self, _method=None, raw_dict=None, cell=None):
         super(Active, self).__init__(raw_dict=raw_dict, cell=cell)
 
-        _method = "relu"
+        _method = _method if _method else "relu" 
         activationAcceptedValues = ("tanh","relu","sigmoid","softmax")
         if not _method or str(_method) not in activationAcceptedValues:
             self.append_parameter("_method",'|'.join(str(i) for i in activationAcceptedValues))
         else:
             self._method = str(_method)
 
+    def build(self,input):
+        input = super(Active, self).build(input)
+        return Activation(activation=self._method)(input)
 
-class Combination(Node):
+
+class Combination(MutableCombination, Node):
     def __init__(self, raw_dict=None, cell=None):
         self.parent_cell = cell
         super(Combination, self).__init__(raw_dict=raw_dict)
