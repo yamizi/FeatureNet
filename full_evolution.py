@@ -37,14 +37,16 @@ class FullEvolution(object):
         x =  [e.accuracy for e in last_population]
         e_x = np.exp(x - np.max(x))
         last_population_probability =  e_x / e_x.sum()
+
+        last_population_size = len(last_population)
         
         # We keep the top individuals + randomly picked with probability distribution
         elitist_count = math.ceil(survival_count/4)
-        for i in range(elitist_count):
+        for i in range(min(last_population_size,elitist_count)):
             individual= last_population[i]
             fittest.append(individual)
         
-        for i in range(survival_count-elitist_count):
+        for i in range(min(last_population_size,survival_count-elitist_count)):
             individual= choice(last_population, None, last_population_probability.tolist())
             fittest.append(individual)
         
@@ -120,7 +122,7 @@ class FullEvolution(object):
         if not os.path.isdir(session_path):
             os.mkdir(session_path)
 
-        session_path = "{}/{}_{}_{}".format(session_path,training_epochs,mutation_rate,survival_rate)
+        session_path = "{}/ee{}_te{}_mr{}_sr{}".format(session_path,evolution_epochs,training_epochs,mutation_rate,survival_rate)
 
         if os.path.isdir(session_path) and not os.path.isfile(last_pdts_path):
             session_path = "{}_{}".format(session_path, int(time.time()))
@@ -166,12 +168,12 @@ class FullEvolution(object):
                         TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
                         TensorflowGenerator.eval_robustness(model)
 
-                        path = "{}/{}products_e{}_{}".format(session_path, nb_base_products, evo,model._name)
+                        path = "{}/e{}_{}".format(session_path, evo,model._name)
 
                         TensorflowGenerator.export_png(keras_model, path)
 
-                pdt_path = "{}/{}products_e{}.json".format(
-                    session_path, nb_base_products, evo)
+                pdt_path = "{}/e{}.json".format(
+                    session_path, evo)
                 
                 f1 = open(pdt_path, 'a')
                 vect = model.to_kerasvector().to_vector()
