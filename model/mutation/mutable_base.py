@@ -5,6 +5,11 @@ class MutationStrategies(Enum):
     CHOICE = 1 # at every node choose only one of the children to mutate
     ALL = 2 # at every node mutate all the children according to mutation rate
 
+class SelectionStrategies(Enum):
+    ELITIST = 1 # choose top N models in terms of accuracy
+    HYBRID = 2 # chose top N/4 models + 3N/4 randomly selected according to accuracy distribution
+    PARETO = 3 # hybrid within the PARETO models
+
 class MutableBase(object):
   
     mutation_operators = []
@@ -12,6 +17,7 @@ class MutableBase(object):
     mutation_stategy = MutationStrategies.CHOICE
     MAX_NB_CELLS = 10
     MAX_NB_BLOCKS = 20
+    selection_stragey = SelectionStrategies.HYBRID
     
     def mutate(self, rate=1):
         e,p =  zip(*self.mutation_operators)

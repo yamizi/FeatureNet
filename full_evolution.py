@@ -2,7 +2,7 @@ import json, pickle
 import os
 from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureVector, KerasFeatureModel
-from model.mutation.mutable_base import MutableBase, MutationStrategies
+from model.mutation.mutable_base import MutableBase, MutationStrategies, SelectionStrategies
 from products_tree import ProductSet, ProductSetError
 import random, math
 from numpy.random import choice
@@ -31,17 +31,58 @@ def reset_keras(classifier=None):
 class FullEvolution(object):
 
     
+    @staticmethod 
+    def get_fronts(df):
+        nb_elements = len(df["accuracy"])
+        df["dom"] = [0 for i in range(nb_elements)]
+        dominates = []
+        fronts = [[]]
+
+        # finding the first front
+        for i in range(nb_elements):
+            dominates.append([])
+            isDominant = True
+            for j in range(nb_elements):
+                if i == j:
+                    continue
+                # if i dominates j
+                if df["accuracy"][i] > df["accuracy"][j] and df["robustness"][i] > df["robustness"][j]:
+                    dominates[i].append(j)
+                # else if i is dominated by j
+                elif  df["accuracy"][j] > df["accuracy"][i] and df["robustness"][j] > df["robustness"][i]:
+                    df['dom'][i] += 1
+            if df['dom'][i] == 0:
+                fronts[0].append(i)
+
+        return fronts[0]
+
     @staticmethod
     def select(last_population, survival_count):
-        fittest = []
+        
+        last_population_size = len(last_population)
         x =  [e.accuracy for e in last_population]
+        y =  [e.robustness_score for e in last_population]
+
+        if MutableBase.selection_stragey == SelectionStrategies.PARETO and last_population_size>1:
+            front = FullEvolution.get_fronts({"accuracy":x, "robustness":y})
+            #import matplotlib.pyplot as plt
+            #plt.scatter(x,y)
+            if len(front)>1:
+                x = [val for i,val in enumerate(x) if i in front]
+                y = [val for i,val in enumerate(y) if i in front]
+                #plt.scatter(x_front,y_front,c="red")
+                
+            #print("front {} {} {}".format(front, x, y))
+        fittest = []
         e_x = np.exp(x - np.max(x))
         last_population_probability =  e_x / e_x.sum()
-
-        last_population_size = len(last_population)
         
         # We keep the top individuals + randomly picked with probability distribution
-        elitist_count = math.ceil(survival_count/4)
+        if MutableBase.selection_stragey == SelectionStrategies.ELITIST:
+            elitist_count = survival_count
+        else:
+            elitist_count = math.ceil(survival_count/4)
+            
         for i in range(min(last_population_size,elitist_count)):
             individual= last_population[i]
             fittest.append(individual)
@@ -206,6 +247,7 @@ if __name__ == "__main__":
     breed = True
     evolution_epochs = 70
 
+    MutableBase.mutation_stategy = MutationStrategies.ALL
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10
     FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
