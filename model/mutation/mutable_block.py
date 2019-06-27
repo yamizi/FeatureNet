@@ -22,7 +22,8 @@ class MutableBlock(MutableBase):
         prob = rand()
         if prob < rate or MutableBase.mutation_stategy==MutationStrategies.CHOICE:
             cell = Cell.base_cell()
-            self.cells.append(cell)
+            index = choice(range(len(self.cells))) if len(self.cells) else 0
+            self.cells.insert(index, cell)
 
         return ("mutate_add_cell",cell)
 

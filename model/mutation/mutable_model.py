@@ -15,8 +15,9 @@ class MutableModel(MutableBase):
         prob = rand()
         if MutableBase.mutation_stategy==MutationStrategies.CHOICE or prob < rate:
             block = Block.base_block()
-            self.blocks.append(block)
-
+            index = choice(range(len(self.blocks)))
+            self.blocks.insert(index, block)
+            
             return ("add_block",block)
 
     def mutate_block(self, rate=1, block_index=None):
