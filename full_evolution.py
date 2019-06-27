@@ -68,6 +68,7 @@ class FullEvolution(object):
             #import matplotlib.pyplot as plt
             #plt.scatter(x,y)
             if len(front)>1:
+                last_population = [val for i,val in enumerate(last_population) if i in front]
                 x = [val for i,val in enumerate(x) if i in front]
                 y = [val for i,val in enumerate(y) if i in front]
                 #plt.scatter(x_front,y_front,c="red")
@@ -82,7 +83,7 @@ class FullEvolution(object):
             elitist_count = survival_count
         else:
             elitist_count = math.ceil(survival_count/4)
-            
+
         for i in range(min(last_population_size,elitist_count)):
             individual= last_population[i]
             fittest.append(individual)
@@ -238,16 +239,18 @@ if __name__ == "__main__":
     input_file = ''
     output_file = ''
     products_file = ''
-    base = '../products/local'
+    base = '../products/local_cp/'
     nb_base_products=10
     dataset = "cifar"
-    training_epochs = 1
+    training_epochs = 12
     mutation_rate = 0.1
     survival_rate = 0.1
     breed = True
     evolution_epochs = 70
 
-    MutableBase.mutation_stategy = MutationStrategies.ALL
+    MutableBase.mutation_stategy = MutationStrategies.CHOICE
+    MutableBase.selection_stragey = SelectionStrategies.PARETO
+
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10
     FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
