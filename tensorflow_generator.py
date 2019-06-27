@@ -15,7 +15,7 @@ from keras.callbacks import Callback, EarlyStopping, LearningRateScheduler, Redu
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 from art.classifiers import KerasClassifier
-from art.metrics import empirical_robustness, clever_u
+from art import metrics
 from keras.optimizers import Adam
 
 #from keras.utils.training_utils import multi_gpu_model
@@ -155,22 +155,44 @@ class TensorflowGenerator(object):
             self.history = (history.history['acc'], history.history['val_acc'])
 
     @staticmethod
+    def eval_attack_robustness(keras_model, attack_name, norm):
+        
+        attack_params = {"norm":norm}
+        if attack_name=="pgd":
+            from art.attacks import ProjectedGradientDescent
+            metrics.supported_methods["pdg"] = {"class":ProjectedGradientDescent, "eps_step": 0.1, "eps": 1.}
+
+        if attack_name=="cw":
+            from art.attacks import CarliniL2Method
+            attack_params = {}
+            metrics.supported_methods["pdg"] = {"class":CarliniL2Method}
+
+        return float(metrics.empirical_robustness(keras_model,TensorflowGenerator.X_test,attack_name, attack_params))
+
+    @staticmethod
     def eval_robustness(model):
         keras_model = model.model
         if not keras_model:
             return 
         begin_robustness = time.time() 
         try:
-
+            norm = 2
             r_l1 = 40
             r_l2 = 2
             r_li = 0.1
             nb_batches = 10
             batch_size = 5
-
+            radius = r_l1 if norm==1 else (r_l2 if norm==2 else r_li)
+            
             keras_model = KerasClassifier(model=keras_model, clip_values=(0, 255))
-            model.clever_score = clever_u(keras_model, TensorflowGenerator.X_test[-1], nb_batches, batch_size, r_l1, norm=1, pool_factor=3)
-            model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
+           
+            model.clever_score = metrics.clever_u(keras_model, TensorflowGenerator.X_test[-1], nb_batches, batch_size, radius, norm=norm, pool_factor=3)
+            model.pgd_score = TensorflowGenerator.eval_attack_robustness(keras_model, "pgd", norm)
+            model.cw_score = TensorflowGenerator.eval_attack_robustness(keras_model, "cw", norm)
+            model.fgsm_score = TensorflowGenerator.eval_attack_robustness(keras_model, "fgsm", norm)
+
+            model.robustness_score = model.fgsm_score
+            
         except Exception as e:
             import traceback
             print("error",e)
