@@ -169,12 +169,13 @@ class TensorflowGenerator(object):
             batch_size = 5
 
             keras_model = KerasClassifier(model=keras_model, clip_values=(0, 255))
-            
             model.robustness_score = clever_u(keras_model, TensorflowGenerator.X_test[-1], nb_batches, batch_size, r_l1, norm=1, pool_factor=3)
             
             #model.robustness_score = float(empirical_robustness(keras_model,TensorflowGenerator.X_test,"fgsm"))
         except Exception as e:
-            print(e)
+            import traceback
+            print("error",e)
+            print (traceback.format_exc())
         
         robustness_time = time.time() - begin_robustness
         print('model rebustness: {} time:{}'.format(model.robustness_score,robustness_time))
