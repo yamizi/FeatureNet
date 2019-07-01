@@ -15,7 +15,7 @@ from keras.callbacks import Callback, EarlyStopping, LearningRateScheduler, Redu
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 from art.classifiers import KerasClassifier
-from art import metrics
+from model import metrics
 from keras.optimizers import Adam
 
 #from keras.utils.training_utils import multi_gpu_model
@@ -158,15 +158,13 @@ class TensorflowGenerator(object):
     def eval_attack_robustness(keras_model, attack_name, norm):
         
         attack_params = {"norm":norm}
-        if attack_name=="pgd":
-            from art.attacks import ProjectedGradientDescent
-            metrics.supported_methods["pdg"] = {"class":ProjectedGradientDescent, "eps_step": 0.1, "eps": 1.}
 
         if attack_name=="cw":
-            from art.attacks import CarliniL2Method
-            attack_params = {}
-            metrics.supported_methods["pdg"] = {"class":CarliniL2Method}
-
+            attack_params["targeted"] = False;
+        elif attack_name=="pgd":
+             attack_params["eps_step"] = 0.1
+             attack_params["eps"]= 1.
+        
         return float(metrics.empirical_robustness(keras_model,TensorflowGenerator.X_test,attack_name, attack_params))
 
     @staticmethod
@@ -190,8 +188,6 @@ class TensorflowGenerator(object):
             model.pgd_score = TensorflowGenerator.eval_attack_robustness(keras_model, "pgd", norm)
             model.cw_score = TensorflowGenerator.eval_attack_robustness(keras_model, "cw", norm)
             model.fgsm_score = TensorflowGenerator.eval_attack_robustness(keras_model, "fgsm", norm)
-
-            model.robustness_score = model.fgsm_score
             
         except Exception as e:
             import traceback
