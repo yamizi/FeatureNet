@@ -1,18 +1,14 @@
-from model.mutation.mutable_base import MutableBase, MutationStrategies
+from model.mutation.mutable_base import MutableBase, MutationStrategies, SelectionStrategies
 import getopt, sys
-
-base_path = '../products'
-base_training_epochs = 12
-
 
 def main(argv):
     input_file = ''
     output_file = ''
     products_file = ''
-    base = base_path
+    base = '../products'
     nb_base_products=[20]
     dataset = "cifar"
-    training_epochs = base_training_epochs
+    training_epochs = 12
     mutation_rate = 0.1
     survival_rate = 0.1
     breed = True
@@ -21,7 +17,9 @@ def main(argv):
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10
 
+    MutableBase.selection_stragey = SelectionStrategies.HYBRID
     MutableBase.mutation_stategy = MutationStrategies.CHOICE
+
     opts = []
     try:
         opts, args = getopt.getopt(argv, "hn:d:b:p:t:m:r:s:e:", [
@@ -49,8 +47,11 @@ def main(argv):
         elif opt in ("-t", "--training_epoch"):
             training_epochs = int(arg)
         elif opt in ("-m", "--mutation_strategy"):
-            if arg=="all":
+            args = arg.split("#")
+            if args[0]=="all":
                 MutableBase.mutation_stategy = MutationStrategies.ALL
+            if len(args)>1 and args[1]=="pareto":
+                MutableBase.selection_stragey = SelectionStrategies.PARETO
         elif opt in ("-r", "--mutation_rate"):
             mutation_rate = float(arg)
         elif opt in ("-s", "--survival_rate"):
