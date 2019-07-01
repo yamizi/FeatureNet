@@ -33,10 +33,10 @@ def reset_keras(classifier=None):
     # if it's done something you should see a number being outputted
     print("cleaning memory {}".format(gc.collect()))
 
-def run_pledge(input_file, nb_base_products, output_file):
+def run_pledge(input_file, nb_base_products, output_file, duration=60):
     params = ['java', '-jar', pledge_path, 'generate_products']
     params = params+['-fm', input_file, '-nbProds',
-                    str(nb_base_products), '-o', output_file]
+                    str(nb_base_products), '-o', output_file, '-timeAllowedMS',str(duration*1000)]
     start = time.time()
     print("running pledge on {}: {}".format(
         params, datetime.datetime.now()))
@@ -251,14 +251,14 @@ class PledgeEvolution(object):
 
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
         
-        full_fm_file = input_file if input_file else "{}/nas{}_{}.xml".format(base_path, _nb_blocks,_nb_cells)
+        full_fm_file = input_file if input_file else "{}/nas_{}.xml".format(base_path,"_".join([str(e) for e in nb_base_products]))
 
         if os.path.isfile(output_file):
             print("Skipping full FM generation, file found in {}".format(full_fm_file))
         else:
             generate_featuretree(_input_file,full_fm_file,int(_nb_cells),int(_nb_blocks))
 
-        PledgeEvolution.run(base_path, full_fm_file, output_file,last_pdts_path=last_pdts_path, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
+        return full_fm_file
 
 
 
@@ -302,8 +302,12 @@ def main(argv):
         PledgeEvolution.run(base, input_file, output_file,
         last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]), training_epochs=training_epochs)
     else:
-        PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
+        _nb_blocks,_nb_cells, _nb_products = nb_base_products
+        
+        full_fm_file = PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
         last_pdts_path=products_file, dataset=dataset, training_epochs=training_epochs )
+        PledgeEvolution.run(base_path, full_fm_file, output_file,last_pdts_path=products_file, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
+
 
 
 if __name__ == "__main__":

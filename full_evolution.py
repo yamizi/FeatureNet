@@ -118,25 +118,23 @@ class FullEvolution(object):
 
         
     @staticmethod
-    def train_products(initial_product_set, dataset,training_epochs, max_products=0):
+    def train_initial_products(initial_product_set, dataset,training_epochs):
         start = time.time()
         print("### training products for dataset {}: {}".format(
             dataset, datetime.datetime.now()))
         last_population = []
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
-            tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
+            tensorflow_gen = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
                                             features_label=initial_product_set.features, no_train=False, data_augmentation=False)
 
-            if tensorflow and hasattr(tensorflow,"model") and tensorflow.model:
-                last_population.append(tensorflow.model.to_kerasvector())
-            reset_keras(tensorflow)
-
-            if max_products>0 and index==max_products:
-                break
+            if tensorflow_gen and hasattr(tensorflow_gen,"model") and tensorflow_gen.model:
+                TensorflowGenerator.eval_robustness(tensorflow_gen.model)
+                last_population.append(tensorflow_gen.model)
+            reset_keras()
 
         end = time.time()
-        print("### training products over, took {}s".format(str(end-start)))
+        print("### training initial products over, took {}s".format(str(end-start)))
         return last_population
 
     @staticmethod
@@ -170,7 +168,7 @@ class FullEvolution(object):
 
         session_path = "{}/ee{}_te{}_mr{}_sr{}".format(session_path,evolution_epochs,training_epochs,mutation_rate,survival_rate)
 
-        if os.path.isdir(session_path) and not os.path.isfile(last_pdts_path):
+        if os.path.isdir(session_path):
             session_path = "{}_{}".format(session_path, int(time.time()))
         
         os.mkdir(session_path)
@@ -183,21 +181,31 @@ class FullEvolution(object):
 
         
         if os.path.isfile(last_pdts_path):
-            print("Resuming training")
-            f1 = open(last_pdts_path, 'r')
-            last_population= pickle.load(f1)
-            last_population = [KerasFeatureModel.parse_blocks(e) for e in last_population]
-
             pattern = 'products_e(\d+).pickled'
-            result = re.findall(pattern, last_pdts_path) 
+            result = re.findall(pattern, last_pdts_path)
             if len(result):
+                print("Resuming training")
                 last_evolution_epoch = int(result[0])+1
+                f1 = open(last_pdts_path, 'r')
+                last_population= pickle.load(f1)
+                last_population = [KerasFeatureModel.parse_blocks(e) for e in last_population]
+
+            pattern = 'nas(\d+)_(\d+).xml'
+            result = re.findall(pattern, last_pdts_path)
+            if len(result):
+                print("Training from PLEDGE products")
+                from pledge_evolution import PledgeEvolution
+                product_set, last_population = PledgeEvolution.extract_leaves(last_pdts_path)
+                pop = FullEvolution.train_initial_products(product_set, dataset, training_epochs)
+                last_population = pop
                 
         else:
             tensorflow_gen = TensorflowGenerator("lenet5",training_epochs, dataset)
+            TensorflowGenerator.eval_robustness(tensorflow_gen.model)
             last_population = [tensorflow_gen.model]
 
         for evo in range(evolution_epochs):
+            reset_keras()
             print("### evolution epoch {}".format(evo+last_evolution_epoch))
 
             new_pop = FullEvolution.select(last_population, survival_count)
@@ -253,13 +261,14 @@ if __name__ == "__main__":
     mutation_rate = 0.1
     survival_rate = 0.1
     breed = True
-    evolution_epochs = 70
+    evolution_epochs = 50
 
     MutableBase.mutation_stategy = MutationStrategies.CHOICE
     MutableBase.selection_stragey = SelectionStrategies.PARETO
 
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10
+    
     FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
     
 
