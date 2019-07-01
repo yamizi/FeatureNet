@@ -61,6 +61,7 @@ class FullEvolution(object):
         
         last_population_size = len(last_population)
         x =  [e.accuracy for e in last_population]
+        score = x
         y =  [e.robustness_score for e in last_population]
 
         if MutableBase.selection_stragey == SelectionStrategies.PARETO and last_population_size>1:
@@ -71,11 +72,14 @@ class FullEvolution(object):
                 last_population = [val for i,val in enumerate(last_population) if i in front]
                 x = [val for i,val in enumerate(x) if i in front]
                 y = [val for i,val in enumerate(y) if i in front]
+
+                score = np.array(x) /np.max(x) * np.array(y) /np.max(y)
+                last_population = [x for _,x in sorted(zip(score,last_population))]
                 #plt.scatter(x_front,y_front,c="red")
                 
             #print("front {} {} {}".format(front, x, y))
         fittest = []
-        e_x = np.exp(x - np.max(x))
+        e_x = np.exp(score - np.max(score))
         last_population_probability =  e_x / e_x.sum()
         
         # We keep the top individuals + randomly picked with probability distribution
@@ -209,6 +213,9 @@ class FullEvolution(object):
                     else: 
                         TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
                         TensorflowGenerator.eval_robustness(model)
+                        
+                        #We use clever score as robustness score
+                        model.robustness_score = model.clever_score
 
                         path = "{}/e{}_{}".format(session_path, evo,model._name)
 
