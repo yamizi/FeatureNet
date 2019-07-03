@@ -5,7 +5,7 @@ trash.xml
 products/
 report*.txt
 reports/*
-plots/
+plots/*.png
 *.pdt
 *.out
 *.sh
