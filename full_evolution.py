@@ -75,6 +75,7 @@ class FullEvolution(object):
 
                 score = np.array(x) /np.max(x) * np.array(y) /np.max(y)
                 last_population = [x for _,x in sorted(zip(score,last_population))]
+                last_population_size = len(last_population)
                 #plt.scatter(x_front,y_front,c="red")
                 
             #print("front {} {} {}".format(front, x, y))
@@ -118,7 +119,7 @@ class FullEvolution(object):
 
         
     @staticmethod
-    def train_initial_products(initial_product_set, dataset,training_epochs):
+    def train_initial_products(initial_product_set, dataset,training_epochs, session_path):
         start = time.time()
         print("### training products for dataset {}: {}".format(
             dataset, datetime.datetime.now()))
@@ -129,8 +130,19 @@ class FullEvolution(object):
                                             features_label=initial_product_set.features, no_train=False, data_augmentation=False)
 
             if tensorflow_gen and hasattr(tensorflow_gen,"model") and tensorflow_gen.model:
-                TensorflowGenerator.eval_robustness(tensorflow_gen.model)
-                last_population.append(tensorflow_gen.model)
+                gen_model = tensorflow_gen.model
+                TensorflowGenerator.eval_robustness(gen_model, ["clever"])
+                path = "{}/base_{}".format(session_path, gen_model._name)
+                TensorflowGenerator.export_png(gen_model.model, path)
+
+                pdt_path = "{}/base.json".format(session_path)
+                
+                f1 = open(pdt_path, 'a')
+                vect = gen_model.to_kerasvector().to_vector()
+                f1.write("\r\n{} {}:{}".format(index,int(time.time()), json.dumps(vect)))
+                f1.close()
+
+                last_population.append(gen_model)
             reset_keras()
 
         end = time.time()
@@ -172,7 +184,7 @@ class FullEvolution(object):
             session_path = "{}_{}".format(session_path, int(time.time()))
         
         os.mkdir(session_path)
-            
+        print("session path: {}".format(session_path))
             
         survival_count = max(3,math.ceil(survival_rate*nb_base_products))
         nb_product_perparent =  ceil((nb_base_products-survival_count) / survival_count)
@@ -190,13 +202,13 @@ class FullEvolution(object):
                 last_population= pickle.load(f1)
                 last_population = [KerasFeatureModel.parse_blocks(e) for e in last_population]
 
-            pattern = 'nas(\d+)_(\d+).xml'
+            pattern = 'products_(\d+)s_(\d+)_(\d+)_(\d+).pdt'
             result = re.findall(pattern, last_pdts_path)
             if len(result):
                 print("Training from PLEDGE products")
                 from pledge_evolution import PledgeEvolution
                 product_set, last_population = PledgeEvolution.extract_leaves(last_pdts_path)
-                pop = FullEvolution.train_initial_products(product_set, dataset, training_epochs)
+                pop = FullEvolution.train_initial_products(product_set, dataset, training_epochs, session_path=session_path)
                 last_population = pop
                 
         else:
@@ -220,11 +232,8 @@ class FullEvolution(object):
                         print("#### model is not valid ####")
                     else: 
                         TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
-                        TensorflowGenerator.eval_robustness(model)
+                        TensorflowGenerator.eval_robustness(model, ["clever"])
                         
-                        #We use clever score as robustness score
-                        model.robustness_score = model.clever_score
-
                         path = "{}/e{}_{}".format(session_path, evo,model._name)
 
                         TensorflowGenerator.export_png(keras_model, path)
