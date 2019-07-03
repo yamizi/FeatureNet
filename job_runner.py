@@ -13,15 +13,17 @@ def main(argv):
     input_file = ''
     output_file = ''
     products_file = ''
-    base = '../products'
+    base = '../products/pledge'
     nb_base_products=[20]
-    nb_base_products=[MutableBase.MAX_NB_BLOCKS,MutableBase.MAX_NB_CELLS,20]
+    #nb_base_products=[int(MutableBase.MAX_NB_BLOCKS/2),MutableBase.MAX_NB_CELLS,10]
     dataset = "cifar"
     training_epochs = 12
     mutation_rate = 0.1
-    survival_rate = 0.1
+    survival_rate = 0.5
     breed = True
     evolution_epochs = 50
+
+    pledge_duration = 300
 
     opts = []
     try:
@@ -66,19 +68,19 @@ def main(argv):
     from pledge_evolution import PledgeEvolution, run_pledge
         
     if len(nb_base_products) ==1:
-        FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
+        FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products[0], training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
     else:
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
-        
-        full_fm_file = PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
-        last_pdts_path=products_file, dataset=dataset, training_epochs=training_epochs )
-
-        output_file = '{}/products_{}.pdt'.format(base, "_".join([str(e) for e in nb_base_products]))
+        output_file = '{}/products_{}s_{}.pdt'.format(base, pledge_duration, "_".join([str(e) for e in nb_base_products]))
 
         if not os.path.isfile(output_file):
-            run_pledge(full_fm_file, _nb_products, output_file, duration=300)
+            full_fm_file = PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
+            last_pdts_path=products_file, dataset=dataset, training_epochs=training_epochs )
 
-        FullEvolution.run(base, last_pdts_path=output_file, dataset=dataset, nb_base_products=_nb_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
+            run_pledge(full_fm_file, _nb_products, output_file, duration=pledge_duration)
+        
+
+        FullEvolution.run(base, last_pdts_path=output_file, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
     
 
 if __name__ == "__main__":
