@@ -72,6 +72,7 @@ class KerasFeatureModel(MutableModel):
     model = None
     accuracy = 0
     use_multigpu = True
+    robustness_scores = ["clever","cw", "fgsm", "pgd"]
     
     layers = {"pool":[],"conv":[]}
     

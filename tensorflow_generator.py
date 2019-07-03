@@ -123,23 +123,20 @@ class TensorflowGenerator(object):
     
     datasets_classes = {"mnist":10,"cifar":10,"cifar100":100}
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128):
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=None):
         #product_features is a list of enabled and disabled features based on the original feature model
         
         if batch_size ==0:
             batch_size = TensorflowGenerator.default_batchsize
-
-        if clear_memory:
-            reset_keras()
             
         if product:
             self.model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, product_features=product_features, features_label=features_label)
 
             print("====> Loading new feature model with {0} blocks".format(len(self.model.blocks)))
-            model = TensorflowGenerator.build(self.model, dataset)
+            model = TensorflowGenerator.build(self.model, dataset, clear_memory=clear_memory)
             
             if not model:
-                print("#### model {} is not valid ####".format(model.name))
+                print("#### model is not valid ####")
                 return 
             
             if no_train:
@@ -148,7 +145,9 @@ class TensorflowGenerator(object):
                 
             history, training_time, score = TensorflowGenerator.train(self.model, epochs, batch_size, data_augmentation,dataset)
             
-            TensorflowGenerator.eval_robustness(self.model)
+            if eval_robustness:
+                TensorflowGenerator.eval_robustness(self.model, eval_robustness)
+
             self.params = self.model.nb_params
             self.training_time = training_time
             self.accuracy = self.model.accuracy
@@ -168,7 +167,7 @@ class TensorflowGenerator(object):
         return float(metrics.empirical_robustness(keras_model,TensorflowGenerator.X_test,attack_name, attack_params))
 
     @staticmethod
-    def eval_robustness(model):
+    def eval_robustness(model, scores=[]):
         keras_model = model.model
         if not keras_model:
             return 
@@ -183,11 +182,17 @@ class TensorflowGenerator(object):
             radius = r_l1 if norm==1 else (r_l2 if norm==2 else r_li)
             
             keras_model = KerasClassifier(model=keras_model, clip_values=(0, 255))
+
+            scores = model.robustness_scores if not scores else scores
            
-            model.clever_score = metrics.clever_u(keras_model, TensorflowGenerator.X_test[-1], nb_batches, batch_size, radius, norm=norm, pool_factor=3)
-            model.pgd_score = TensorflowGenerator.eval_attack_robustness(keras_model, "pgd", norm)
-            model.cw_score = TensorflowGenerator.eval_attack_robustness(keras_model, "cw", norm)
-            model.fgsm_score = TensorflowGenerator.eval_attack_robustness(keras_model, "fgsm", norm)
+            if "clever" in scores:
+                model.clever_score = metrics.clever_u(keras_model, TensorflowGenerator.X_test[-1], nb_batches, batch_size, radius, norm=norm, pool_factor=3)
+            if "pgd" in scores:
+                model.pgd_score = TensorflowGenerator.eval_attack_robustness(keras_model, "pgd", norm)
+            if "cw" in scores:
+                model.cw_score = TensorflowGenerator.eval_attack_robustness(keras_model, "cw", norm)
+            if "fgsm" in scores:
+                model.fgsm_score = TensorflowGenerator.eval_attack_robustness(keras_model, "fgsm", norm)
             
         except Exception as e:
             import traceback
@@ -195,10 +200,15 @@ class TensorflowGenerator(object):
             print (traceback.format_exc())
         
         robustness_time = time.time() - begin_robustness
-        print('model rebustness: {} time:{}'.format(model.robustness_score,robustness_time))
+        model.robustness_score = getattr(model,"{}_score".format(scores[0]),0) if len(scores) else model.clever_score
+        print('model robustness (clever, pgd, cw, fgsm): {} time:{}'.format((model.clever_score,model.pgd_score, model.cw_score, model.fgsm_score),robustness_time))
 
     @staticmethod
-    def build(model, dataset):
+    def build(model, dataset, clear_memory=True):
+
+        if clear_memory:
+            reset_keras()
+
         TensorflowGenerator.init_dataset(dataset)
         keras_model =  model.build(TensorflowGenerator.input_shape, TensorflowGenerator.datasets_classes.get(dataset))
 
@@ -218,10 +228,13 @@ class TensorflowGenerator(object):
 
     @staticmethod
     def train(model, epochs, batch_size, data_augmentation, dataset):
+
         keras_model = model.model
         begin_training = time.time()    
             
         early_stopping = EarlyStopping(monitor='val_acc', mode='max', min_delta=0.005, patience=100)
+        early_stopping = EarlyStopping(monitor='val_loss', mode='min', patience=10)
+        
         lr_scheduler = LearningRateScheduler(lr_schedule)
         
         timed = TimedStopping(model,None, 6000)
@@ -236,7 +249,7 @@ class TensorflowGenerator(object):
         history = keras_model.fit(TensorflowGenerator.X_train, TensorflowGenerator.Y_train,
                 batch_size=batch_size,
                 epochs=epochs,
-                verbose=0,
+                verbose=2,
                 validation_data=(TensorflowGenerator.X_test, TensorflowGenerator.Y_test), 
                 callbacks=callbacks)
 
@@ -244,7 +257,7 @@ class TensorflowGenerator(object):
 
         score = keras_model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
         
-        #model.nb_flops get_flops()
+        #model.nb_flops = get_flops()
         model.accuracy =score[1]
         
         print('Test loss: {} Test accuracy: {} training_time {}'.format(score[0],  score[1], training_time))
