@@ -127,7 +127,7 @@ class FullEvolution(object):
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
             tensorflow_gen = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
-                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False)
+                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False, save_path="{}/base_".format(session_path))
 
             if tensorflow_gen and hasattr(tensorflow_gen,"model") and tensorflow_gen.model:
                 gen_model = tensorflow_gen.model
@@ -213,10 +213,18 @@ class FullEvolution(object):
                 
         else:
             tensorflow_gen = TensorflowGenerator("lenet5",training_epochs, dataset)
-            TensorflowGenerator.eval_robustness(tensorflow_gen.model)
+            TensorflowGenerator.eval_robustness(tensorflow_gen.model, ["clever"])
             last_population = [tensorflow_gen.model]
 
-        for evo in range(evolution_epochs):
+        pdt_path = "{}/e0.json".format(session_path)
+        f1 = open(pdt_path, 'a')
+        for index, model in enumerate(last_population):
+            vect = model.to_kerasvector().to_vector()
+            f1.write("\r\n{} {}:{}".format(index,int(time.time()), json.dumps(vect)))
+            f1.close()
+
+        for e in range(evolution_epochs):
+            evo = e+1
             reset_keras()
             print("### evolution epoch {}".format(evo+last_evolution_epoch))
 
@@ -231,11 +239,10 @@ class FullEvolution(object):
                     if not keras_model:
                         print("#### model is not valid ####")
                     else: 
-                        TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset)
+                        path = "{}/e{}_{}".format(session_path, evo,model._name)
+                        TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset, save_path=path)
                         TensorflowGenerator.eval_robustness(model, ["clever"])
                         
-                        path = "{}/e{}_{}".format(session_path, evo,model._name)
-
                         TensorflowGenerator.export_png(keras_model, path)
 
                 pdt_path = "{}/e{}.json".format(
@@ -273,7 +280,7 @@ if __name__ == "__main__":
     evolution_epochs = 50
 
     MutableBase.mutation_stategy = MutationStrategies.CHOICE
-    MutableBase.selection_stragey = SelectionStrategies.PARETO
+    #MutableBase.selection_stragey = SelectionStrategies.PARETO
 
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10
