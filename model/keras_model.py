@@ -74,6 +74,7 @@ class KerasFeatureModel(MutableModel):
     use_multigpu = True
     robustness_scores = ["clever","cw", "fgsm", "pgd"]
     
+    
     layers = {"pool":[],"conv":[]}
     
 
@@ -99,7 +100,7 @@ class KerasFeatureModel(MutableModel):
         else:
             nb_layers = 0
             
-        return KerasFeatureVector(self.accuracy, [self._name, len(self.blocks),nb_layers, self.nb_params, self.robustness_score,  self.clever_score, self.fgsm_score, self.pgd_score, self.cw_score,self.nb_flops], self.features)
+        return KerasFeatureVector(self.accuracy, [self._name, [len(self.blocks),nb_layers, self.nb_params,self.nb_flops], [self.robustness_score,  [self.clever_score, self.fgsm_score, self.pgd_score, self.cw_score]]], self.features)
         
     def build(self, input_shape, output_shape, max_parameters=20000000):
         self.outputs = []
@@ -210,5 +211,9 @@ class KerasFeatureModel(MutableModel):
         if feature_model=="lenet5":
             from .leNet import lenet5_blocks
             blocks =  lenet5_blocks()
+
+        if feature_model=="keras":
+            from .kerasNet import standard_blocks
+            blocks =  standard_blocks()
         
         return blocks

@@ -117,6 +117,14 @@ class FullEvolution(object):
 
         return mutant
 
+    @staticmethod
+    def log_models(population, session_path, evo):
+        pdt_path = "{}/e{}.json".format(session_path, evo)
+        f1 = open(pdt_path, 'a')
+        for index, model in enumerate(population):
+            vect = model.to_kerasvector().to_vector()
+            f1.write("\r\n{} {}:{}".format(index,int(time.time()), json.dumps(vect)))
+            f1.close()
         
     @staticmethod
     def train_initial_products(initial_product_set, dataset,training_epochs, session_path):
@@ -131,7 +139,7 @@ class FullEvolution(object):
 
             if tensorflow_gen and hasattr(tensorflow_gen,"model") and tensorflow_gen.model:
                 gen_model = tensorflow_gen.model
-                TensorflowGenerator.eval_robustness(gen_model, ["clever"])
+                TensorflowGenerator.eval_robustness(gen_model, ["clever","fgsm" ,"cw"])
                 path = "{}/base_{}".format(session_path, gen_model._name)
                 TensorflowGenerator.export_png(gen_model.model, path)
 
@@ -212,17 +220,14 @@ class FullEvolution(object):
                 last_population = pop
                 
         else:
-            tensorflow_gen = TensorflowGenerator("lenet5",training_epochs, dataset)
-            TensorflowGenerator.eval_robustness(tensorflow_gen.model, ["clever"])
+            datasets = dataset.split("#")
+            dataset, model_name = (datasets[0], datasets[1]) if len(datasets)==2 else (datasets[0], "lenet5")
+            tensorflow_gen = TensorflowGenerator(model_name,training_epochs, dataset)
+            TensorflowGenerator.eval_robustness(tensorflow_gen.model, ["clever","pgd","cw"])
             last_population = [tensorflow_gen.model]
+            FullEvolution.log_models(last_population, session_path, 0)
 
-        pdt_path = "{}/e0.json".format(session_path)
-        f1 = open(pdt_path, 'a')
-        for index, model in enumerate(last_population):
-            vect = model.to_kerasvector().to_vector()
-            f1.write("\r\n{} {}:{}".format(index,int(time.time()), json.dumps(vect)))
-            f1.close()
-
+        
         for e in range(evolution_epochs):
             evo = e+1
             reset_keras()
@@ -241,7 +246,7 @@ class FullEvolution(object):
                     else: 
                         path = "{}/e{}_{}".format(session_path, evo,model._name)
                         TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset, save_path=path)
-                        TensorflowGenerator.eval_robustness(model, ["clever"])
+                        TensorflowGenerator.eval_robustness(model, ["clever","pgd","cw"])
                         
                         TensorflowGenerator.export_png(keras_model, path)
 

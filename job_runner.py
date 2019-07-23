@@ -13,16 +13,15 @@ def main(argv):
     input_file = ''
     output_file = ''
     products_file = ''
-    base = '../products/pledge'
-    nb_base_products=[20]
-    #nb_base_products=[int(MutableBase.MAX_NB_BLOCKS/2),MutableBase.MAX_NB_CELLS,10]
-    dataset = "cifar"
+    base = '../products/2metrics'
+    nb_base_products=[100]
+    #nb_base_products=[int(MutableBase.MAX_NB_BLOCKS/2),MutableBase.MAX_NB_CELLS,100]
+    dataset = "cifar#lenet5"
     training_epochs = 12
     mutation_rate = 0.1
-    survival_rate = 0.5
+    survival_rate = 0.2
     breed = True
-    evolution_epochs = 50
-
+    evolution_epochs = 10
     pledge_duration = 300
 
     opts = []
