@@ -105,7 +105,7 @@ class Drop(Operation):
             self._value =_value = 0
             #self.append_parameter("_value","__float__")
         else:
-            self._value = int(_value)/10
+            self._value = int(_value)/100
 
     def build(self,input):
         input = super(Drop, self).build(input)
