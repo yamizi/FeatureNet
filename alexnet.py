@@ -140,4 +140,6 @@ def run(dataset="mnist", epochs=12):
 
     #print("flops", get_flops(model))
 
-run("cifar", 12)
+
+if __name__ == "__main__":
+    run("cifar", 12)
