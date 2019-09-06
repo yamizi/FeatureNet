@@ -88,7 +88,7 @@ def empirical_robustness(classifier, x, attack_name, attack_params=None):
     perts_norm = la.norm((adv_x - x).reshape(x.shape[0], -1), ord=norm_type, axis=1)
     perts_norm = perts_norm[idxs]
 
-    return np.mean(perts_norm / la.norm(x[idxs].reshape(np.sum(idxs), -1), ord=norm_type, axis=1))
+    return np.mean(perts_norm / la.norm(x[idxs].reshape(np.sum(idxs), -1), ord=norm_type, axis=1)), adv_x
 
 
 # def nearest_neighbour_dist(classifier, x, x_ref, attack_name, attack_params=None):
