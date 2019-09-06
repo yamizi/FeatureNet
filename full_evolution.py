@@ -30,6 +30,7 @@ def reset_keras(classifier=None):
 
 class FullEvolution(object):
 
+    attacks = ["cw","pgd"]
     
     @staticmethod 
     def get_fronts(df):
@@ -135,11 +136,11 @@ class FullEvolution(object):
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
             tensorflow_gen = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
-                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False, save_path="{}/base_".format(session_path))
+                                            features_label=initial_product_set.features, no_train=False, data_augmentation=True, save_path="{}/base_".format(session_path))
 
             if tensorflow_gen and hasattr(tensorflow_gen,"model") and tensorflow_gen.model:
                 gen_model = tensorflow_gen.model
-                TensorflowGenerator.eval_robustness(gen_model, ["clever","fgsm" ,"cw"])
+                TensorflowGenerator.eval_robustness(gen_model, ["fgsm" ,"cw"])
                 path = "{}/base_{}".format(session_path, gen_model._name)
                 TensorflowGenerator.export_png(gen_model.model, path)
 
@@ -163,7 +164,7 @@ class FullEvolution(object):
         mutants = []
         for i in range(len_pop):
             individual1 = new_pop[i]
-            print("### generating children of product {}".format(individual1._name))
+            print("### generating children of product {} of index {}".format(individual1._name, i))
             for i in range(nb_product_perparent):
                 if breed: 
                     individual2 = choice(new_pop)
@@ -223,7 +224,7 @@ class FullEvolution(object):
             datasets = dataset.split("#")
             dataset, model_name = (datasets[0], datasets[1]) if len(datasets)==2 else (datasets[0], "lenet5")
             tensorflow_gen = TensorflowGenerator(model_name,training_epochs, dataset)
-            TensorflowGenerator.eval_robustness(tensorflow_gen.model, ["clever","pgd","cw"])
+            TensorflowGenerator.eval_robustness(tensorflow_gen.model, FullEvolution.attacks) #["clever","pgd","cw"])
             last_population = [tensorflow_gen.model]
             FullEvolution.log_models(last_population, session_path, 0)
 
@@ -238,6 +239,7 @@ class FullEvolution(object):
             mutant_population = FullEvolution.evolve(evo, session_path, nb_product_perparent, dataset, new_pop , training_epochs, mutation_ratio=mutation_rate, breed=breed )
             
             for index,model in enumerate(mutant_population):
+                print("#### assessing model {}".format(index))
                 if model.accuracy==0:
                     #we do not train individuals preserved from previous generation
                     keras_model = TensorflowGenerator.build(model,dataset)
@@ -245,8 +247,8 @@ class FullEvolution(object):
                         print("#### model is not valid ####")
                     else: 
                         path = "{}/e{}_{}".format(session_path, evo,model._name)
-                        TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, False,dataset, save_path=path)
-                        TensorflowGenerator.eval_robustness(model, ["clever","pgd","cw"])
+                        TensorflowGenerator.train(model, training_epochs, TensorflowGenerator.default_batchsize, dataset, save_path=path)
+                        TensorflowGenerator.eval_robustness(model, FullEvolution.attacks)
                         
                         TensorflowGenerator.export_png(keras_model, path)
 

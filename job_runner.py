@@ -16,8 +16,8 @@ def main(argv):
     base = '../products/2metrics'
     nb_base_products=[100]
     #nb_base_products=[int(MutableBase.MAX_NB_BLOCKS/2),MutableBase.MAX_NB_CELLS,100]
-    dataset = "cifar#lenet5"
-    training_epochs = 12
+    dataset = "cifar#keras"
+    training_epochs = 50
     mutation_rate = 0.1
     survival_rate = 0.2
     breed = True
@@ -67,7 +67,7 @@ def main(argv):
     from pledge_evolution import PledgeEvolution, run_pledge
         
     if len(nb_base_products) ==1:
-        FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products[0], training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
+        FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]), training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
     else:
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
         output_file = '{}/products_{}s_{}.pdt'.format(base, pledge_duration, "_".join([str(e) for e in nb_base_products]))
