@@ -57,17 +57,26 @@ class Cell(MutableCell, Node):
             self.input2.set_features(block_features, True)
         
         i1 = self.input1.build(last_inputs[0] if len(last_inputs)>0 else None)
-        i1 = self.operation1.build(i1)
+        o1 = self.operation1.build(i1)
+        Node.layer_mapping[i1.name] = self.input1.name
+        Node.layer_mapping[o1.name] = self.operation1.name
        
         if type(self.input2) is ZerosInput:
-            combination = i1
+            combination = o1
         else:
             i2 = self.input2.build(last_inputs[1] if len(last_inputs)>1 else last_inputs[0] if len(last_inputs)>0 else None, i1)
-            i2 = self.operation2.build(i2)
-            combination = self.combination.build(i1,i2)
+            i2.cell = self
+            Node.layer_mapping[i2.name] = self.input2.name
+            o2 = self.operation2.build(i2)
+            Node.layer_mapping[o2.name] = self.operation2.name
+            combination = self.combination.build(o1,o2)
+        
+        Node.layer_mapping[combination.name] = self.combination.name
 
         self.output.currentIndex = min(max_relative_index,self.output.currentIndex)
         output = self.output.build(combination)
+        Node.layer_mapping[output.name] = self.output.name
+
         outputs = []
         if type(self.output) is OutCell and self.output.currentIndex>-1:           
             inputs.insert(0, output)

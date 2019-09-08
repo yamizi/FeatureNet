@@ -3,13 +3,16 @@ class Node(object):
     content = None
     parent = None
     parent_model = None
-    
+    layer_mapping = {}
+    node_mapping = {}
      
     def __init__(self, raw_dict=None, parent_model=None):
         self.parent_name = ""
         self.raw_dict = raw_dict
         self.customizable_parameters = {}
         self.uniqid = str(uuid.uuid1())[:10]
+
+        Node.node_mapping[self.name] = self
 
         if parent_model:
             self.parent_model = parent_model
@@ -36,7 +39,24 @@ class Node(object):
 
     @property
     def name(self):
-        return "{}-{}".format(self.get_name(), self.parent_name)
+        return self.get_name()
+        
+        
+    @staticmethod
+    def layer_to_cell(layer):
+        node = Node.layer_to_node(layer)
+        cell = node.parent_cell
+        return cell
+        
+    @staticmethod
+    def layer_to_node(layer):
+        node = Node.layer_mapping.get(layer.name)
+        return Node.node_mapping.get(node)
+
+    @staticmethod
+    def node_to_layer(node):
+        layers = [l for (l,n) in Node.layer_mapping.items() if n==node.name]
+        return layers[0]
 
     @staticmethod
     def get_type(element, keep_index=True):

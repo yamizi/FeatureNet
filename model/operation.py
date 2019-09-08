@@ -16,7 +16,9 @@ class Operation(MutableOperation, Node):
         pass
 
     def build(self, input, neighbour=None):
-        return input.content if hasattr(input,"content") and input.content is not None else input
+        input = input.content if hasattr(input,"content") and input.content is not None else input
+        Node.layer_mapping[input.name] = self.name
+        return input
 
     @staticmethod
     def parse_feature_model(feature_model):
