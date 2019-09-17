@@ -240,7 +240,7 @@ class TensorflowGenerator(object):
         if model_path:
             #saving best model
             keras_model.save(model_path)
-            TensorflowGenerator.export_png(model, save_path)
+            TensorflowGenerator.export_png(keras_model, save_path)
 
         score = keras_model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
         
@@ -334,9 +334,10 @@ class TensorflowGenerator(object):
 
         from keras.utils import plot_model
         try:
+            print("saving model png to {}".format(path))
             plot_model(model, to_file='{}.png'.format(path))
         except Exception as e:
-            print(e)
+            print("error export model image: {}".format(e))
             TensorflowGenerator.model_graph_export = False
 
     def print(self, include_summary=True, invalid_params=True, export_png=True):

@@ -19,7 +19,7 @@ import re
 pledge_path = '../products/PLEDGE.jar'
 base_path = '../products'
 base_training_epochs = 25
-evolution_epochs = 50
+
 
 
 def reset_keras(classifier=None):
@@ -44,11 +44,16 @@ def run_pledge(input_file, nb_base_products, output_file, duration=60):
 
     end = time.time()
     print("pledge result {} in {}s".format(pledge_result, str(end-start)))
-    return
-    
+    return pledge_result
+
+def default_pledge_output(base_path, nb_base_products):
+    output_file = '{}/{}products.pdt'.format(base_path, nb_base_products)
+    return output_file
+
 class PledgeEvolution(object):
 
-    
+    attacks = ["cw"]
+
     @staticmethod
     def select(last_population, survival_count):
         labels = last_population.get("filtered_features_label")
@@ -103,7 +108,7 @@ class PledgeEvolution(object):
         return initial_product_set, last_population
 
     @staticmethod
-    def train_products(initial_product_set, dataset,training_epochs, max_products=0):
+    def train_products(initial_product_set, dataset,training_epochs, max_products=0, export_path=""):
         start = time.time()
         print("### training products for dataset {}: {}".format(
             dataset, datetime.datetime.now()))
@@ -111,7 +116,7 @@ class PledgeEvolution(object):
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
             tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
-                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False)
+                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False,eval_robustness=PledgeEvolution.attacks, save_path=export_path)
 
             if tensorflow and hasattr(tensorflow,"model") and tensorflow.model:
                 last_population.append(tensorflow.model.to_kerasvector())
@@ -141,7 +146,7 @@ class PledgeEvolution(object):
                     print(e)
                     continue
 
-                pop = PledgeEvolution.train_products(product_set, dataset,training_epochs)
+                pop = PledgeEvolution.train_products(product_set, dataset,training_epochs, export_path=mutant_path)
                 pop = sorted(pop, key=lambda x: x.accuracy, reverse=True)
                 f1 = open("{}.json".format(mutant_path), 'w')
 
@@ -153,7 +158,7 @@ class PledgeEvolution(object):
         return last_population
 
     @staticmethod
-    def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar", training_epochs=25):
+    def run(base_path, input_file="", output_file="", last_pdts_path="", nb_base_products=100, dataset="cifar", training_epochs=25, evolution_epochs = 50):
 
         if not os.path.isdir(base_path):
             os.mkdir(base_path)
@@ -174,7 +179,7 @@ class PledgeEvolution(object):
             #input_file = '{}main_1block_10_cells.xml'.format(base_path)
 
         if not output_file:
-            output_file = '{}/{}products.pdt'.format(base_path, nb_base_products)
+            output_file = default_pledge_output(base_path, nb_base_products)
             #output_file = '{}main_1blocks_10cells_{}products.pdt'.format(base_path,nb_base_products)
 
         if not last_pdts_path:
@@ -205,7 +210,8 @@ class PledgeEvolution(object):
                 last_evolution_epoch = int(result[0])+1
                 
         else:
-            pop = PledgeEvolution.train_products(product_set, dataset, training_epochs, nb_base_products)
+            export_path = "{}/initial".format(session_path)
+            pop = PledgeEvolution.train_products(product_set, dataset, training_epochs, nb_base_products, export_path=export_path)
             last_population["products"] = last_population["products"] + pop
             f1 = open(last_pdts_path, 'w')
             f1.write(json.dumps([i.to_vector()
@@ -238,6 +244,8 @@ class PledgeEvolution(object):
             f1 = open(pdt_path, 'w')
             f1.write(json.dumps([i.to_vector() for i in pop]))
             f1.close()
+
+        return session_path
 
     @staticmethod
     def end2end(base_path, nb_base_products, input_file="", output_file="", last_pdts_path="", dataset="cifar", training_epochs=25):
