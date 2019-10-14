@@ -33,7 +33,7 @@ def reset_keras(classifier=None):
     # if it's done something you should see a number being outputted
     print("cleaning memory {}".format(gc.collect()))
 
-def run_pledge(input_file, nb_base_products, output_file, duration=60):
+def run_pledge(input_file, nb_base_products, output_file, duration=600):
     params = ['java', '-jar', pledge_path, 'generate_products']
     params = params+['-fm', input_file, '-nbProds',
                     str(nb_base_products), '-o', output_file, '-timeAllowedMS',str(duration*1000)]
@@ -115,8 +115,9 @@ class PledgeEvolution(object):
         last_population = []
         for index, (product, original_product) in enumerate(initial_product_set.format_products()):
             print("### training product {}".format(index))
+            save_path = "{}_{}_".format(export_path,index)
             tensorflow = TensorflowGenerator(product, training_epochs, dataset, product_features=original_product, depth=1,
-                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False,eval_robustness=PledgeEvolution.attacks, save_path=export_path)
+                                            features_label=initial_product_set.features, no_train=False, data_augmentation=False,eval_robustness=PledgeEvolution.attacks, save_path=save_path)
 
             if tensorflow and hasattr(tensorflow,"model") and tensorflow.model:
                 last_population.append(tensorflow.model.to_kerasvector())
@@ -307,14 +308,16 @@ def main(argv):
             training_epochs = int(arg)
         
     if len(nb_base_products) ==1:
+        print("running products sampling from existing FM")
         PledgeEvolution.run(base, input_file, output_file,
         last_pdts_path=products_file, dataset=dataset, nb_base_products=int(nb_base_products[0]), training_epochs=training_epochs)
     else:
+        print("running products sampling after FM generation")
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
         
         full_fm_file = PledgeEvolution.end2end(base, nb_base_products, input_file, output_file,
         last_pdts_path=products_file, dataset=dataset, training_epochs=training_epochs )
-        PledgeEvolution.run(base_path, full_fm_file, output_file,last_pdts_path=products_file, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
+        PledgeEvolution.run(base, full_fm_file, output_file,last_pdts_path=products_file, dataset=dataset, nb_base_products=int(_nb_products), training_epochs=training_epochs)
 
 
 

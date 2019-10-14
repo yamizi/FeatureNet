@@ -116,8 +116,12 @@ class TensorflowGenerator(object):
             if save_path:
                 save_path = "{}{}".format(save_path,self.model._name)
                 
-            history, training_time, score = TensorflowGenerator.train(self.model, epochs, batch_size, dataset, data_augmentation,save_path=save_path)
+            history, training_time, score, model = TensorflowGenerator.train(self.model, epochs, batch_size, dataset, data_augmentation,save_path=save_path)
             
+            if not model:
+                print("#### model is not valid ####")
+                return 
+                
             if eval_robustness:
                 TensorflowGenerator.eval_robustness(self.model, eval_robustness, robustness_set_size)
 
@@ -193,7 +197,7 @@ class TensorflowGenerator(object):
             print (traceback.format_exc())
         
         robustness_time = time.time() - begin_robustness
-        model.robustness_score = getattr(model,"{}_score".format(scores[0]),0)[0] if len(scores) else model.clever_score
+        model.robustness_score = getattr(model,"{}_score".format(scores[0]),[0])[0] if len(scores) else model.clever_score
         print('model robustness (clever, pgd, cw, fgsm): {} time:{}'.format((model.clever_score,model.pgd_score, model.cw_score, model.fgsm_score),robustness_time))
 
     @staticmethod
@@ -222,6 +226,8 @@ class TensorflowGenerator(object):
     @staticmethod
     def train(model, epochs, batch_size, dataset, data_augmentation=True, save_path=None):
 
+        score = []
+
         if hasattr(model,"model"):
             keras_model = model.model
         else:
@@ -237,19 +243,21 @@ class TensorflowGenerator(object):
 
         training_time = time.time() - begin_training
 
-        if model_path:
-            #saving best model
-            keras_model.save(model_path)
-            TensorflowGenerator.export_png(keras_model, save_path)
+        if keras_model:
 
-        score = keras_model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
+            if model_path:
+                #saving best model
+                keras_model.save(model_path)
+                TensorflowGenerator.export_png(keras_model, save_path)
+
+            score = keras_model.evaluate(TensorflowGenerator.X_test, TensorflowGenerator.Y_test, verbose=0)
+            
+            #model.nb_flops = get_flops()
+            model.accuracy =score[1]
+            
+            print('Test loss: {} Test accuracy: {} training_time {}'.format(score[0],  score[1], training_time))
         
-        #model.nb_flops = get_flops()
-        model.accuracy =score[1]
-        
-        print('Test loss: {} Test accuracy: {} training_time {}'.format(score[0],  score[1], training_time))
-        
-        return history, training_time, score
+        return history, training_time, score, keras_model
 
     @staticmethod
     def init_dataset(dataset, data_augmentation=False):

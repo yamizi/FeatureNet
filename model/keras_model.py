@@ -129,10 +129,10 @@ class KerasFeatureModel(MutableModel):
                 model.summary()
                 return None 
 
-            if model.count_params() < 20000:
-                print("#### model is smaller than 20K params. Skipped")
-                model.summary()
-                return None 
+            # if model.count_params() < 20000:
+            #     print("#### model is smaller than 20K params. Skipped")
+            #     model.summary()
+            #     return None 
 
             if KerasFeatureModel.use_multigpu:
                 try:
