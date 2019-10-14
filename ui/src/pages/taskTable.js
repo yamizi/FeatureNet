@@ -7,6 +7,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+
+import IconButton from '@material-ui/core/IconButton';
 
 import API from '../api';
 
@@ -37,6 +41,9 @@ const styles = makeStyles(theme => ({
   },
   table: {
     minWidth: 700,
+  },
+  margin: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -69,7 +76,7 @@ class TableHomeComponent extends React.Component {
           .then(res => {
               var headers = []
               var tasks = []
-              headers = ["task_name","formattedTime","formattedStatus", "pdt","products", "nb_initial_config", "nb_valid_elements","max_sampling_time", "nb_training_iterations"]
+              headers = ["task_name","formattedTime","formattedStatus", "pdt","products", "nb_initial_config", "nb_valid_elements","max_sampling_time"]
                 
               if(res.data && res.data.length){
                 
@@ -83,7 +90,14 @@ class TableHomeComponent extends React.Component {
             
         })
     }
+    
+    handleDeleteTaskClickOpen = (task) => {
+      //this.setState({ selectedTask: campaign });
+    };
 
+    handleDetailsTaskClickOpen = (task) => {
+      this.props.onTaskSelect(task)
+    };
 
     render() {
         const { classes } = this.props;
@@ -97,6 +111,7 @@ class TableHomeComponent extends React.Component {
                     {headers.map(header => (
                         <StyledTableCell>{header}</StyledTableCell>
                     ))}
+                    <StyledTableCell></StyledTableCell>
                     </TableRow>
                     </TableHead>
                     <TableBody>
@@ -105,6 +120,15 @@ class TableHomeComponent extends React.Component {
                         {headers.map(val => (
                             <StyledTableCell>{row[val]}</StyledTableCell>
                         ))}
+                        <StyledTableCell>
+                          <IconButton aria-label="delete" className={classes.margin} onClick={() => {this.handleDeleteTaskClickOpen(row)}}>
+                            <DeleteIcon/>
+                          </IconButton>
+                          <IconButton aria-label="see" className={classes.margin} onClick={() => {this.handleDetailsTaskClickOpen(row)}}>
+                            <VisibilityIcon/>
+                          </IconButton>
+                          
+                        </StyledTableCell>
                         </StyledTableRow>
                     ))}
                     </TableBody>

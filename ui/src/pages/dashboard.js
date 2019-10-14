@@ -15,6 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import PipelineHomeComponent from './pipelineHome'
 import PipelineTableComponent from './taskTable'
+import TaskDetailsComponent from './taskDetails'
 
 import API from '../api';
 
@@ -79,7 +80,8 @@ class DashboardComponent extends React.Component {
         right:"user",
         id:0
       },
-      newTask: false
+      newTask: false,
+      selectedTask: null
     }
 
   }
@@ -94,6 +96,10 @@ class DashboardComponent extends React.Component {
     })
 }
 
+
+  closeDetailsTask = (event) =>{
+    this.setState({ selectedTask: null });
+  }
   closeNewTask = (event) =>{
     this.setState({ newTask: false });
   }
@@ -106,13 +112,13 @@ class DashboardComponent extends React.Component {
     this.setState({ newTask: true });
   };
 
-  handleSelectTaskClickOpen = (campaign) => {
-    this.setState({ selectedTask: campaign });
+  handleSelectTaskClickOpen = (task) => {
+    this.setState({ selectedTask: task });
   };
 
   render() {
     const { classes } = this.props;
-    const {user, newTask } = this.state
+    const {user, newTask,selectedTask } = this.state
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -139,8 +145,13 @@ class DashboardComponent extends React.Component {
         }
 
         { 
-          !newTask && <PipelineTableComponent usr={user}/>
+          selectedTask && <TaskDetailsComponent usr={user} task={selectedTask} onClose={this.closeDetailsTask}/>
         }
+
+        { 
+          !newTask && !selectedTask && <PipelineTableComponent usr={user} onTaskSelect={this.handleSelectTaskClickOpen}/>
+        }
+
 
         
       </div>

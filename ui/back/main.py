@@ -1,14 +1,56 @@
 
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask import jsonify
 from flask_cors import CORS
 import multiprocessing
 import dataset
 import sys, time, os
-import uuid
+import uuid, json
+from math import log
 
 DATABASE_URL = 'sqlite:///samples.db'
+M = 1000
 
+def _get_file_endswith(folder,file_end):
+    for file in os.listdir(folder):
+        if file.endswith(file_end):
+            return file
+
+    return None
+
+def _fetch_models(elem):
+    path = elem.get("products")
+    nb_elements = elem.get("nb_initial_config")
+    json_path = "{}/{}products.json".format(path, nb_elements)
+
+    def format_element(elem):
+        structure = elem[1][1]
+        structure = {"nb_blocks":structure[0], "nb_layers":structure[1], "nb_params":(structure[2]), "nb_flops":structure[3]}
+        #structure = {"nb_layers":structure[1], "nb_params":structure[2]}
+        
+        robustness = elem[1][2][0]
+        return {"accuracy":elem[0], "name":elem[1][0], **structure, "robustness":robustness}
+
+    if os.path.isfile(json_path):
+        
+        
+        with open(json_path) as file:
+            obj = json.load(file)
+            print(len(obj))
+            return list(map(format_element,obj))
+    
+    return None
+def _fetch_elements(elem, count_only=True):
+    path = elem.get("products")
+    elements = []
+    for file in os.listdir(path):
+        if file.endswith(".h5"):
+            elements.append(file)
+    if count_only:
+        elem["nb_valid_elements"] = len(elements);
+    else:
+        elem["valid_elements"] = elements;
+    return elem
 
 def init_task(params, status="init"):
     db = dataset.connect(DATABASE_URL)
@@ -31,19 +73,15 @@ def get_tasks():
     db = dataset.connect(DATABASE_URL)
     tasks = db['tasks'].all()
 
-    def fetch_elements(elem):
-        path = elem.get("products")
-        nb_elements = 0
-        for file in os.listdir(path):
-            if file.endswith(".h5"):
-                nb_elements = nb_elements+1
-        elem["nb_valid_elements"] = nb_elements;
-        return elem
-    return map(fetch_elements,tasks)
+    
+    return map(_fetch_elements,tasks)
 
-def get_task(id):
+def get_task(id, full=False):
     db = dataset.connect(DATABASE_URL)
     task = db['tasks'].find_one(task_id=id)
+
+    if full:
+        task["models"] = _fetch_models(task)
     return task
 
 def run_featurenet(task_id):
@@ -59,10 +97,13 @@ def run_featurenet(task_id):
     nb_base_products=int(task.get("nb_initial_config"))
     training_epochs=int(task.get("nb_training_iterations"))
 
-    products_path = PledgeEvolution.run(base, full_fm_file, output_file, dataset=dt, nb_base_products=nb_base_products, training_epochs=training_epochs, evolution_epochs = 0)
-    task["status"] = "generation_complete"
+    products_path = "{}/{}".format(base, dt)
     task["products"] = products_path
-    updated = db['tasks'].update(task, ['task_id'])
+    db['tasks'].update(task, ['task_id'])
+
+    PledgeEvolution.run(base, full_fm_file, output_file, dataset=dt, nb_base_products=nb_base_products, training_epochs=training_epochs, evolution_epochs = 0)
+    task["status"] = "generation_complete"
+    db['tasks'].update(task, ['task_id'])
     print("task id {} generated:{}".format(task["task_id"],products_path))
 
 
@@ -116,9 +157,39 @@ def create_app():
         tasks = list(get_tasks())
         return jsonify(tasks)   
     
+
+        
+    @app.route('/sample/<id>/product/<pId>/<content>', methods=['GET'])
+    def model_get(id, pId,content):
+        from flask import send_file
+
+        task = get_task(id)
+        path = task.get("products")
+        file_path = "./{}/".format(path)
+        f = None
+        mime = None
+        if content=="graph":
+            f = _get_file_endswith(file_path,"{}.png".format(pId))
+            mime = 'image/png'
+        else:
+            f = _get_file_endswith(file_path,"{}.h5".format(pId))
+            mime = 'application/octet-stream'
+
+        if f is not None:
+            file_path = "{}{}".format(file_path, f)
+            p = os.path.abspath(file_path)
+            res = make_response(send_file(p, mime))
+            res.headers['Content-Length'] = os.path.getsize(p)
+            return res
+
+        return jsonify({})
+
     @app.route('/sample/<id>', methods=['GET'])
     def sample_get(id):
-        task = get_task(id)
+        data = request.args
+        full = bool(data.get("full",False)) if data else False
+        
+        task = get_task(id,full)
         return jsonify(task)
 
     @app.route('/sample/', methods=['POST'])
