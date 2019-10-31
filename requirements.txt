@@ -1,4 +1,4 @@
 keras == 2.2.4
-Pillow == 5.4.1
+Pillow == 6.2.0
 pbd == 0.9
 validators
