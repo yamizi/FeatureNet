@@ -2,7 +2,7 @@
 __pychache__/
 .vscode/
 trash.xml
-products/
+products/*.txt
 report*.txt
 reports/*
 plots/*.png

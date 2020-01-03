@@ -39,13 +39,8 @@ def plot(url_results, url_features,plot_prefix=""):
     Y = load_results(url_results)
 
     print(len(Y))
-
-    #We filter only architectures where accuracy >0.8
     Y = [y for y in Y if float(y[1]) >= 0.5]
 
-    #We filter only architectures < 200K parameters
-    #Y = [y for y in Y if int(y[4]) < 50000]
-    #print(Y)
 
     nb_elements = len(Y)
     print(nb_elements)
@@ -53,7 +48,6 @@ def plot(url_results, url_features,plot_prefix=""):
     accuracy = np.array([float(y[1]) for y in Y])
     training_time = np.array([float(y[3]) for y in Y])
     nb_params = np.array([float(y[4]) for y in Y])
-    #plt.xticks(np.arange(0, nb_elements, 1.0))
 
     fig, ax1 = plt.subplots()
     ax1.set_title(plot_prefix)
@@ -87,9 +81,6 @@ def plot(url_results, url_features,plot_prefix=""):
     ax32.set_ylabel('accuracy / parameters(M)', color='r')
 
 
-    #plt.savefig("{0}_{1}_accuracy".format(plot_path, plot_prefix))
-
-
 def histo(url_results):
     
     
@@ -104,22 +95,10 @@ def histo(url_results):
     ax.set_xlabel('Accuracy %')
     ax.set_ylabel('Number of configurations')
     ax.set_title("Cumulative distribution of accuracy on CIFAR-10 dataset") 
-    #ax.set_title("Cumulative histogram of accuracy")
     n, bins, patches = ax.hist(accuracy*100, bins=1000, cumulative=True)
 
     x_labels = range(0,100,10)
-    #plt.xticks(np.array(range(50))*2)
-    #ax.set_xticklabels(labels=x_labels, rotation=90)
-
     median, q3, q90 = np.percentile(accuracy, 50), np.percentile(accuracy, 75), np.percentile(accuracy, 90)
-
-    #median = np.where(accuracy==median)
-    #q75 = np.where(accuracy==q3)
-    #q90 = np.where(accuracy==q90)
-    #ax.axvline(x=median[0])
-    #ax.axvline(x=q75)
-    #ax.axvline(x=np.where(accuracy==q90))
-    #print(t)
 
 
 def efficiency(url_results):
@@ -136,9 +115,6 @@ def efficiency(url_results):
     ax1.plot(x, y, "k.")
     ax1.set_ylabel('Accuracy')
     ax1.set_xlabel('Log(Size)')
-
-    #b, m = polyfit(x, y, 1)
-    #plt.plot(x, b + m * x, '-')
 
 
 def training_time(url_results):
@@ -329,8 +305,6 @@ if __name__ == '__main__':
     
 
     #plot("./report_100Products_lenet5_exact_cifar.txt", "./100Products_lenet5_exact.pdt", "100_lenet_exact")
-    
-
     #plot("./report_1000Products_cifar.txt", "./1000Products.pdt", "1000_cifar")
     #plot("./report1000Products_cifar.txt", "./1000Products.pdt", ">50% Accuracy on CIFAR")
     #histo("./report1000Products_cifar.txt")

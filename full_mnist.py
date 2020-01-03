@@ -46,9 +46,7 @@ if __name__ == "__main__":
 
     top_cifar = [59, 63, 143,  161, 203, 444, 477, 595, 634,  936]
     top_cifar = []
-    # small architectures < 4M on CIFAR
-    #top_cifar = [59, 203, 477, 634, 63, 161, 936]
-    main("1000Products", datasets=["mnist"], filter_indices=top_cifar,epochs=300, depth=1, data_augmentation=False, min_index=81)
+    main("./datasets/1000Products", datasets=["mnist"], epochs=300, depth=1, data_augmentation=False)
        
 
         
