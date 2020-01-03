@@ -16,8 +16,7 @@ from math import ceil
 import re
 
 
-pledge_path = '../products/PLEDGE.jar'
-base_path = '../products'
+b_path = '../products'
 base_training_epochs = 25
 
 
@@ -31,19 +30,20 @@ def reset_keras(classifier=None):
             pass
 
     # if it's done something you should see a number being outputted
-    print("cleaning memory {}".format(gc.collect()))
+    gc.collect()
+    #print("cleaning memory {}".format(gc.collect()))
 
-def run_pledge(input_file, nb_base_products, output_file, duration=600):
+def run_pledge(input_file, nb_base_products, output_file, pledge_path, duration=600):
     params = ['java', '-jar', pledge_path, 'generate_products']
     params = params+['-fm', input_file, '-nbProds',
                     str(nb_base_products), '-o', output_file, '-timeAllowedMS',str(duration*1000)]
     start = time.time()
-    print("running pledge on {}: {}".format(
-        params, datetime.datetime.now()))
+    print("Running pledge diversity")
+    # print("Running pledge diversity on {}: {}".format(params, datetime.datetime.now()))
     pledge_result = subprocess.check_call(params)
 
     end = time.time()
-    print("pledge result {} in {}s".format(pledge_result, str(end-start)))
+    print("diversity result {} in {}s".format(pledge_result, str(end-start)))
     return pledge_result
 
 def default_pledge_output(base_path, nb_base_products):
@@ -53,6 +53,7 @@ def default_pledge_output(base_path, nb_base_products):
 class PledgeEvolution(object):
 
     attacks = ["cw"]
+    pledge_path = './PLEDGE.jar'
 
     @staticmethod
     def select(last_population, survival_count):
@@ -92,7 +93,7 @@ class PledgeEvolution(object):
             raise Exception()
 
         output_file = "{}.{}".format(dst[:-4], "pdt")
-        run_pledge(dst, int(nb_products), output_file)
+        run_pledge(dst, int(nb_products), output_file, pledge_path=PledgeEvolution.pledge_path)
 
         # possibility to generate multiple products each containing a different set of constraints
         return output_file
@@ -193,7 +194,7 @@ class PledgeEvolution(object):
             print("Skipping initial PLEDGE run, file found in {}".format(output_file))
         else:
             print("Initial PLEDGE run")
-            run_pledge(input_file, nb_base_products, output_file)
+            run_pledge(input_file, nb_base_products, output_file,PledgeEvolution.pledge_path)
 
         product_set, last_population = PledgeEvolution.extract_leaves(output_file)
 
@@ -255,17 +256,16 @@ class PledgeEvolution(object):
         if not os.path.isdir(base_path):
             os.mkdir(base_path)
 
-        _input_file = "main_1block_nas.xml"
-        print("End to end NAS Search from {} to {} products".format(_input_file, nb_base_products))
+        print("End to end NAS Search from {} to {} products".format(input_file, nb_base_products))
 
         _nb_blocks,_nb_cells, _nb_products = nb_base_products
         
-        full_fm_file = input_file if input_file else "{}/nas_{}.xml".format(base_path,"_".join([str(e) for e in nb_base_products]))
+        full_fm_file = "{}/nas_{}.xml".format(base_path,"_".join([str(e) for e in nb_base_products]))
 
-        if os.path.isfile(output_file):
+        if os.path.isfile(full_fm_file):
             print("Skipping full FM generation, file found in {}".format(full_fm_file))
         else:
-            generate_featuretree(_input_file,full_fm_file,int(_nb_cells),int(_nb_blocks))
+            generate_featuretree(input_file,full_fm_file,int(_nb_cells),int(_nb_blocks))
 
         return full_fm_file
 
@@ -275,7 +275,7 @@ def main(argv):
     input_file = ''
     output_file = ''
     products_file = ''
-    base = base_path
+    base = b_path
     nb_base_products=[100]
     dataset = "cifar"
     training_epochs = base_training_epochs

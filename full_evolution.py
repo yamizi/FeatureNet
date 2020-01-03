@@ -7,6 +7,9 @@ from products_tree import ProductSet, ProductSetError
 import random, math
 from numpy.random import choice
 import numpy as np
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 import tensorflow
 import gc
 import datetime
@@ -26,7 +29,8 @@ def reset_keras(classifier=None):
             pass
 
     # if it's done something you should see a number being outputted
-    print("cleaning memory {}".format(gc.collect()))
+    gc.collect()
+    #print("cleaning memory {}".format(gc.collect()))
 
 class FullEvolution(object):
 
@@ -177,7 +181,7 @@ class FullEvolution(object):
         return new_pop + mutants
 
     @staticmethod
-    def run(base_path, last_pdts_path="",nb_base_products=100, dataset="cifar", training_epochs=25,mutation_rate = 0.1,survival_rate = 0.1, breed=True, evolution_epochs=50):
+    def run(base_path, last_pdts_path="",nb_base_products=100, dataset="cifar", training_epochs=25,mutation_rate = 0.1,survival_rate = 0.1, breed=True, evolution_epochs=50, model=""):
 
         if not os.path.isdir(base_path):
             os.mkdir(base_path)
@@ -221,8 +225,7 @@ class FullEvolution(object):
                 last_population = pop
                 
         else:
-            datasets = dataset.split("#")
-            dataset, model_name = (datasets[0], datasets[1]) if len(datasets)==2 else (datasets[0], "lenet5")
+            model_name = model if model else "lenet5"
             tensorflow_gen = TensorflowGenerator(model_name,training_epochs, dataset)
             TensorflowGenerator.eval_robustness(tensorflow_gen.model, FullEvolution.attacks) #["clever","pgd","cw"])
             last_population = [tensorflow_gen.model]

@@ -157,7 +157,7 @@ def histo(url_results="../products/cifar_12_0.1_0.1/20products_e{}.json", nb_epo
         full_acc = np.concatenate((full_acc, accuracy))
 
         s = len(Y[0][1])
-        if len(Y[0][1])>3:
+        if s>3:
             robustness = np.array([[float(y[1][4]) for y in Y]])
         else:
             rob = [y[1][2][1] for y in Y]
@@ -245,7 +245,7 @@ def histo(url_results="../products/cifar_12_0.1_0.1/20products_e{}.json", nb_epo
 
 #histo("../products/2metrics\cifar#lenet5\ee10_te12_mr0.1_sr0.2/e{}.json", name="3 metrics", show_max_accuracy=False, show_max_robustness=False)
 
-#histo("../products/2metrics\cifar#lenet5\ee10_te12_mr0.1_sr0.2/e{}.json", name="3 metrics", show_max_accuracy=False, show_max_robustness=False)
+# histo("../products/2metrics\cifar#lenet5\ee10_te12_mr0.1_sr0.2/e{}.json", name="3 metrics", show_max_accuracy=False, show_max_robustness=False)
 
 histo("../products/2metrics\cifar#keras\ee10_te50_mr0.1_sr0.2_1566924825/e{}.json", name="Robustness driven sampling", show_max_accuracy=False, show_max_robustness=False)
 

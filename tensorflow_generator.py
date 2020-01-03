@@ -90,8 +90,9 @@ class TensorflowGenerator(object):
     default_robustness_set_size = 500
 
     model_graph_export = True
+    eval_metrics={}
     
-    datasets_classes = {"mnist":10,"cifar":10,"cifar100":100}
+    datasets_classes = {"mnist":10,"cifar":10,"cifar10":10,"cifar100":100}
 
     def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=None, save_path=None, robustness_set_size=0):
         #product_features is a list of enabled and disabled features based on the original feature model
@@ -116,20 +117,36 @@ class TensorflowGenerator(object):
             if save_path:
                 save_path = "{}{}".format(save_path,self.model._name)
                 
-            history, training_time, score, model = TensorflowGenerator.train(self.model, epochs, batch_size, dataset, data_augmentation,save_path=save_path)
+            history, training_time, score, keras_model = TensorflowGenerator.train(self.model, epochs, batch_size, dataset, data_augmentation,save_path=save_path)
             
-            if not model:
+            if not keras_model:
                 print("#### model is not valid ####")
                 return 
                 
             if eval_robustness:
                 TensorflowGenerator.eval_robustness(self.model, eval_robustness, robustness_set_size)
 
+            if TensorflowGenerator.eval_metrics:
+                for (m,f) in TensorflowGenerator.eval_metrics:
+                    self.model.metrics[m] = f(keras_model)
+
             self.params = self.model.nb_params
             self.training_time = training_time
             self.accuracy = self.model.accuracy
             self.history = (history.history['acc'], history.history['val_acc'])
 
+    @property
+    def keras_model(self):
+        return self.model.model
+
+    @property
+    def metrics(self):
+        return self.model.metrics
+
+    @staticmethod
+    def add_metric(metric, func):
+        TensorflowGenerator.eval_metrics[metric] = func
+        
     @staticmethod
     def eval_attack_robustness(keras_model, attack_name, norm, robustness_set_size=0):
         
@@ -342,7 +359,7 @@ class TensorflowGenerator(object):
 
         from keras.utils import plot_model
         try:
-            print("saving model png to {}".format(path))
+            print("saving model png to {}.png".format(path))
             plot_model(model, to_file='{}.png'.format(path))
         except Exception as e:
             print("error export model image: {}".format(e))

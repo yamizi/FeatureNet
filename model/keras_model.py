@@ -73,7 +73,7 @@ class KerasFeatureModel(MutableModel):
     accuracy = 0
     use_multigpu = True
     robustness_scores = ["clever","cw", "fgsm", "pgd"]
-    
+    metrics = []
     
     layers = {"pool":[],"conv":[]}
     
@@ -100,7 +100,7 @@ class KerasFeatureModel(MutableModel):
         else:
             nb_layers = 0
             
-        return KerasFeatureVector(self.accuracy, [self._name, [len(self.blocks),nb_layers, self.nb_params,self.nb_flops], [self.robustness_score,  [self.clever_score, self.fgsm_score, self.pgd_score, self.cw_score]]], self.features)
+        return KerasFeatureVector(self.accuracy, [self._name, [len(self.blocks),nb_layers, self.nb_params,self.nb_flops], [self.robustness_score,  [self.clever_score, self.fgsm_score, self.pgd_score, self.cw_score]],self.metrics], self.features)
         
     def build(self, input_shape, output_shape, max_parameters=20000000):
         self.outputs = []
