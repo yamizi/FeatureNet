@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Avatar from '@material-ui/core/Avatar';
+
 
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import PipelineHomeComponent from './pipelineHome'
-import PipelineTableComponent from './taskTable'
-import TaskDetailsComponent from './taskDetails'
+import PipelineHomePage from './pipelineHome'
+import PipelineTablePage from './taskTable'
+import TaskDetailsPage from './taskDetails'
 
 import API from '../api';
 
+const user =  {
+  avatar:"http://www.techschool.lu/images/Logo_Small.png",
+  firstName:"Salah",
+  lastName:"Ghamizi",
+  right:"user",
+  id:0
+}
 const styles = theme => ({
   avatar: {
     margin: 10,
@@ -62,6 +63,32 @@ const styles = theme => ({
   
 });
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true, newTask:false ,selectedTask:false };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.log(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <PipelineTablePage usr={user} onTaskSelect={this.handleSelectTaskClickOpen}/>;
+    }
+
+    return this.props.children; 
+  }
+}
+
 class DashboardComponent extends React.Component {
 
   constructor(props) {
@@ -73,15 +100,9 @@ class DashboardComponent extends React.Component {
     // Set the state directly. Use props if necessary.
     this.state = {
 
-      user: {
-        avatar:"http://www.techschool.lu/images/Logo_Small.png",
-        firstName:"Salah",
-        lastName:"Ghamizi",
-        right:"user",
-        id:0
-      },
+      user: user,
       newTask: false,
-      selectedTask: null
+      selectedTask: false
     }
 
   }
@@ -93,8 +114,8 @@ class DashboardComponent extends React.Component {
                 
         }
         
-    })
-}
+      })
+  }
 
 
   closeDetailsTask = (event) =>{
@@ -120,17 +141,7 @@ class DashboardComponent extends React.Component {
     const { classes } = this.props;
     const {user, newTask,selectedTask } = this.state
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <Avatar alt="User" src={user.avatar} className={classes.avatar} />
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              Dashboard FeatureNet
-            </Typography>
-          </Toolbar>
-        </AppBar>
-
-        
+      <div className={classes.root}>        
 
         <Fab color="primary" aria-label="Add" className={classes.fab} onClick={this.handleNewTaskClickOpen}>
           <AddIcon />
@@ -141,15 +152,20 @@ class DashboardComponent extends React.Component {
         </Fab>
 
         { 
-          newTask && <PipelineHomeComponent onClose={this.closeNewTask}/>
+          newTask && <PipelineHomePage onClose={this.closeNewTask}/>
         }
 
         { 
-          selectedTask && <TaskDetailsComponent usr={user} task={selectedTask} onClose={this.closeDetailsTask}/>
+          selectedTask && <TaskDetailsPage usr={user} task={selectedTask} onClose={this.closeDetailsTask}/>
         }
 
         { 
-          !newTask && !selectedTask && <PipelineTableComponent usr={user} onTaskSelect={this.handleSelectTaskClickOpen}/>
+        
+          !newTask && !selectedTask && 
+          <ErrorBoundary>
+            <PipelineTablePage usr={user} onTaskSelect={this.handleSelectTaskClickOpen}/>
+          </ErrorBoundary>
+
         }
 
 

@@ -54,7 +54,8 @@ const statusLabels={
     "init":"Building Base Feature Model..."
 }
 
-class TableHomeComponent extends React.Component {
+class PipelineTableComponent extends React.Component {
+    _isMounted = false;
 
     constructor(props) {
         // Required step: always call the parent class' constructor
@@ -65,10 +66,19 @@ class TableHomeComponent extends React.Component {
             tasks: []
 
         }
-
-        this.load_tasks()
-        setInterval(() => {this.load_tasks()}, 5000);
+        
+        
   
+    }
+
+    componentDidMount() {
+      this._isMounted = true;
+      this.load_tasks()
+      setInterval(() => {this.load_tasks()}, 5000);
+
+    }
+    componentWillUnmount() {
+      this._isMounted = false;
     }
 
     async load_tasks(){
@@ -77,18 +87,20 @@ class TableHomeComponent extends React.Component {
               var headers = []
               var tasks = []
               headers = ["task_name","formattedTime","formattedStatus", "pdt","products", "nb_initial_config", "nb_valid_elements","max_sampling_time"]
+              
+              if(this._isMounted){
                 
-              if(res.data && res.data.length){
-                
-                //headers = Object.keys(res.data[0])
-                tasks = res.data.map(e => {e["formattedStatus"] = statusLabels[e["status"]]; e["formattedTime"] = new Date(parseInt(e["timestamp"])*1000).toLocaleString('fr-FR'); return e;})
-                //alert(JSON.stringify(this.state))
-        
-            }
-            this.setState({tasks:tasks, headers:headers})
+                if(res.data && res.data.length){
+                  
+                  //headers = Object.keys(res.data[0])
+                  tasks = res.data.map(e => {e["formattedStatus"] = statusLabels[e["status"]]; e["formattedTime"] = new Date(parseInt(e["timestamp"])*1000).toLocaleString('fr-FR'); return e;})
+                  //alert(JSON.stringify(this.state))
+          
+                }
+                this.setState({tasks:tasks, headers:headers})
+              }
             
-            
-        })
+          })
     }
     
     handleDeleteTaskClickOpen = (task) => {
@@ -138,11 +150,11 @@ class TableHomeComponent extends React.Component {
     }
 }
 
-TableHomeComponent.propTypes = {
+PipelineTableComponent.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
 
-const TableHomePage = withStyles(styles)(TableHomeComponent);
+const PipelineTablePage = withStyles(styles)(PipelineTableComponent);
 
-export default TableHomePage
+export default PipelineTablePage
