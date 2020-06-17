@@ -119,10 +119,10 @@ class Cell(MutableCell, Node):
                     element = Input.parse_feature_model(cell_element_dict)
                     
                 elif(element_type=="operation1"):
-                    element = Operation.parse_feature_model(cell_element_dict)
+                    element = Operation.parse_feature_model(cell_element_dict,cell.input1)
                     
                 elif(element_type=="operation2"):
-                    element = Operation.parse_feature_model(cell_element_dict)
+                    element = Operation.parse_feature_model(cell_element_dict,cell.input2)
                     
                 elif(element_type=="combination"):
                     element = Combination.parse_feature_model(cell_element_dict)
@@ -136,4 +136,3 @@ class Cell(MutableCell, Node):
             #print("settings {0} {1}".format(element_type, element.get_name())) 
   
         return cell
-        

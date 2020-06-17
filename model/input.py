@@ -2,6 +2,7 @@
 
 from .node import Node
 from keras import backend as K
+from keras.layers import Embedding
 from keras.layers import Dense, Conv2D, SeparableConv2D, DepthwiseConv2D, Conv1D, SeparableConv1D
 from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D 
 from .output import Output, OutCell, OutBlock, Out
@@ -19,6 +20,8 @@ class Input(MutableInput, Node):
         self._stride = stride
         self._features = features
         self._relative_features = None
+        self.build_raw = False
+        self.last_build = None
 
         self.parent_cell = cell
         super(Input, self).__init__(raw_dict=raw_dict)
@@ -171,6 +174,24 @@ class IdentityInput(Input):
     def build(self, input, neighbour=None):
         return input
 
+
+class EmbeddingInput(Input):
+    def __init__(self, _input_dim, _input_length, _dropout = 0.2, _embed_dim = 128, raw_dict=None, cell=None):
+        super(IdentityInput, self).__init__(raw_dict=raw_dict, cell=cell)
+
+        self._input_dim = _input_dim
+        self._input_length = _input_length
+        self._dropout = _dropout
+        self. _embed_dim = _embed_dim
+
+    def build(self, input, neighbour=None):
+        input = super(EmbeddingInput, self).build(input)
+        self.last_build = Embedding(self._input_dim, self._embed_dim,self._input_length, dropout = self._dropout)
+
+        if self.build_raw:
+            return input
+        return self.last_build(input)
+
 class DenseInput(Input):
     def __init__(self, _features=128, _activation="relu", raw_dict=None, cell=None):
         super(DenseInput, self).__init__(raw_dict=raw_dict, cell=cell)
@@ -187,8 +208,11 @@ class DenseInput(Input):
 
     def build(self, input, neighbour=None):
         input = super(DenseInput, self).build(input)
-        return Dense(self._features, activation=self._activation, name=Node.get_name(self))(input)
+        self.last_build =  Dense(self._features, activation=self._activation, name=Node.get_name(self))
 
+        if self.build_raw:
+            return input
+        return self.last_build(input)
 
 class PoolingInput(Input):
     def __init__(self, _kernel=(3,3), _stride=(1,1), _type="max", _padding="same", raw_dict=None, cell=None):
@@ -230,15 +254,18 @@ class PoolingInput(Input):
             if self._type=="max":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
-                return MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
+                self.last_build =  MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
             if self._type=="average":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
-                return AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))(input)
+                self.last_build = AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
             if self._type=="global":
                 #return input
-                return GlobalAveragePooling2D(name=Node.get_name(self))(input)
-                
+                self.last_build =  GlobalAveragePooling2D(name=Node.get_name(self))
+
+            if self.build_raw:
+                return input
+            return self.last_build(input)
 
         return input
 
@@ -285,25 +312,29 @@ class ConvolutionInput(Input):
     def build(self, input, neighbour=None):
         input = super(ConvolutionInput, self).build(input)
         input = input.content if hasattr(input,"content") else input
-        
-        if input.shape.ndims==4:
+        self.last_build = None
 
+        if input.shape.ndims==4:
             if self._type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
-                return Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                self.last_build= Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))
             elif self._type == "separable":
-                return SeparableConv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                self.last_build= SeparableConv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))
             elif self._type == "depthwise":
-                return DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                self.last_build= DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))
         
         elif input.shape.ndims==3:
             if self._type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
-                return Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
+                self.last_build= Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))
             elif self._type == "separable":
-                return SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))(input)
-                 
+                self.last_build= SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))
+
+
+        if self.last_build is not None:
+            if self.build_raw:
+                return input
+            return self.last_build(input)
         return input
-        

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .node import Node
-from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D, Conv2D
+from keras.layers import Flatten, Dropout, BatchNormalization, Activation, Add, Concatenate, Multiply, ZeroPadding2D, Conv2D, TimeDistributed
 from .output import Output, OutCell, OutBlock, Out
 
 from .mutation.mutable_operation import MutableOperation
@@ -21,7 +21,7 @@ class Operation(MutableOperation, Node):
         return input
 
     @staticmethod
-    def parse_feature_model(feature_model):
+    def parse_feature_model(feature_model, layer_to_transform=None):
         operation = feature_model.get("children")[0] 
         operation_type = Node.get_type(operation)
         operation_element = None
@@ -92,6 +92,17 @@ class Flat(Operation):
         if(input.shape.ndims > 2):
             return Flatten()(input)
         return input
+
+
+class Distributed(Operation):
+    def __init__(self, _prev_layer, raw_dict=None, cell=None):
+        super(Flat, self).__init__(raw_dict=raw_dict, cell=cell)
+        _prev_layer.build_raw = True
+        self._prev_layer = _prev_layer
+
+    def build(self,input):
+        input = super(Distributed, self).build(input)
+        return TimeDistributed(self._prev_layer.last_build)(input)
 
 class Void(Operation):
     def __init__(self, raw_dict=None, cell=None):
@@ -246,4 +257,3 @@ class Product(Combination):
     def build(self, source1, source2):
         source1, source2 = super(Product, self).build(source1, source2)
         return Multiply()([source1, source2])
-        
