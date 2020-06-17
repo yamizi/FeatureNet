@@ -30,8 +30,11 @@ class Operation(MutableOperation, Node):
             operation_element = Void(operation)
         elif operation_type=="flatten":
             operation_element = Flat(operation)
+        elif operation_type=="distributedflatten":
+            operation_element = Flat(operation,_distributed=True)
+        elif operation_type=="distributed":
+            operation_element = Distributed(operation)
         elif operation_type=="dropout":
-
             _value = None
             for child in operation.get("children"):
                 element_type = Node.get_type(child)
@@ -78,19 +81,22 @@ class Operation(MutableOperation, Node):
                 if(element_type == "activation"):
                     if(len(child.get("children"))):
                         _activation = Node.get_type(child.get("children")[0])
-            #operation_element = Void(operation)
             operation_element = Active(_activation, raw_dict=operation)
 
         return operation_element
         
 class Flat(Operation):
-    def __init__(self, raw_dict=None, cell=None):
+    def __init__(self, _distributed=False, raw_dict=None, cell=None):
         super(Flat, self).__init__(raw_dict=raw_dict, cell=cell)
+        self._distributed = _distributed
 
     def build(self,input):
         input = super(Flat, self).build(input)
         if(input.shape.ndims > 2):
-            return Flatten()(input)
+            if self._distributed:
+                return TimeDistributed(Flatten)(input)
+            else:
+                return Flatten()(input)
         return input
 
 
