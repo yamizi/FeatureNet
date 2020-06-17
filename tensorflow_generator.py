@@ -93,6 +93,9 @@ class TensorflowGenerator(object):
     eval_metrics={}
     
     datasets_classes = {"mnist":10,"cifar":10,"cifar10":10,"cifar100":100}
+    training_metrics = ['accuracy']
+    training_loss = "categorical_crossentropy"
+    training_optimizer = Adam(lr=lr_schedule(0))
 
     def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=None, save_path=None, robustness_set_size=0):
         #product_features is a list of enabled and disabled features based on the original feature model
@@ -111,8 +114,7 @@ class TensorflowGenerator(object):
                 return 
             
             if no_train:
-                self.print()
-                return  
+                return model
 
             if save_path:
                 save_path = "{}{}".format(save_path,self.model._name)
@@ -223,16 +225,17 @@ class TensorflowGenerator(object):
         if clear_memory:
             reset_keras()
 
-        TensorflowGenerator.init_dataset(dataset)
+        if dataset is not None:
+            TensorflowGenerator.init_dataset(dataset)
+
         keras_model =  model.build(TensorflowGenerator.input_shape, TensorflowGenerator.datasets_classes.get(dataset))
 
         if not keras_model:
             return keras_model
 
-        optimizers = [  Adam(lr=lr_schedule(0)), "sgd"]
-        losss = ['categorical_crossentropy']
         #print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
-        keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
+        #keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
+        keras_model.compile(loss=TensorflowGenerator.training_loss, metrics=TensorflowGenerator.training_metrics, optimizer=TensorflowGenerator.training_optimizer)
 
         model.nb_params =  keras_model.count_params()
         print('model blocks,layers,params,flops: {} '.format(model.to_kerasvector()))
