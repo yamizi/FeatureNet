@@ -2,7 +2,7 @@
 
 from .node import Node
 from keras import backend as K
-from keras.layers import Embedding
+from keras.layers import Embedding, LSTM
 from keras.layers import Dense, Conv2D, SeparableConv2D, DepthwiseConv2D, Conv1D, SeparableConv1D
 from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D 
 from .output import Output, OutCell, OutBlock, Out
@@ -128,9 +128,20 @@ class Input(MutableInput, Node):
                 _element_type = "_{}".format(element_type)
                 if (_element_type in params):
                     if (len(child.get("children"))):
-                        params[_element_type] = Node.get_type(child.get("children")[0])
+                        params[_element_type] = float(Node.get_type(child.get("children")[0]))
 
             input_element = EmbeddingInput(**params,raw_dict=input)
+
+        elif (input_type == "lstm"):
+            params = dict(_units=None,_dropout=0.2, _recurrent_dropout=0.2, _activation = "tanh")
+            for child in input.get("children"):
+                element_type = Node.get_type(child)
+                _element_type = "_{}".format(element_type)
+                if (_element_type in params):
+                    if (len(child.get("children"))):
+                        params[_element_type] = float(Node.get_type(child.get("children")[0]))
+
+            input_element = LSTMInput(**params, raw_dict=input)
 
         elif(input_type=="convolution"):
             _kernel = None
@@ -200,10 +211,25 @@ class IdentityInput(Input):
     def build(self, input, neighbour=None):
         return input
 
+class LSTMInput(Input):
+    def __init__(self, _units=None,_dropout=0.2, _recurrent_dropout=0.2, _activation = "tanh", raw_dict=None, cell=None):
+        super(LSTMInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
+        self._units = _units
+        self._recurrent_dropout = _recurrent_dropout
+        self._dropout = _dropout
+        self._activation = _activation
+
+    def build(self, input, neighbour=None):
+        input = super(LSTMInput, self).build(input)
+        self.last_build = LSTM(self._units, recurrent_dropout = self._recurrent_dropout,activation = self._activation, dropout = self._dropout)
+
+        if self.build_raw:
+            return input
+        return self.last_build(input)
 class EmbeddingInput(Input):
     def __init__(self, _input_dim, _input_length, _dropout = 0.2, _embed_dim = 128, raw_dict=None, cell=None):
-        super(IdentityInput, self).__init__(raw_dict=raw_dict, cell=cell)
+        super(EmbeddingInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         self._input_dim = _input_dim
         self._input_length = _input_length
