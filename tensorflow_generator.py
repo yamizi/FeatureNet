@@ -92,7 +92,8 @@ class TensorflowGenerator(object):
     model_graph_export = True
     eval_metrics={}
     
-    datasets_classes = {"mnist":10,"cifar":10,"cifar10":10,"cifar100":100}
+    datasets_classes = {"mnist":10,"cifar":10,"cifar10":10,"cifar100":100,"imdb_sentiment":1}
+    datasets_output = {"mnist": "softmax", "cifar": "softmax", "cifar10": "softmax", "cifar100": "softmax", "imdb_sentiment": "sigmoid"}
     training_metrics = ['accuracy']
     training_loss = "categorical_crossentropy"
     training_optimizer = Adam(lr=lr_schedule(0))
@@ -228,7 +229,7 @@ class TensorflowGenerator(object):
         if dataset is not None:
             TensorflowGenerator.init_dataset(dataset)
 
-        keras_model =  model.build(TensorflowGenerator.input_shape, TensorflowGenerator.datasets_classes.get(dataset))
+        keras_model =  model.build(TensorflowGenerator.input_shape, TensorflowGenerator.datasets_classes.get(dataset),output_activation=TensorflowGenerator.datasets_output.get(dataset))
 
         if not keras_model:
             return keras_model

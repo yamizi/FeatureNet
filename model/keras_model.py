@@ -102,7 +102,7 @@ class KerasFeatureModel(MutableModel):
             
         return KerasFeatureVector(self.accuracy, [self._name, [len(self.blocks),nb_layers, self.nb_params,self.nb_flops], [self.robustness_score,  [self.clever_score, self.fgsm_score, self.pgd_score, self.cw_score]],self.metrics], self.features)
         
-    def build(self, input_shape, output_shape, max_parameters=20000000):
+    def build(self, input_shape, output_shape, max_parameters=20000000, output_activation="softmax"):
         self.outputs = []
 
         X_input = Input(input_shape)
@@ -121,7 +121,7 @@ class KerasFeatureModel(MutableModel):
             if out.shape.ndims >2:
                 out = Flatten()(out)
                 #out = GlobalAveragePooling2D()(out)
-            self.outputs = [Dense(output_shape, activation="softmax", name="out")(out)]
+            self.outputs = [Dense(output_shape, activation=output_activation, name="out")(out)]
 
             model = Model(outputs=self.outputs, inputs=X_input,name=self._name)
             if model.count_params() > 20000000:
