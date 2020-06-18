@@ -53,6 +53,7 @@ class Input(MutableInput, Node):
         input = feature_model.get("children")[0] 
         input_type = Node.get_type(input)
         input_element = None
+        build_raw = False
 
         if(input_type=="zeros"):
             input_element = ZerosInput(raw_dict=input)
@@ -67,7 +68,9 @@ class Input(MutableInput, Node):
                 if(element_type == "activation"):
                     if(len(child.get("children"))):
                         activation = Node.get_type(child.get("children")[0])
-
+                elif (element_type == "build_raw"):
+                    if (len(child.get("children"))):
+                        build_raw = Node.get_type(child.get("build_raw")[0])
                 elif(element_type == "features"):
                     if(len(child.get("children"))):
                         features = Node.get_type(child.get("children")[0])
@@ -89,6 +92,9 @@ class Input(MutableInput, Node):
                 elif(element_type == "type"):
                     if(len(child.get("children"))):
                         _type = Node.get_type(child.get("children")[0])
+                elif (element_type == "build_raw"):
+                    if (len(child.get("children"))):
+                        build_raw = Node.get_type(child.get("build_raw")[0])
 
                 elif(element_type == "stride"):
                     if(len(child.get("children"))):
@@ -110,6 +116,21 @@ class Input(MutableInput, Node):
 
 
             input_element = PoolingInput(_kernel=_kernel,_stride=_stride, _type=_type, _padding=_padding,raw_dict=input)
+#_input_dim, _input_length,
+        elif (input_type == "embedding"):
+            params = dict(_input_dim = None,
+            _input_length = None,
+            _dropout = 0.2,
+            _embed_dim = 128)
+
+            for child in input.get("children"):
+                element_type = Node.get_type(child)
+                _element_type = "_{}".format(element_type)
+                if (_element_type in params):
+                    if (len(child.get("children"))):
+                        params[_element_type] = Node.get_type(child.get("children")[0])
+
+            input_element = EmbeddingInput(**params,raw_dict=input)
 
         elif(input_type=="convolution"):
             _kernel = None
@@ -155,8 +176,13 @@ class Input(MutableInput, Node):
                     if(len(child.get("children"))):
                         _features = Node.get_type(child.get("children")[0])
 
+                elif (element_type == "build_raw"):
+                    if (len(child.get("children"))):
+                        build_raw = Node.get_type(child.get("build_raw")[0])
+
             input_element = ConvolutionInput(_kernel=_kernel,_stride=_stride, _padding=_padding,_activation=_activation,_features=_features, _type=_type, raw_dict=input)
-        
+
+        input_element.build_raw = build_raw
         return input_element
 
 class ZerosInput(Input):
