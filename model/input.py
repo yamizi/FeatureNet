@@ -4,7 +4,7 @@ from .node import Node
 from keras import backend as K
 from keras.layers import Embedding, LSTM
 from keras.layers import Dense, Conv2D, SeparableConv2D, DepthwiseConv2D, Conv1D, SeparableConv1D
-from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D 
+from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D ,AveragePooling1D, MaxPooling1D, GlobalAveragePooling1D
 from .output import Output, OutCell, OutBlock, Out
 
 from .mutation.mutable_input import MutableInput
@@ -121,7 +121,7 @@ class Input(MutableInput, Node):
             params = dict(_input_dim = None,
             _input_length = None,
             _dropout = 0.2,
-            _embed_dim = 128)
+            _output_dim = 128)
 
             for child in input.get("children"):
                 element_type = Node.get_type(child)
@@ -228,17 +228,17 @@ class LSTMInput(Input):
             return input
         return self.last_build(input)
 class EmbeddingInput(Input):
-    def __init__(self, _input_dim, _input_length, _dropout = 0.2, _embed_dim = 128, raw_dict=None, cell=None):
+    def __init__(self, _input_dim, _input_length=None, _dropout = 0.2, _output_dim = 128, raw_dict=None, cell=None):
         super(EmbeddingInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         self._input_dim = _input_dim
         self._input_length = _input_length
         self._dropout = _dropout
-        self. _embed_dim = _embed_dim
+        self. _output_dim = _output_dim
 
     def build(self, input, neighbour=None):
         input = super(EmbeddingInput, self).build(input)
-        self.last_build = Embedding(self._input_dim, self._embed_dim,self._input_length, dropout = self._dropout)
+        self.last_build = Embedding(self._input_dim, self._output_dim,self._input_length, dropout = self._dropout)
 
         if self.build_raw:
             return input
@@ -283,13 +283,21 @@ class PoolingInput(Input):
 
             if not _kernel:
                 self.append_parameter("_kernel","(__int__,__int__)")
-            else:
+            elif _kernel == "none":
+                self._kernel = None
+            elif isinstance(_kernel, list):
                 self._kernel =(min(int(_kernel[0]),3),min(int(_kernel[1]),3))
+            else:
+                self._kernel = int(_kernel)
 
             if not _stride:
                 self.append_parameter("_stride",'(__int__,__int__)')
-            else:
+            elif _stride =="none":
+                self._stride = None
+            elif isinstance(_stride, list):
                 self._stride = (int(_stride[0]), int(_stride[1]))
+            else:
+                self._stride = int(_stride)
 
             if not _padding or str(_padding) not in paddingAcceptedValues:
                 self.append_parameter("_padding",'|'.join(str(i) for i in paddingAcceptedValues))
@@ -312,8 +320,23 @@ class PoolingInput(Input):
                     self._padding="same"
                 self.last_build = AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
             if self._type=="global":
-                #return input
                 self.last_build =  GlobalAveragePooling2D(name=Node.get_name(self))
+
+            if self.build_raw:
+                return input
+            return self.last_build(input)
+
+        elif input.shape.ndims==2:
+            if self._type=="max":
+                if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                    self._padding="same"
+                self.last_build =  MaxPooling1D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
+            if self._type=="average":
+                if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
+                    self._padding="same"
+                self.last_build = AveragePooling1D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
+            if self._type=="global":
+                self.last_build =  GlobalAveragePooling1D(name=Node.get_name(self))
 
             if self.build_raw:
                 return input
