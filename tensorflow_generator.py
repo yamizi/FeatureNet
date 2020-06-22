@@ -2,7 +2,7 @@
 """"""
 from __future__ import absolute_import, division, print_function, unicode_literals
 from model.keras_model import KerasFeatureModel
-from keras.datasets import mnist, cifar10, cifar100
+from keras.datasets import mnist, cifar10, cifar100, imdb
 import keras
 from keras import backend as K
 import tensorflow as tf
@@ -87,6 +87,9 @@ class TensorflowGenerator(object):
     input_shape = (0,0,0)
     default_batchsize = 64
     num_classes = 10
+    num_words = 20000
+    # cut texts after this number of words (among top max_features most common words)
+    default_words_set_size = 80
     default_robustness_set_size = 500
 
     model_graph_export = True
@@ -100,7 +103,6 @@ class TensorflowGenerator(object):
 
     def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=None, save_path=None, robustness_set_size=0):
         #product_features is a list of enabled and disabled features based on the original feature model
-        
         if batch_size ==0:
             batch_size = TensorflowGenerator.default_batchsize
             
@@ -234,8 +236,6 @@ class TensorflowGenerator(object):
         if not keras_model:
             return keras_model
 
-        #print("Compile Tensorflow model with loss:{}, optimizer {}".format(losss[0], optimizers[0]))
-        #keras_model.compile(loss=losss[0], metrics=['accuracy'], optimizer=optimizers[0])
         keras_model.compile(loss=TensorflowGenerator.training_loss, metrics=TensorflowGenerator.training_metrics, optimizer=TensorflowGenerator.training_optimizer)
 
         model.nb_params =  keras_model.count_params()
@@ -259,7 +259,7 @@ class TensorflowGenerator(object):
         model_path = "{}.h5".format(save_path) if save_path else None
             
         #print("training with batch size {} epochs {} callbacks {} dataset {} data-augmentation {}".format(batch_size,epochs, callbacks,dataset , data_augmentation))
-    
+
         keras_model, history  = train_model(keras_model,TensorflowGenerator.X_train, TensorflowGenerator.Y_train,TensorflowGenerator.X_test, TensorflowGenerator.Y_test, epochs, batch_size, True, data_augmentation, model_path)
 
         training_time = time.time() - begin_training
@@ -294,6 +294,13 @@ class TensorflowGenerator(object):
             elif dataset=="cifar100":
                 (x_train, y_train), (x_test, y_test) = cifar100.load_data()
                 TensorflowGenerator.num_classes = 100
+
+            elif "imdb" in dataset:
+                from keras.preprocessing import sequence
+                (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=TensorflowGenerator.num_words)
+                x_train = sequence.pad_sequences(x_train, maxlen=TensorflowGenerator.default_words_set_size)
+                x_test = sequence.pad_sequences(x_test, maxlen=TensorflowGenerator.default_words_set_size)
+                print('x_train shape:', x_train.shape)
 
             # input image dimensions
             img_rows, img_cols, channels = x_train.shape[1], x_train.shape[2], x_train.shape[3] if len(x_train.shape) ==4 else 1
