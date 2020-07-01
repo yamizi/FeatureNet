@@ -1,9 +1,10 @@
 import json, pickle
-import os
+import os, sys
+sys.path.append(".")
+
 from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureVector, KerasFeatureModel
 from model.mutation.mutable_base import MutableBase, MutationStrategies, SelectionStrategies
-from products_tree import ProductSet, ProductSetError
 import random, math
 from numpy.random import choice
 import numpy as np
@@ -225,8 +226,9 @@ class FullEvolution(object):
                 last_population = pop
                 
         else:
-            model_name = model if model else "lenet5"
-            tensorflow_gen = TensorflowGenerator(model_name,training_epochs, dataset)
+            model_name, data_augment = model if model else "lenet5", TensorflowGenerator.default_augmentation if model else False
+
+            tensorflow_gen = TensorflowGenerator(model_name,training_epochs, dataset, data_augmentation=data_augment)
             TensorflowGenerator.eval_robustness(tensorflow_gen.model, FullEvolution.attacks) #["clever","pgd","cw"])
             last_population = [tensorflow_gen.model]
             FullEvolution.log_models(last_population, session_path, 0)
@@ -280,7 +282,7 @@ if __name__ == "__main__":
     input_file = ''
     output_file = ''
     products_file = ''
-    base = '../products/local_cp/'
+    base = './products/fullevolution/'
     nb_base_products=10
     dataset = "cifar"
     training_epochs = 12
@@ -294,7 +296,8 @@ if __name__ == "__main__":
 
     MutableBase.MAX_NB_CELLS = 5
     MutableBase.MAX_NB_BLOCKS = 10
-    
+
+    TensorflowGenerator.dataset_robustness=True
     FullEvolution.run(base, last_pdts_path=products_file, dataset=dataset, nb_base_products=nb_base_products, training_epochs=training_epochs, mutation_rate=mutation_rate,survival_rate=survival_rate, breed=breed, evolution_epochs=evolution_epochs)
     
 

@@ -109,7 +109,7 @@ def train_model(model, x_train, y_train, x_test, y_test, epochs, batch_size, sch
                     shuffle=True,
                     callbacks=callbacks,
                     verbose=2)
-        else:
+        elif data_augmentation=="image":
             print('Using real-time data augmentation.')
             # This will do preprocessing and realtime data augmentation:
             datagen = ImageDataGenerator(

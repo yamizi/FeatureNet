@@ -91,27 +91,31 @@ class TensorflowGenerator(object):
     # cut texts after this number of words (among top max_features most common words)
     default_words_set_size = 80
     default_robustness_set_size = 500
+    default_augmentation = False
 
     model_graph_export = True
     eval_metrics={}
-    
+
+    dataset_robustness = False
     datasets_classes = {"mnist":10,"cifar":10,"cifar10":10,"cifar100":100,"imdb_sentiment":1}
     datasets_output = {"mnist": "softmax", "cifar": "softmax", "cifar10": "softmax", "cifar100": "softmax", "imdb_sentiment": "sigmoid"}
     training_metrics = ['accuracy']
     training_loss = "categorical_crossentropy"
-    training_optimizer = Adam(lr=lr_schedule(0))
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=None, save_path=None, robustness_set_size=0):
+
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=False, save_path=None, robustness_set_size=0, name="", optimizer=None):
+
+        KerasFeatureModel.dataset_robustness = eval_robustness
         #product_features is a list of enabled and disabled features based on the original feature model
         if batch_size ==0:
             batch_size = TensorflowGenerator.default_batchsize
             
         if product:
-            self.model =KerasFeatureModel.parse_feature_model(product, name="", depth=depth, product_features=product_features, features_label=features_label)
+            self.model =KerasFeatureModel.parse_feature_model(product, name=name, depth=depth, product_features=product_features, features_label=features_label)
 
             print("====> Loading new feature model with {0} blocks".format(len(self.model.blocks)))
-            model = TensorflowGenerator.build(self.model, dataset, clear_memory=clear_memory)
-            
+            model = TensorflowGenerator.build(self.model, dataset, clear_memory=clear_memory, optimizer=optimizer)
+
             if not model:
                 print("#### model is not valid ####")
                 return 
@@ -219,14 +223,16 @@ class TensorflowGenerator(object):
             print (traceback.format_exc())
         
         robustness_time = time.time() - begin_robustness
-        model.robustness_score = getattr(model,"{}_score".format(scores[0]),[0])[0] if len(scores) else model.clever_score
+        model.robustness_score = getattr(model,"{}_score".format(scores[0]),[0]) if len(scores) else model.clever_score
         print('model robustness (clever, pgd, cw, fgsm): {} time:{}'.format((model.clever_score,model.pgd_score, model.cw_score, model.fgsm_score),robustness_time))
 
     @staticmethod
-    def build(model, dataset, clear_memory=True):
+    def build(model, dataset, clear_memory=True, optimizer=None):
 
         if clear_memory:
             reset_keras()
+
+        optimizer = optimizer if optimizer is not None else Adam(lr=lr_schedule(0))
 
         if dataset is not None:
             TensorflowGenerator.init_dataset(dataset)
@@ -236,7 +242,7 @@ class TensorflowGenerator(object):
         if not keras_model:
             return keras_model
 
-        keras_model.compile(loss=TensorflowGenerator.training_loss, metrics=TensorflowGenerator.training_metrics, optimizer=TensorflowGenerator.training_optimizer)
+        keras_model.compile(loss=TensorflowGenerator.training_loss, metrics=TensorflowGenerator.training_metrics, optimizer=optimizer)
 
         model.nb_params =  keras_model.count_params()
         print('model blocks,layers,params,flops: {} '.format(model.to_kerasvector()))
@@ -286,80 +292,83 @@ class TensorflowGenerator(object):
 
         if TensorflowGenerator.dataset != dataset:
 
-            # the data, split between train and test sets
-            if dataset=="mnist":
-                (x_train, y_train), (x_test, y_test) = mnist.load_data()
-            elif dataset=="cifar":
-                (x_train, y_train), (x_test, y_test) = cifar10.load_data()
-            elif dataset=="cifar100":
-                (x_train, y_train), (x_test, y_test) = cifar100.load_data()
-                TensorflowGenerator.num_classes = 100
-
-            elif "imdb" in dataset:
+            if "imdb" in dataset:
                 from keras.preprocessing import sequence
                 (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=TensorflowGenerator.num_words)
                 x_train = sequence.pad_sequences(x_train, maxlen=TensorflowGenerator.default_words_set_size)
                 x_test = sequence.pad_sequences(x_test, maxlen=TensorflowGenerator.default_words_set_size)
-                print('x_train shape:', x_train.shape)
+                TensorflowGenerator.input_shape = (x_train.shape[1],)
+                print('x_train shape:', TensorflowGenerator.input_shape)
 
-            # input image dimensions
-            img_rows, img_cols, channels = x_train.shape[1], x_train.shape[2], x_train.shape[3] if len(x_train.shape) ==4 else 1
-
-            # convert class vectors to binary class matrices
-            y_train = keras.utils.to_categorical(y_train, TensorflowGenerator.num_classes)
-            y_test = keras.utils.to_categorical(y_test, TensorflowGenerator.num_classes)
-
-            if K.image_data_format() == 'channels_first':
-                x_train = x_train.reshape(x_train.shape[0], channels, img_rows, img_cols)
-                x_test = x_test.reshape(x_test.shape[0], channels, img_rows, img_cols)
-                TensorflowGenerator.input_shape = (channels, img_rows, img_cols)
             else:
-                x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
-                x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
-                TensorflowGenerator.input_shape = (img_rows, img_cols, channels)
+                # the data, split between train and test sets
+                if dataset=="mnist":
+                    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+                elif dataset=="cifar":
+                    (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+                elif dataset=="cifar100":
+                    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
+                    TensorflowGenerator.num_classes = 100
 
-            x_train = x_train.astype('float32')
-            x_test = x_test.astype('float32')
-            x_train /= 255
-            x_test /= 255
-            #print('x_train shape:', x_train.shape)
-            #print(x_train.shape[0], 'train samples')
-            #print(x_test.shape[0], 'test samples')
+                # input image dimensions
+                img_rows, img_cols, channels = x_train.shape[1], x_train.shape[2], x_train.shape[3] if len(x_train.shape) ==4 else 1
 
-            # if data_augmentation:
+                # convert class vectors to binary class matrices
+                y_train = keras.utils.to_categorical(y_train, TensorflowGenerator.num_classes)
+                y_test = keras.utils.to_categorical(y_test, TensorflowGenerator.num_classes)
 
-            #     augment_size=5000
-            #     train_size = x_train.shape[0]
+                if K.image_data_format() == 'channels_first':
+                    x_train = x_train.reshape(x_train.shape[0], channels, img_rows, img_cols)
+                    x_test = x_test.reshape(x_test.shape[0], channels, img_rows, img_cols)
+                    TensorflowGenerator.input_shape = (channels, img_rows, img_cols)
+                else:
+                    x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
+                    x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
+                    TensorflowGenerator.input_shape = (img_rows, img_cols, channels)
 
-            #     datagen = ImageDataGenerator(
-            #     rotation_range=10,
-            #     zoom_range = 0.05, 
-            #     width_shift_range=0.07,
-            #     height_shift_range=0.07,
-            #     horizontal_flip=False,
-            #     vertical_flip=False, 
-            #     data_format="channels_last",
-            #     zca_whitening=True)
+                x_train = x_train.astype('float32')
+                x_test = x_test.astype('float32')
+                x_train /= 255
+                x_test /= 255
+                #print('x_train shape:', x_train.shape)
+                #print(x_train.shape[0], 'train samples')
+                #print(x_test.shape[0], 'test samples')
 
-            #     # compute quantities required for featurewise normalization
-            #     # (std, mean, and principal components if ZCA whitening is applied)
-            #     datagen.fit(x_train, augment=True)
+                # if data_augmentation:
 
-            #     randidx = np.random.randint(train_size, size=augment_size)
-            #     x_augmented = x_train[randidx].copy()
-            #     y_augmented = y_train[randidx].copy()
-                
-            #     x_augmented = datagen.flow(x_augmented, np.zeros(augment_size), batch_size=augment_size, shuffle=False).next()[0]
-            #     x_train = np.concatenate((x_train, x_augmented))
-            #     y_train = np.concatenate((y_train, y_augmented))
+                #     augment_size=5000
+                #     train_size = x_train.shape[0]
+
+                #     datagen = ImageDataGenerator(
+                #     rotation_range=10,
+                #     zoom_range = 0.05,
+                #     width_shift_range=0.07,
+                #     height_shift_range=0.07,
+                #     horizontal_flip=False,
+                #     vertical_flip=False,
+                #     data_format="channels_last",
+                #     zca_whitening=True)
+
+                #     # compute quantities required for featurewise normalization
+                #     # (std, mean, and principal components if ZCA whitening is applied)
+                #     datagen.fit(x_train, augment=True)
+
+                #     randidx = np.random.randint(train_size, size=augment_size)
+                #     x_augmented = x_train[randidx].copy()
+                #     y_augmented = y_train[randidx].copy()
+
+                #     x_augmented = datagen.flow(x_augmented, np.zeros(augment_size), batch_size=augment_size, shuffle=False).next()[0]
+                #     x_train = np.concatenate((x_train, x_augmented))
+                #     y_train = np.concatenate((y_train, y_augmented))
 
             TensorflowGenerator.X_train = x_train
             TensorflowGenerator.X_test = x_test
             TensorflowGenerator.Y_train = y_train
             TensorflowGenerator.Y_test = y_test
 
-            TensorflowGenerator.X_robustness = x_test[0:TensorflowGenerator.default_robustness_set_size]
-            TensorflowGenerator.Y_robustness = y_test[0:TensorflowGenerator.default_robustness_set_size]
+            if KerasFeatureModel.dataset_robustness:
+                TensorflowGenerator.X_robustness = x_test[0:TensorflowGenerator.default_robustness_set_size]
+                TensorflowGenerator.Y_robustness = y_test[0:TensorflowGenerator.default_robustness_set_size]
 
             TensorflowGenerator.dataset = dataset
 
