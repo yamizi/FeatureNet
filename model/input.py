@@ -2,10 +2,10 @@
 
 from .node import Node
 from keras import backend as K
-from keras.layers import Embedding, LSTM
+from keras.layers import Embedding, LSTM, SpatialDropout1D
 from keras.layers import Dense, Conv2D, SeparableConv2D, DepthwiseConv2D, Conv1D, SeparableConv1D
 from keras.layers import AveragePooling2D, MaxPooling2D, GlobalAveragePooling2D ,AveragePooling1D, MaxPooling1D, GlobalAveragePooling1D
-from .output import Output, OutCell, OutBlock, Out
+
 
 from .mutation.mutable_input import MutableInput
 
@@ -32,7 +32,7 @@ class Input(MutableInput, Node):
 
     def set_features(self,features, relative_features=False):
         if relative_features:
-            self._relative_features = float(features)
+            self._relative_features = int(features)
         else:
             self._features =  max(Input.min_features,min(int(features),Input.max_features))
 
@@ -128,7 +128,7 @@ class Input(MutableInput, Node):
                 _element_type = "_{}".format(element_type)
                 if (_element_type in params):
                     if (len(child.get("children"))):
-                        params[_element_type] = float(Node.get_type(child.get("children")[0]))
+                        params[_element_type] = int(Node.get_type(child.get("children")[0]))
 
             input_element = EmbeddingInput(**params,raw_dict=input)
 
@@ -139,7 +139,10 @@ class Input(MutableInput, Node):
                 _element_type = "_{}".format(element_type)
                 if (_element_type in params):
                     if (len(child.get("children"))):
-                        params[_element_type] = float(Node.get_type(child.get("children")[0]))
+                        params[_element_type] = int(Node.get_type(child.get("children")[0]))
+                        if element_type == "dropout":
+                            params[_element_type] = params[_element_type] / 100
+
 
             input_element = LSTMInput(**params, raw_dict=input)
 
@@ -226,19 +229,19 @@ class LSTMInput(Input):
 
         if self.build_raw:
             return input
+
         return self.last_build(input)
 class EmbeddingInput(Input):
-    def __init__(self, _input_dim, _input_length=None, _dropout = 0.2, _output_dim = 128, raw_dict=None, cell=None):
+    def __init__(self, _input_dim, _input_length=None, _output_dim = 128, raw_dict=None, cell=None):
         super(EmbeddingInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         self._input_dim = _input_dim
         self._input_length = _input_length
-        self._dropout = _dropout
         self. _output_dim = _output_dim
 
     def build(self, input, neighbour=None):
         input = super(EmbeddingInput, self).build(input)
-        self.last_build = Embedding(self._input_dim, self._output_dim,self._input_length, dropout = self._dropout)
+        self.last_build = Embedding(self._input_dim, self._output_dim,input_length=self._input_length)
 
         if self.build_raw:
             return input
@@ -271,7 +274,7 @@ class PoolingInput(Input):
         super(PoolingInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         typeAcceptedValues = ("max","average","global")
-        paddingAcceptedValues = ("same",)# ("valid", "same")
+        paddingAcceptedValues = ("valid", "same")
 
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
@@ -285,7 +288,7 @@ class PoolingInput(Input):
                 self.append_parameter("_kernel","(__int__,__int__)")
             elif _kernel == "none":
                 self._kernel = None
-            elif isinstance(_kernel, list):
+            elif isinstance(_kernel, tuple):
                 self._kernel =(min(int(_kernel[0]),3),min(int(_kernel[1]),3))
             else:
                 self._kernel = int(_kernel)
@@ -294,7 +297,7 @@ class PoolingInput(Input):
                 self.append_parameter("_stride",'(__int__,__int__)')
             elif _stride =="none":
                 self._stride = None
-            elif isinstance(_stride, list):
+            elif isinstance(_stride, tuple):
                 self._stride = (int(_stride[0]), int(_stride[1]))
             else:
                 self._stride = int(_stride)

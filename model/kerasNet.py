@@ -36,23 +36,6 @@ def lstm_blocks(max_features = 20000,lstm_units = 128):
     blocks = []
 
     block1 = Block()
-
-    cell11 = Cell(input1 = EmbeddingInput(max_features))
-    block1.append_cell(cell11)
-    cell12 = Cell(input1 = LSTMInput(lstm_units))
-    block1.append_cell(cell12)
-
-    block2 = Block()
-    block2.set_stride("1x1")
-    cell21 = Cell(input1 = DenseInput(1, "sigmoid"))
-    block2.append_cell(cell21)
-
-    blocks.extend([block1, block2])
-
-def lstm_blocks(max_features = 20000,lstm_units = 128):
-    blocks = []
-
-    block1 = Block()
     cell11 = Cell(input1 = EmbeddingInput(max_features))
     block1.append_cell(cell11)
 
@@ -65,6 +48,8 @@ def lstm_blocks(max_features = 20000,lstm_units = 128):
     block3.append_cell(cell31)
 
     blocks.extend([block1, block2, block3])
+
+    return blocks
 
 
 def cnn1d_blocks(input_dims = 20000,maxlen = 400,output_dims = 50,filters = 250,hidden_dims = 250):
@@ -92,3 +77,4 @@ def cnn1d_blocks(input_dims = 20000,maxlen = 400,output_dims = 50,filters = 250,
     block3.append_cell(cell31)
 
     blocks.extend([block1, block2, block3])
+    return blocks

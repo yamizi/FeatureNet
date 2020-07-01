@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
 """"""
 from __future__ import absolute_import, division, print_function, unicode_literals
-import tensorflow as tf
-import keras.backend as k
 from keras.models import Sequential, Model
 from keras.layers import Dense, Flatten
 from keras.layers import Input, GlobalAveragePooling2D
-from keras.optimizers import SGD
 
 from .mutation.mutable_model import MutableModel
 
 from keras.utils import multi_gpu_model
 from tensorflow.python.client import device_lib
-
 from .block import Block
-from .output import Out
-from .cell import Cell
 
 import random
 import uuid
@@ -175,7 +169,7 @@ class KerasFeatureModel(MutableModel):
     @staticmethod
     def parse_feature_model(feature_model, name=None, depth=1, product_features=None, features_label=None):
 
-        print("building keras model from feature model tree")
+        print("building keras model from feature model tree {}".format(name))
         model = KerasFeatureModel(name=name)
 
         if product_features:
@@ -215,5 +209,13 @@ class KerasFeatureModel(MutableModel):
         if feature_model=="keras":
             from .kerasNet import standard_blocks
             blocks =  standard_blocks()
+
+        if feature_model=="keras_c1d":
+            from .kerasNet import cnn1d_blocks
+            blocks =  cnn1d_blocks()
+
+        if feature_model=="keras_lstm":
+            from .kerasNet import lstm_blocks
+            blocks =  lstm_blocks()
         
         return blocks
