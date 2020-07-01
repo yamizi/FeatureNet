@@ -13,7 +13,7 @@ class SelectionStrategies(Enum):
 class MutableBase(object):
   
     mutation_operators = []
-    debug_mode = False
+    debug_mode = True
     mutation_stategy = MutationStrategies.CHOICE
     MAX_NB_CELLS = 10
     MAX_NB_BLOCKS = 20

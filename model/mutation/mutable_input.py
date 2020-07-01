@@ -1,7 +1,6 @@
 from .mutable_base import MutableBase, MutationStrategies
 from numpy.random import choice, rand
 
-
 class MutableInput(MutableBase):
 
     attributes = {"strides_values":"_stride","features_values":"_features", "kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
@@ -12,22 +11,27 @@ class MutableInput(MutableBase):
     conv_type_values = ("normal","separable","depthwise")
     activation_values = ("relu","sigmoid",None)
     features_values = (None,8,16,32,64,128,256, 512, 1024, 2048)
-    
+
+
 
     def __init__(self, raw_dict=None, stride=1, features=0):
 
         self.mutation_operators = (("mutate_type",0.5),("mutate_attributes",0.5))
+        from model.input import DenseInput, IdentityInput, PoolingInput, ConvolutionInput, EmbeddingInput, \
+            LSTMInput
+        self.available_inputs = [IdentityInput, ConvolutionInput, PoolingInput, DenseInput, EmbeddingInput, LSTMInput]
+
         super(MutableInput, self).__init__()
 
 
     def mutate_type(self, rate=1):
         prob = rand()
         if prob < rate or MutableBase.mutation_stategy==MutationStrategies.CHOICE:
-            from model.input import ZerosInput, DenseInput, IdentityInput, PoolingInput, ConvolutionInput
-            inputs = [IdentityInput, ConvolutionInput] #,PoolingInput, DenseInput]
+            inputs = self.available_inputs
 
             #We only allow second input to be zero
             if self.parent_cell.input2 == self:
+                from model.input import DenseInput, ZerosInput
                 inputs.append(ZerosInput)
             input = choice(inputs, None)()
 
