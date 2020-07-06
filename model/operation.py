@@ -94,7 +94,7 @@ class Flat(Operation):
         input = super(Flat, self).build(input)
         if(input.shape.ndims > 2):
             if self._distributed:
-                return TimeDistributed(Flatten)(input)
+                return TimeDistributed(Flatten, name=self.fullname)(input)
             else:
                 return Flatten()(input)
         return input
@@ -108,7 +108,7 @@ class Distributed(Operation):
 
     def build(self,input):
         input = super(Distributed, self).build(input)
-        return TimeDistributed(self._prev_layer.last_build)(input)
+        return TimeDistributed(self._prev_layer.last_build, name=self.fullname)(input)
 
 class Void(Operation):
     def __init__(self, raw_dict=None, cell=None):
@@ -128,7 +128,7 @@ class Drop(Operation):
 
     def build(self,input):
         input = super(Drop, self).build(input)
-        return Dropout(self._value)(input) if self._value else input
+        return Dropout(self._value, name=self.fullname)(input) if self._value else input
 
 class Padding(Operation):
     def __init__(self, _fillValue=None, _fillSize=None, raw_dict=None, cell=None):
@@ -150,7 +150,7 @@ class Padding(Operation):
     def build(self,input):
         input = super(Padding, self).build(input)
         if input.shape.ndims ==4:
-            return ZeroPadding2D(self._fillSize)(input)
+            return ZeroPadding2D(self._fillSize, name=self.fullname)(input)
         return input
 
 class BatchNorm(Operation):
@@ -164,7 +164,7 @@ class BatchNorm(Operation):
 
     def build(self,input):
         input = super(BatchNorm, self).build(input)
-        return BatchNormalization(axis = self._axis)(input)
+        return BatchNormalization(axis = self._axis, name=self.fullname)(input)
 
 class Active(Operation):
     def __init__(self, _method=None, raw_dict=None, cell=None):
@@ -179,7 +179,7 @@ class Active(Operation):
 
     def build(self,input):
         input = super(Active, self).build(input)
-        return Activation(activation=self._method)(input)
+        return Activation(activation=self._method, name=self.fullname)(input)
 
 
 class Combination(MutableCombination, Node):
@@ -236,7 +236,7 @@ class Sum(Combination):
         source1, source2 = super(Sum, self).build(source1, source2)
 
         if source1.shape.as_list() == source2.shape.as_list():
-            return Add()([source1, source2])
+            return Add(name=self.fullname)([source1, source2])
         return source2  # we keep the biggest matrix
         
 class Concat(Combination):
@@ -252,7 +252,7 @@ class Concat(Combination):
         source1, source2 = super(Concat, self).build(source1, source2)
 
         if source1.shape.as_list() == source2.shape.as_list():
-            return Concatenate(axis=self._axis)([source1, source2])
+            return Concatenate(axis=self._axis, name=self.fullname)([source1, source2])
         return source2 # we keep the biggest matrix
 
 class Product(Combination):
@@ -262,4 +262,4 @@ class Product(Combination):
     
     def build(self, source1, source2):
         source1, source2 = super(Product, self).build(source1, source2)
-        return Multiply()([source1, source2])
+        return Multiply(name=self.fullname)([source1, source2])

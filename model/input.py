@@ -225,7 +225,7 @@ class LSTMInput(Input):
 
     def build(self, input, neighbour=None):
         input = super(LSTMInput, self).build(input)
-        self.last_build = LSTM(self._units, recurrent_dropout = self._recurrent_dropout,activation = self._activation, dropout = self._dropout)
+        self.last_build = LSTM(self._units, recurrent_dropout = self._recurrent_dropout,activation = self._activation, dropout = self._dropout, name=self.fullname)
 
         if self.build_raw:
             return input
@@ -241,7 +241,7 @@ class EmbeddingInput(Input):
 
     def build(self, input, neighbour=None):
         input = super(EmbeddingInput, self).build(input)
-        self.last_build = Embedding(self._input_dim, self._output_dim,input_length=self._input_length)
+        self.last_build = Embedding(self._input_dim, self._output_dim,input_length=self._input_length, name=self.fullname)
 
         if self.build_raw:
             return input
@@ -263,7 +263,7 @@ class DenseInput(Input):
 
     def build(self, input, neighbour=None):
         input = super(DenseInput, self).build(input)
-        self.last_build =  Dense(self._features, activation=self._activation, name=Node.get_name(self))
+        self.last_build =  Dense(self._features, activation=self._activation, name=self.fullname)
 
         if self.build_raw:
             return input
@@ -317,13 +317,13 @@ class PoolingInput(Input):
             if self._type=="max":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
-                self.last_build =  MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
+                self.last_build =  MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=self.fullname)
             if self._type=="average":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
-                self.last_build = AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
+                self.last_build = AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=self.fullname)
             if self._type=="global":
-                self.last_build =  GlobalAveragePooling2D(name=Node.get_name(self))
+                self.last_build =  GlobalAveragePooling2D(name=self.fullname)
 
             if self.build_raw:
                 return input
@@ -333,13 +333,13 @@ class PoolingInput(Input):
             if self._type=="max":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
-                self.last_build =  MaxPooling1D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
+                self.last_build =  MaxPooling1D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=self.fullname)
             if self._type=="average":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
-                self.last_build = AveragePooling1D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=Node.get_name(self))
+                self.last_build = AveragePooling1D(pool_size=self._kernel, strides = self._stride, padding=self, name=self.fullname)
             if self._type=="global":
-                self.last_build =  GlobalAveragePooling1D(name=Node.get_name(self))
+                self.last_build =  GlobalAveragePooling1D(name=self.fullname)
 
             if self.build_raw:
                 return input
@@ -396,19 +396,19 @@ class ConvolutionInput(Input):
             if self._type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
-                self.last_build= Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))
+                self.last_build= Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=self.fullname)
             elif self._type == "separable":
-                self.last_build= SeparableConv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))
+                self.last_build= SeparableConv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=self.fullname)
             elif self._type == "depthwise":
-                self.last_build= DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=Node.get_name(self))
+                self.last_build= DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=self.fullname)
         
         elif input.shape.ndims==3:
             if self._type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
-                self.last_build= Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))
+                self.last_build= Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=self.fullname)
             elif self._type == "separable":
-                self.last_build= SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=Node.get_name(self))
+                self.last_build= SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=self.fullname)
 
 
         if self.last_build is not None:

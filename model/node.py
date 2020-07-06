@@ -5,25 +5,53 @@ class Node(object):
     parent_model = None
     layer_mapping = {}
     node_mapping = {}
+    node_list = []
+    increment = 0
      
     def __init__(self, raw_dict=None, parent_model=None):
         self.parent_name = ""
         self.raw_dict = raw_dict
         self.customizable_parameters = {}
-        self.uniqid = str(uuid.uuid1())[:10]
-
+        self.uniqid = "{}-{}".format(Node.increment,str(uuid.uuid1())[:10])
+        Node.increment = Node.increment+1
         Node.node_mapping[self.name] = self
+        Node.node_list.append(self.name)
 
         if parent_model:
             self.parent_model = parent_model
 
         #print(self.get_name())
 
+
+    def __deepcopy__(self, memo):
+        from copy import deepcopy
+
+        uniqid = "{}_{}-{}".format(self.uniqid, Node.increment,str(uuid.uuid1())[:10])
+        Node.increment = Node.increment + 1
+
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            if k =="last_build":
+                continue
+            elif k =="uniqid":
+
+                setattr(result, "uniqid", deepcopy(uniqid, memo))
+            else:
+                setattr(result, k, deepcopy(v, memo))
+
+        Node.node_mapping[result.name] = result
+        Node.node_list.append(result.name)
+
+        return result
+
     def get_name(self, raw_dict=None):
         if self.raw_dict:
             lbl = self.raw_dict.get("label")
             lbl = lbl.replace("Block","B").replace("Cell_","").replace("Element","C")
             return self.uniqid+lbl
+
         return self.uniqid
 
     def append_parameter(self, attribute, possible_values=""):
@@ -40,7 +68,11 @@ class Node(object):
     @property
     def name(self):
         return self.get_name()
-        
+
+    @property
+    def fullname(self):
+        return self.get_name() + "-" + self.__class__.__name__
+
         
     @staticmethod
     def layer_to_cell(layer):
