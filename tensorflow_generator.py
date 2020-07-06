@@ -111,7 +111,10 @@ class TensorflowGenerator(object):
             batch_size = TensorflowGenerator.default_batchsize
             
         if product:
-            self.model =KerasFeatureModel.parse_feature_model(product, name=name, depth=depth, product_features=product_features, features_label=features_label)
+            if isinstance(product, KerasFeatureModel):
+                self.model = product
+            else:
+                self.model =KerasFeatureModel.parse_feature_model(product, name=name, depth=depth, product_features=product_features, features_label=features_label)
 
             print("====> Loading new feature model with {0} blocks".format(len(self.model.blocks)))
             model = TensorflowGenerator.build(self.model, dataset, clear_memory=clear_memory, optimizer=optimizer)
@@ -330,36 +333,6 @@ class TensorflowGenerator(object):
                 x_test = x_test.astype('float32')
                 x_train /= 255
                 x_test /= 255
-                #print('x_train shape:', x_train.shape)
-                #print(x_train.shape[0], 'train samples')
-                #print(x_test.shape[0], 'test samples')
-
-                # if data_augmentation:
-
-                #     augment_size=5000
-                #     train_size = x_train.shape[0]
-
-                #     datagen = ImageDataGenerator(
-                #     rotation_range=10,
-                #     zoom_range = 0.05,
-                #     width_shift_range=0.07,
-                #     height_shift_range=0.07,
-                #     horizontal_flip=False,
-                #     vertical_flip=False,
-                #     data_format="channels_last",
-                #     zca_whitening=True)
-
-                #     # compute quantities required for featurewise normalization
-                #     # (std, mean, and principal components if ZCA whitening is applied)
-                #     datagen.fit(x_train, augment=True)
-
-                #     randidx = np.random.randint(train_size, size=augment_size)
-                #     x_augmented = x_train[randidx].copy()
-                #     y_augmented = y_train[randidx].copy()
-
-                #     x_augmented = datagen.flow(x_augmented, np.zeros(augment_size), batch_size=augment_size, shuffle=False).next()[0]
-                #     x_train = np.concatenate((x_train, x_augmented))
-                #     y_train = np.concatenate((y_train, y_augmented))
 
             TensorflowGenerator.X_train = x_train
             TensorflowGenerator.X_test = x_test

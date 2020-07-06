@@ -3,7 +3,7 @@ import os, sys
 sys.path.append(".")
 
 from tensorflow_generator import TensorflowGenerator
-from model.keras_model import KerasFeatureVector, KerasFeatureModel
+from model.keras_model import KerasFeatureModel
 from model.mutation.mutable_base import MutableBase, MutationStrategies, SelectionStrategies
 import random, math
 from numpy.random import choice
