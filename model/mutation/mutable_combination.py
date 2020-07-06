@@ -3,11 +3,11 @@ from numpy.random import choice, rand
 
 
 class MutableCombination(MutableBase):
-
+    mutation_operators = (("mutate_type",1))
 
     def __init__(self, raw_dict=None, stride=1, features=0):
 
-        self.mutation_operators = (("mutate_type",1))
+        self.mutation_operators = MutableCombination.mutation_operators
         super(MutableCombination, self).__init__()
 
 
@@ -28,4 +28,3 @@ class MutableCombination(MutableBase):
         return ("mutate_combination_type",)
 
 
-    

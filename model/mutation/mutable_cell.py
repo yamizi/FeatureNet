@@ -1,9 +1,11 @@
 from .mutable_base import MutableBase
 
 class MutableCell(MutableBase):
+
+    mutation_operators = (("mutate_input1",0.4),("mutate_input2",0.3),("mutate_output",0.3))
     def __init__(self, raw_dict=None, input1=None, operation1=None, input2=None, operation2=None, output=None, output_combination=None):
 
-        self.mutation_operators = (("mutate_input1",0.4),("mutate_input2",0.3),("mutate_output",0.3))
+        self.mutation_operators = MutableCell.mutation_operators
         super(MutableCell, self).__init__(raw_dict)
 
 
@@ -28,4 +30,3 @@ class MutableCell(MutableBase):
         self.output.mutate(rate)
         return ("cell","output")
 
-    
