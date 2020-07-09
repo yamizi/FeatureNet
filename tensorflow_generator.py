@@ -103,9 +103,11 @@ class TensorflowGenerator(object):
     training_loss = "categorical_crossentropy"
 
 
-    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = True, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=False, save_path=None, robustness_set_size=0, name="", optimizer=None):
+    def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=False, save_path=None, robustness_set_size=0, name="", optimizer=None):
 
         KerasFeatureModel.dataset_robustness = eval_robustness
+        self.valid = True
+
         #product_features is a list of enabled and disabled features based on the original feature model
         if batch_size ==0:
             batch_size = TensorflowGenerator.default_batchsize
@@ -121,10 +123,11 @@ class TensorflowGenerator(object):
 
             if not model:
                 print("#### model is not valid ####")
-                return 
+                self.valid = False
+                return
             
             if no_train:
-                return model
+                return
 
             if save_path:
                 save_path = "{}{}".format(save_path,self.model._name)
@@ -133,6 +136,7 @@ class TensorflowGenerator(object):
             
             if not keras_model:
                 print("#### model is not valid ####")
+                self.valid = False
                 return 
                 
             if eval_robustness:
@@ -254,7 +258,7 @@ class TensorflowGenerator(object):
 
 
     @staticmethod
-    def train(model, epochs, batch_size, dataset, data_augmentation=True, save_path=None):
+    def train(model, epochs, batch_size, dataset, data_augmentation=False, save_path=None):
 
         score = []
 
