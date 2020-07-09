@@ -58,7 +58,7 @@ class KerasFeatureModel(MutableModel):
     features_label=  []
     nb_flops  = 0
     nb_params = 0
-    robustness_score = 0
+    robustness_score = (0,0,0)
     clever_score = 0
     pgd_score = 0
     cw_score = 0
