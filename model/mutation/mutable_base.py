@@ -21,6 +21,7 @@ class MutableBase(object):
     
     def mutate(self, rate=1):
         e,p =  zip(*self.mutation_operators)
+        result = None
         if MutableBase.mutation_stategy==MutationStrategies.CHOICE:
             operation = getattr(self, choice(e, None, p))
 
@@ -35,8 +36,15 @@ class MutableBase(object):
                 if result and MutableBase.debug_mode:
                     print("mutation {}".format(result))
 
+        if len(result)==2:
+            self.mutations.append({"mutation_type":result[0],"mutation_target":result[1].__class__.__name__})
+        elif len(result)==3:
+            self.mutations.append({"mutation_type":result[0],"mutation_target":"{}#{}".format(result[1],result[2])})
+
+
     def __init__(self, raw_dict=None, previous_block = None):
 
+        self.mutations = []
         super(MutableBase, self).__init__(raw_dict,previous_block)
 
     

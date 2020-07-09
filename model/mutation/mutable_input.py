@@ -4,7 +4,8 @@ from numpy.random import choice, rand
 class MutableInput(MutableBase):
 
     attributes = {"strides_values":"_stride","features_values":"_features", "kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
-    attributes = {"kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
+    #attributes = {"kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
+
     strides_values = ((1,1),(2,2))
     kernel_values = ((1,1),(3,1),(1,3),(3,3),(5,1),(1,5),(5,5),(7,1),(1,7),(7,7))
     pool_type_values = ("max","average","global")
@@ -19,7 +20,7 @@ class MutableInput(MutableBase):
         self.mutation_operators = (("mutate_type",0.5),("mutate_attributes",0.5))
         from model.input import DenseInput, IdentityInput, PoolingInput, ConvolutionInput, EmbeddingInput, \
             LSTMInput
-        self.available_inputs = [IdentityInput, ConvolutionInput, PoolingInput, DenseInput, EmbeddingInput, LSTMInput]
+        self.available_inputs = [IdentityInput, ConvolutionInput, PoolingInput, DenseInput, LSTMInput]
 
         super(MutableInput, self).__init__()
 
@@ -33,7 +34,9 @@ class MutableInput(MutableBase):
             if self.parent_cell.input2 == self:
                 from model.input import DenseInput, ZerosInput
                 inputs.append(ZerosInput)
-            input = choice(inputs, None)()
+            selected = choice(inputs, None)
+            if selected is not None:
+                input = selected()
 
             #copy previous input attributes
             input.parent_cell = self.parent_cell

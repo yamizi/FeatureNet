@@ -77,6 +77,7 @@ class KerasFeatureModel(MutableModel):
         if not name:
             name = str(uuid.uuid1())[:10]
         self._name = name
+        self.mutation_history = []
         super(KerasFeatureModel, self).__init__()
 
     def get_custom_parameters(self):
