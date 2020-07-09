@@ -102,6 +102,9 @@ class TensorflowGenerator(object):
     training_metrics = ['accuracy']
     training_loss = "categorical_crossentropy"
 
+    robustness_time = 0
+    training_time = 0
+
 
     def __init__(self, product, epochs=12, dataset="mnist", data_augmentation = False, depth=1, product_features=None, features_label=None, no_train=False,clear_memory=True, batch_size=128, eval_robustness=False, save_path=None, robustness_set_size=0, name="", optimizer=None):
 
@@ -165,7 +168,8 @@ class TensorflowGenerator(object):
         
     @staticmethod
     def eval_attack_robustness(keras_model, attack_name, norm, robustness_set_size=0):
-        
+        print("Evaluating model robustness using {}".format(attack_name))
+
         attack_params = {"norm":norm}
 
         if attack_name=="cw":
@@ -190,9 +194,10 @@ class TensorflowGenerator(object):
 
     @staticmethod
     def eval_robustness(model, scores=[], robustness_set_size=0):
+        robustness_time = 0
         keras_model = model.model
         if not keras_model or model.accuracy < 0.5:
-            return 
+            return None
         begin_robustness = time.time() 
         try:
             norm = 2
@@ -233,13 +238,20 @@ class TensorflowGenerator(object):
         model.robustness_score = getattr(model,"{}_score".format(scores[0]),[0]) if len(scores) else model.clever_score
         print('model robustness (clever, pgd, cw, fgsm): {} time:{}'.format((model.clever_score,model.pgd_score, model.cw_score, model.fgsm_score),robustness_time))
 
+        return robustness_time
+
+    @staticmethod
+    def compile(keras_model, optimizer=None):
+        optimizer = optimizer if optimizer is not None else Adam(lr=lr_schedule(0))
+        keras_model.compile(loss=TensorflowGenerator.training_loss, metrics=TensorflowGenerator.training_metrics,
+                            optimizer=optimizer)
+        return keras_model
+
     @staticmethod
     def build(model, dataset, clear_memory=True, optimizer=None):
 
         if clear_memory:
             reset_keras()
-
-        optimizer = optimizer if optimizer is not None else Adam(lr=lr_schedule(0))
 
         if dataset is not None:
             TensorflowGenerator.init_dataset(dataset)
@@ -249,10 +261,8 @@ class TensorflowGenerator(object):
         if not keras_model:
             return keras_model
 
-        keras_model.compile(loss=TensorflowGenerator.training_loss, metrics=TensorflowGenerator.training_metrics, optimizer=optimizer)
-
-        model.nb_params =  keras_model.count_params()
-        print('model blocks,layers,params,flops: {} '.format(model.to_kerasvector()))
+        keras_model =  TensorflowGenerator.compile(keras_model, optimizer)
+        model.nb_params = keras_model.count_params()
 
         return keras_model
 

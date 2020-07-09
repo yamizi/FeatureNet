@@ -38,8 +38,9 @@ class MutableBase(object):
 
         if len(result)==2:
             self.mutations.append({"mutation_type":result[0],"mutation_target":result[1].__class__.__name__})
-        elif len(result)==3:
-            self.mutations.append({"mutation_type":result[0],"mutation_target":"{}#{}".format(result[1],result[2])})
+        elif len(result)==1:
+            result = result[0]
+            self.mutations.append({"mutation_type":result[0],"mutation_target":"{}#{}".format(result[1],str(result[2]))})
 
 
     def __init__(self, raw_dict=None, previous_block = None):
