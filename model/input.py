@@ -215,7 +215,7 @@ class IdentityInput(Input):
         return input
 
 class LSTMInput(Input):
-    def __init__(self, _units=None,_dropout=0.2, _recurrent_dropout=0.2, _activation = "tanh", raw_dict=None, cell=None):
+    def __init__(self, _units=128,_dropout=0.2, _recurrent_dropout=0.2, _activation = "tanh", raw_dict=None, cell=None):
         super(LSTMInput, self).__init__(raw_dict=raw_dict, cell=cell)
 
         self._units = _units
