@@ -49,7 +49,7 @@ class Node(object):
     def get_name(self, raw_dict=None):
         if self.raw_dict:
             lbl = self.raw_dict.get("label")
-            lbl = lbl.replace("Block","B-").replace("Cell_","").replace("Element","C-")
+            lbl = lbl.replace("Block","-B-").replace("Cell_","").replace("Element","-C-")
             return self.uniqid+lbl
 
         return self.uniqid
@@ -67,11 +67,13 @@ class Node(object):
 
     @property
     def name(self):
-        return self.get_name()+ self.__class__.__name__
+        return self.get_name()+ "-n-" +self.__class__.__name__
 
     @property
     def fullname(self):
-        return self.get_name() + "-f-" + self.__class__.__name__
+        classname =  self.__class__.__name__
+        node_name =self.get_name()
+        return  node_name + "-f-" +classname
 
         
     @staticmethod

@@ -137,7 +137,7 @@ class KerasFeatureModel(MutableModel):
                         raise Exception()
                     model = multi_gpu_model(model, gpus=len(gpu_devices))
                 except Exception as e:
-                    print("multi gpu not available")
+                    print("multi gpu not available {}".format(local_device_protos))
                     KerasFeatureModel.use_multigpu = False
 
             
