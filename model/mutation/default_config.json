@@ -1,0 +1,218 @@
+{
+  "MutableBlock": {
+    "attributes": {
+      "strides_values": null,
+      "features_multiplier_values": null
+    },
+    "strides_values": [
+      "1x1",
+      "2x2"
+    ],
+    "features_multiplier_values": [
+      800,
+      400,
+      200,
+      100,
+      50,
+      25
+    ],
+    "mutation_operators": [
+      [
+        "mutate_add_cell",
+        0.3
+      ],
+      [
+        "mutate_cell",
+        0.3
+      ],
+      [
+        "mutate_remove_cell",
+        0.1
+      ],
+      [
+        "mutate_block",
+        0.3
+      ]
+    ]
+  },
+  "MutableCell": {
+    "mutation_operators": [
+      [
+        "mutate_input1",
+        0.4
+      ],
+      [
+        "mutate_input2",
+        0.3
+      ],
+      [
+        "mutate_operation1",
+        0.0
+      ],
+      [
+        "mutate_operation2",
+        0.0
+      ],
+      [
+        "mutate_combination",
+        0.0
+      ],
+      [
+        "mutate_output",
+        0.0
+      ]
+    ]
+  },
+  "MutableInput": {
+    "mutation_operators": [
+      [
+        "mutate_type",
+        0
+      ],
+      [
+        "mutate_attributes",
+        1
+      ]
+    ],
+    "type_inputs" : [["identity",0.25],["dense",0.25],["pooling",0.25],["convolution",0.25],["embedding",0],["lstm",0]],
+    "attributes": {
+      "strides_values": "_stride",
+      "features_values": "_features",
+      "kernel_values": "_kernel",
+      "type_values": "_type",
+      "conv_type_values": "_type",
+      "activation_values": "_activation"
+    },
+    "strides_values": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "kernel_values": [
+      [
+        1,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        7,
+        7
+      ]
+    ],
+    "pool_type_values": [
+      "max",
+      "average",
+      "global"
+    ],
+    "conv_type_values": [
+      "normal",
+      "separable",
+      "depthwise"
+    ],
+    "activation_values": [
+      "relu",
+      "sigmoid",
+      null
+    ],
+    "features_values": [
+      null,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048
+    ]
+  },
+  "MutableOperation": {
+    "type_operations" : [["active", 0.25], ["batch", 0.25], ["void", 0.25], ["drop", 0.25]],
+    "attributes": {
+      "dropout_values": "_value",
+      "activation_method": "_method"
+    },
+    "dropout_values": [
+      0.7,
+      0.3,
+      0.5
+    ],
+    "activation_method": [
+      "relu",
+      "tanh",
+      "sigmoid"
+    ],
+    "mutation_operators": [
+      [
+        "mutate_type",
+        0.5
+      ],
+      [
+        "mutate_attributes",
+        0.5
+      ]
+    ]
+  },
+  "MutableOutput": {
+    "attributes": {
+      "cell_index_values": "_relativeCellIndex"
+    },
+    "cell_index_values": [
+      1,
+      2,
+      3
+    ],
+    "mutation_operators": [
+      [
+        "mutate_type",
+        0.5
+      ],
+      [
+        "mutate_attributes",
+        0.5
+      ]
+    ]
+  },
+  
+  "MutableCombination": {
+      "mutation_operators" : [["mutate_type",1]],
+      "type_combinations" : [["concat",0.5],["sum",0.5]]
+  }
+}
