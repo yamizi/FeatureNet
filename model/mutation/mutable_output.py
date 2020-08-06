@@ -6,11 +6,11 @@ class MutableOutput(MutableBase):
 
     attributes = {"cell_index_values":"_relativeCellIndex"}
     cell_index_values = (1, 2, 3)
-    
+    mutation_operators = (("mutate_type", 0.5), ("mutate_attributes", 0.5))
 
     def __init__(self, raw_dict=None, stride=1, features=0):
 
-        self.mutation_operators = (("mutate_type",0.5),("mutate_attributes",0.5))
+        self.mutation_operators = MutableOutput.mutation_operators
         super(MutableOutput, self).__init__()
 
 
@@ -37,7 +37,7 @@ class MutableOutput(MutableBase):
             attribute_to_mutate = choice(list(self.attributes.keys()), None)
             attribute_value = choice(getattr(self,attribute_to_mutate), None)
             setattr(self, self.attributes[attribute_to_mutate],attribute_value)
-            attrs =  [("mutate_output_attribute",attribute_to_mutate, attribute_value )]
+            attrs =  [("mutate_output_attribute",self.attributes[attribute_to_mutate], attribute_value )]
         else:
             
             for attribute_to_mutate in self.attributes.keys():
@@ -45,6 +45,6 @@ class MutableOutput(MutableBase):
                 if prob < rate:
                     attribute_value = choice(getattr(self,attribute_to_mutate), None)
                     setattr(self, self.attributes[attribute_to_mutate],attribute_value)
-                    attrs.append(("mutate_output_attribute",attribute_to_mutate, attribute_value ))
+                    attrs.append(("mutate_output_attribute",self.attributes[attribute_to_mutate], attribute_value ))
 
         return attrs
