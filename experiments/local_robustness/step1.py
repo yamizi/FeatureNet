@@ -5,15 +5,17 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import numpy as np
+import random
+import getopt
 from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureModel
 from model.node import Node
-from model.mutation.mutable_base import MutableBase, MutationStrategies, SelectionStrategies
+from model.mutation.mutable_parameters import MutableParameters
 import tensorflow as tf
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 def _get_layer_id(layer_name):
-    return layer_name[0:layer_name.find("-c")]
+    return layer_name[0:layer_name.find("-n-")]
 
 
 def generate_mutants(fm_model, node_name,nb_mutants=1, nb_mutations=1,mutation_ratio = 1):
@@ -58,14 +60,29 @@ def copy_weights(target_model, src_layers=None, freeze_layers=False):
 
     return target_model
 
-def run(experiment_path="./experiments/local_robustness"):
-    experiment_path = "."
-    model_name, training_epochs, dataset = "keras", 10, "cifar"
-    attacks = ["pgd"]
-    mutation_ratio = 0.1
-    nb_mutations = 1
-    nb_mutants = 10
-    robustness_set_size = 1000
+def run(experiment_path=".", mutation_config_path="./light_config.json"):
+    os.makedirs('{}/output/'.format(experiment_path), exist_ok=True)
+
+    config = MutableParameters.load_config(mutation_config_path)
+
+    if not config or not config.get("evolution_parameters"):
+        return
+
+    config = config.get("evolution_parameters")
+    model_name = config.get("model_name")
+    training_epochs= config.get("training_epochs")
+    dataset = config.get("dataset")
+
+    attacks = config.get("attacks")
+    mutation_ratio = config.get("mutation_ratio")
+    nb_mutations = config.get("nb_mutations")
+    nb_mutants = config.get("nb_mutants")
+    robustness_set_size = config.get("robustness_set_size")
+
+    random_seed = config.get("random_seed",None)
+    if random_seed:
+        random.seed(random_seed)
+        np.random.seed(random_seed)
 
     tensorflow_gen = TensorflowGenerator(model_name, training_epochs, dataset)
     original_model = tensorflow_gen.model.model
@@ -92,65 +109,33 @@ def run(experiment_path="./experiments/local_robustness"):
             history = {"train_acc":history.history['acc'], "test_acc":history.history['val_acc'], **robustness, "mutations":mutant.mutation_history, **time}
             print("mutant {}".format(i), history)
             histories.append(history)
-
-    print(histories)
-    with open('{}/step1.json'.format(experiment_path), 'w') as outfile:
+    with open('{}/output/step1.json'.format(experiment_path), 'w') as outfile:
         json.dump(histories,outfile)
 
-def run2():
-    model_name, training_epochs, dataset = "keras", 1, "cifar"
-    attacks = ["cw", "pgd"]
-    mutation_ratio = 0.1
-    nb_mutations = 1
-    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, dataset, data_augmentation=False)
-    #TensorflowGenerator.eval_robustness(tensorflow_gen.model, attacks,100)
 
-    blocks1 = tensorflow_gen.model.dump_blocks()
-    node_mapping1 = list(Node.node_mapping.keys())
-    layer_mapping1 = list(Node.layer_mapping.keys())
-    node_list1 = Node.node_list.copy()
-
-    blocks = copy.deepcopy(blocks1)
-    for b in blocks1["blocks"]:
-        for c in b.cells:
-            print(c.uniqid)
-
-    mutant = KerasFeatureModel.parse_blocks({"blocks": blocks["blocks"]})
-
-    all_layers = [e.name for e in tensorflow_gen.model.model.layers]
-    for l in layer_mapping1:
-        if l.find("Conv") > -1:
-            tensorflow_gen.model.model.get_layer(l).trainable = False
+def main(argv):
+    experiment_path = '.'
+    mutation_config_path = "./light_config.json"
 
 
-    for j in range(nb_mutations):
-        #mutant.mutate(mutation_ratio)
-        tensorflow_gen = TensorflowGenerator(mutant, training_epochs, dataset, data_augmentation=False)
-        TensorflowGenerator.eval_robustness(tensorflow_gen.model, attacks, 100)
+    try:
+        opts, args = getopt.getopt(argv, "hx:c:", [
+            "xp_path=", "config_path="])
+    except getopt.GetoptError:
+        pass
+    print("arguments {}".format(opts))
+    for opt, arg in opts:
+        if opt == '-h':
+            print(
+                'step1.py -x <experience_path> -c <config_path>')
+            sys.exit()
+        elif opt in ("-x", "--xp"):
+            experiment_path = arg
+        elif opt in ("-c", "--config_path"):
+            mutation_config_path = arg
 
-        node_mapping = list(Node.node_mapping.keys())
-        node_mapping2 =  [e for e in node_mapping if e not in node_mapping1]
-        layer_mapping = list(Node.layer_mapping.keys())
-        layer_mapping2 = [e for e in layer_mapping if e not in layer_mapping1]
-        node_list2 = Node.node_list #[e for e in Node.node_list if e not in node_list1]
+    run(experiment_path,mutation_config_path)
 
-        print(node_mapping1)
-        print(node_mapping2)
-        print(node_list1)
-        print(node_list2)
+if __name__ == "__main__":
+    main(sys.argv[1:])
 
-
-        TensorflowGenerator.train(tensorflow_gen.model, training_epochs, dataset, False)
-        TensorflowGenerator.eval_robustness(tensorflow_gen.model, attacks, 100)
-
-        #print(layer_mapping1)
-        #print(layer_mapping2)
-
-#// Freeze the first layer.
-#layer0.trainable = false;
-
-        blocks2 = tensorflow_gen.model.dump_blocks()
-
-
-
-run()

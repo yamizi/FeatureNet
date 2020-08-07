@@ -8,22 +8,25 @@ from .mutable_output import MutableOutput
 import json
 
 
-class Mutable_parameters(object):
+class MutableParameters(object):
 
     mutable_classes = {"MutableBlock":MutableBlock, "MutableCell":MutableCell, "MutableInput":MutableInput, "MutableOperation":MutableOperation, "MutableCombination":MutableCombination, "MutableOutput":MutableOutput}
 
     @staticmethod
     def set_config(config):
         for c, k in config.items():
-            cls = getattr(Mutable_parameters.mutable_classes, c)
+            cls = MutableParameters.mutable_classes.get(c)
             for attr, v in k.items():
                 setattr(cls, attr, v)
-                print(v, getattr(cls, attr))
 
     @staticmethod
     def load_config(file_path):
         with open(file_path, "r") as file:
             config = json.load(file)
-            Mutable_parameters.set_config(config)
+            if config:
+                print("Configuration {} loaded".format(file_path))
+            MutableParameters.set_config(config["mutable_parameters"])
+
+            return config
 
 
