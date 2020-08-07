@@ -278,11 +278,11 @@ class PoolingInput(Input):
 
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
-            self._type = "max"
+            self._pool_type = "max"
         else:
-            self._type = _type
+            self._pool_type = _type
 
-        if self._type !="global":
+        if self._pool_type !="global":
 
             if not _kernel:
                 self.append_parameter("_kernel","(__int__,__int__)")
@@ -314,15 +314,15 @@ class PoolingInput(Input):
         input = input.content if hasattr(input,"content") else input
 
         if input.shape.ndims==4:
-            if self._type=="max":
+            if self._pool_type=="max":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 self.last_build =  MaxPooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=self.fullname)
-            if self._type=="average":
+            if self._pool_type=="average":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 self.last_build = AveragePooling2D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=self.fullname)
-            if self._type=="global":
+            if self._pool_type=="global":
                 self.last_build =  GlobalAveragePooling2D(name=self.fullname)
 
             if self.build_raw:
@@ -330,15 +330,15 @@ class PoolingInput(Input):
             return self.last_build(input)
 
         elif input.shape.ndims==2:
-            if self._type=="max":
+            if self._pool_type=="max":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 self.last_build =  MaxPooling1D(pool_size=self._kernel, strides = self._stride, padding=self._padding, name=self.fullname)
-            if self._type=="average":
+            if self._pool_type=="average":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                     self._padding="same"
                 self.last_build = AveragePooling1D(pool_size=self._kernel, strides = self._stride, padding=self, name=self.fullname)
-            if self._type=="global":
+            if self._pool_type=="global":
                 self.last_build =  GlobalAveragePooling1D(name=self.fullname)
 
             if self.build_raw:
@@ -357,9 +357,9 @@ class ConvolutionInput(Input):
 
         if not _type or str(_type) not in typeAcceptedValues:
             self.append_parameter("_type",'|'.join(str(i) for i in typeAcceptedValues))
-            self._type = "normal"
+            self._conv_type = "normal"
         else:
-            self._type = _type
+            self._conv_type = _type
 
         if not _kernel:
             self.append_parameter("_kernel","(__int__,__int__)")
@@ -393,21 +393,21 @@ class ConvolutionInput(Input):
         self.last_build = None
 
         if input.shape.ndims==4:
-            if self._type == "normal":
+            if self._conv_type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
                 self.last_build= Conv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=self.fullname)
-            elif self._type == "separable":
+            elif self._conv_type == "separable":
                 self.last_build= SeparableConv2D(self._features, self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=self.fullname)
-            elif self._type == "depthwise":
+            elif self._conv_type == "depthwise":
                 self.last_build= DepthwiseConv2D(self._kernel, strides = self._stride, padding=self._padding, activation=self._activation, name=self.fullname)
         
         elif input.shape.ndims==3:
-            if self._type == "normal":
+            if self._conv_type == "normal":
                 if(self._padding=="valid" and (self._kernel[0]>input.shape.dims[1].value or self._kernel[1]>input.shape.dims[2].value)):
                         self._padding="same"
                 self.last_build= Conv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=self.fullname)
-            elif self._type == "separable":
+            elif self._conv_type == "separable":
                 self.last_build= SeparableConv1D(self._features, self._kernel[0], strides = self._stride[0], padding=self._padding, activation=self._activation, name=self.fullname)
 
 

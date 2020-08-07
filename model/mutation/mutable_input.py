@@ -3,9 +3,6 @@ from numpy.random import choice, rand
 
 class MutableInput(MutableBase):
 
-    attributes = {"strides_values":"_stride","features_values":"_features", "kernel_values":"_kernel", "type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
-    #attributes = {"kernel_values":"_kernel", "pool_type_values":"_type", "conv_type_values":"_type", "activation_values":"_activation"}
-
     strides_values = ((1,1),(2,2))
     kernel_values = ((1,1),(3,1),(1,3),(3,3),(5,1),(1,5),(5,5),(7,1),(1,7),(7,7))
     pool_type_values = ("max","average","global")
@@ -22,6 +19,11 @@ class MutableInput(MutableBase):
             LSTMInput
 
         self.available_inputs = {"identity":IdentityInput,"dense":DenseInput,"pooling":PoolingInput,"convolution":ConvolutionInput,"embedding":EmbeddingInput,"lstm":LSTMInput}
+
+        # mapping between the possible values and the actual node property
+        self.attributes = {"strides_values": "_stride", "features_values": "_features", "kernel_values": "_kernel",
+                      "pool_type_values": "_pool_type", "conv_type_values": "_conv_type",
+                      "activation_values": "_activation"}
 
         super(MutableInput, self).__init__()
 
@@ -61,15 +63,15 @@ class MutableInput(MutableBase):
     def mutate_attributes(self, rate=1):
         attrs = []
         if MutableBase.mutation_stategy==MutationStrategies.CHOICE:
-            #available_attributes = self.attributes
-            #attrs = [(e,getattr(self, v)) for (e,v) in available_attributes.items()]
-            #attrs = [(e,j) for (e,j) in available_attributes.items() if ]
             attribute_to_mutate =choice(list(self.attributes.keys()), None)
-            attr = getattr(self,attribute_to_mutate)
-            attribute_value = attr[choice( len(attr))]
-            setattr(self, self.attributes[attribute_to_mutate],attribute_value)
-
-            attrs = [("mutate_input_attribute",self.attributes[attribute_to_mutate], attribute_value )]
+            attr = getattr(self,attribute_to_mutate, None)
+            if attr is not None:
+                attribute_value = attr[choice( len(attr))]
+                attribute = self.attributes[attribute_to_mutate]
+                attr_exists = getattr(self,attribute, False)
+                if attr_exists != False:
+                    setattr(self,attribute ,attribute_value)
+                    attrs = [("mutate_input_attribute",self.attributes[attribute_to_mutate], attr_exists, attribute_value )]
         else:
             for attribute_to_mutate in self.attributes.keys():
                 prob = rand()
