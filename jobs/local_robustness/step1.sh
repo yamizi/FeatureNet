@@ -14,6 +14,7 @@
 echo "Hello from the batch queue on node ${SLURM_NODELIST} for neural architecture mutation"
 module purge
 module load swenv/default-env/v1.1-20180716-production lang/Python/3.6.4-foss-2018a system/CUDA numlib/cuDNN math/Gurobi/8.1.1-intel-2018a-Python-3.6.4
-pip install --user -r ../requirements.txt
+pip install --user -r ./requirements.txt
 
-python -u experiments/local_robustness/step1.py > step1.out
+cd experiments/local_robustness/
+python -u ./step1.py > step1.out

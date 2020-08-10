@@ -1,11 +1,11 @@
 
 import copy , sys, json
 sys.path.append("../..")
-import os
+import os, pickle
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import numpy as np
-import random
+import random, time
 import getopt
 from tensorflow_generator import TensorflowGenerator
 from model.keras_model import KerasFeatureModel
@@ -94,6 +94,8 @@ def run(experiment_path=".", mutation_config_path="./light_config.json"):
 
     mutants = generate_mutants(tensorflow_gen.model, node_name, nb_mutants=nb_mutants, nb_mutations=nb_mutations, mutation_ratio=mutation_ratio)
 
+
+    #pickle.dump(mutants, open('{}/output/step1_mutants.pickle'.format(experiment_path), "wb"))
     histories = []
     for i, mutant in enumerate(mutants):
         tensorflow_gen = TensorflowGenerator(mutant, training_epochs, dataset, no_train=True, clear_memory=True)
@@ -106,15 +108,15 @@ def run(experiment_path=".", mutation_config_path="./light_config.json"):
             robustness_time = TensorflowGenerator.eval_robustness(tensorflow_gen.model, attacks, robustness_set_size)
             robustness = {"robustness_score":tensorflow_gen.model.robustness_score}
             time = {"training_time":training_time, "robustness_time":robustness_time}
-            history = {"train_acc":history.history['acc'], "test_acc":history.history['val_acc'], **robustness, "mutations":mutant.mutation_history, **time}
+            history = {"mutant":"{}_{}".format(i,mutant.name),"train_acc":history.history['acc'], "test_acc":history.history['val_acc'], **robustness, "mutations":mutant.mutation_history, **time}
             print("mutant {}".format(i), history)
             histories.append(history)
-    with open('{}/output/step1.json'.format(experiment_path), 'w') as outfile:
-        json.dump(histories,outfile)
+            with open('{}/output/step1_metrics.json'.format(experiment_path), 'w') as file:
+                json.dump(histories,file)
 
 
 def main(argv):
-    experiment_path = '.'
+    experiment_path = './{}'.format(int(time.time()))
     mutation_config_path = "./light_config.json"
 
 
