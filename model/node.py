@@ -22,7 +22,6 @@ class Node(object):
 
         #print(self.get_name())
 
-
     def __deepcopy__(self, memo):
         from copy import deepcopy
 

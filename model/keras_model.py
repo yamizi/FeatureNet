@@ -71,7 +71,9 @@ class KerasFeatureModel(MutableModel):
     
     layers = {"pool":[],"conv":[]}
     
-
+    @property
+    def name(self):
+        return self._name
 
     def __init__(self, name=""):
         if not name:
