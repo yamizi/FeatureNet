@@ -70,14 +70,14 @@ def save_weights(layers, save_path, target_model=None):
                 try:
                     np.save("{}_{}".format(save_path, name), layer.get_weights())
                 except Exception as err:
-                    print("error {} saving weight of layer {}".format(err, name))
+                    print("error [{}] on saving weight of layer {}".format(err, name))
 
     else:
         for e,v in layers.items():
             try:
                 np.save("{}_{}".format(save_path,e), v)
             except Exception as err:
-                print("error {} saving weight of layer {}".format(err, e))
+                print("error [{}] on saving weight of layer {}".format(err, e))
 
 def run(mutation_config_path="./light_config.json"):
 
@@ -115,7 +115,7 @@ def run(mutation_config_path="./light_config.json"):
         np.random.seed(random_seed)
 
     tensorflow_gen = TensorflowGenerator(model_name, training_epochs, batch_size=batch_size,
-                                                                                   dataset=dataset, data_augmentation=data_augmentation,save_path="{}/{}".format(model_path,model_name))
+                                                                                   dataset=dataset, data_augmentation=data_augmentation,save_path="{}/{}_{}".format(model_path,model_name,dataset))
     original_model = tensorflow_gen.model.model
 
     node_name = Node.node_list[mutable_node]
@@ -123,8 +123,9 @@ def run(mutation_config_path="./light_config.json"):
     all_layers = [(e.name,e) for e in original_model.layers]
     layers_to_copy = [(_get_layer_id(e),v.get_weights()) for (e,v) in all_layers if e.find(node_name) == -1]
 
-    layer_save_path = "{}/{}".format(weights_path, model_name)
-    save_weights(dict(all_layers), layer_save_path)
+    if not data_augmentation:
+        layer_save_path = "{}/{}_{}".format(model_path, model_name, dataset)
+        save_weights(dict(all_layers), layer_save_path)
 
     mutants = generate_mutants(tensorflow_gen.model, node_name, nb_mutants=nb_mutants, nb_mutations=nb_mutations, mutation_ratio=mutation_ratio)
 
@@ -136,7 +137,8 @@ def run(mutation_config_path="./light_config.json"):
 
         if tensorflow_gen.valid:
             layer_save_path = "{}/{}".format(weights_path, mutant.name)
-            save_weights(dict(all_layers), layer_save_path,tensorflow_gen.model.model)
+            if not data_augmentation:
+                save_weights(dict(all_layers), layer_save_path,tensorflow_gen.model.model)
             #copy_weights(tensorflow_gen.model.model, dict(layers_to_copy), True)
             history, training_time, score, keras_model = TensorflowGenerator.train(tensorflow_gen.model, training_epochs, batch_size=batch_size,
                                                                                    dataset=dataset, data_augmentation=data_augmentation,save_path="{}/{}".format(model_path,mutant.name))
