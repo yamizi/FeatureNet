@@ -231,7 +231,7 @@ class TensorflowGenerator(object):
             
         except Exception as e:
             import traceback
-            print("error",e)
+            print("Robustness error",e)
             print (traceback.format_exc())
         
         robustness_time = time.time() - begin_robustness

@@ -83,7 +83,7 @@ def train_model(model, x_train, y_train, x_test, y_test, epochs, batch_size, sch
     callbacks = []#, lr_reducer, lr_scheduler]
 
     if scheduler:
-        callbacks = [lr_reducer, lr_scheduler, early_stopping]        
+        callbacks = [lr_reducer, lr_scheduler]#, early_stopping]
 
     if not model_path:
         save_dir = os.path.join(os.getcwd(), 'saved_models')
