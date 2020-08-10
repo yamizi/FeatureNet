@@ -60,8 +60,7 @@ def copy_weights(target_model, src_layers=None, freeze_layers=False):
 
     return target_model
 
-def run(experiment_path=".", mutation_config_path="./light_config.json"):
-    os.makedirs('{}/output/'.format(experiment_path), exist_ok=True)
+def run(mutation_config_path="./light_config.json"):
 
     config = MutableParameters.load_config(mutation_config_path)
 
@@ -78,16 +77,23 @@ def run(experiment_path=".", mutation_config_path="./light_config.json"):
     nb_mutations = config.get("nb_mutations")
     nb_mutants = config.get("nb_mutants")
     robustness_set_size = config.get("robustness_set_size")
+    mutable_node = config.get("mutable_node", 1)
+
+    experiment_path = "{}/{}".format(config.get("experiment_path",'.'), int(time.time()))
+    model_path = 'output/{}/models'.format(experiment_path)
+    metrics_path = 'output/{}/metrics'.format(experiment_path)
+    os.makedirs(model_path, exist_ok=True)
+    os.makedirs(metrics_path, exist_ok=True)
 
     random_seed = config.get("random_seed",None)
     if random_seed:
         random.seed(random_seed)
         np.random.seed(random_seed)
 
-    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, dataset)
+    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, dataset, no_train=True)
     original_model = tensorflow_gen.model.model
 
-    node_name = Node.node_list[1]
+    node_name = Node.node_list[mutable_node]
     node_name = _get_layer_id(node_name)
     all_layers = [(e.name,e) for e in original_model.layers]
     layers_to_copy = [(_get_layer_id(e),v.get_weights()) for (e,v) in all_layers if e.find(node_name) == -1]
@@ -103,40 +109,35 @@ def run(experiment_path=".", mutation_config_path="./light_config.json"):
         if tensorflow_gen.valid:
             copy_weights(tensorflow_gen.model.model, dict(layers_to_copy), True)
             history, training_time, score, keras_model = TensorflowGenerator.train(tensorflow_gen.model, training_epochs, batch_size=128,
-                                                                                   dataset=dataset, data_augmentation=False,save_path=None)
+                                                                                   dataset=dataset, data_augmentation=False,save_path="{}/{}".format(model_path,mutant.name))
 
             robustness_time = TensorflowGenerator.eval_robustness(tensorflow_gen.model, attacks, robustness_set_size)
             robustness = {"robustness_score":tensorflow_gen.model.robustness_score}
-            time = {"training_time":training_time, "robustness_time":robustness_time}
-            history = {"mutant":"{}_{}".format(i,mutant.name),"train_acc":history.history['acc'], "test_acc":history.history['val_acc'], **robustness, "mutations":mutant.mutation_history, **time}
+            infos = {"training_time":training_time, "robustness_time":robustness_time, "config_path":mutation_config_path}
+            history = {"mutant":"{}_{}".format(i,mutant.name),"train_acc":history.history['acc'], "test_acc":history.history['val_acc'], **robustness, "mutations":mutant.mutation_history, **infos}
             print("mutant {}".format(i), history)
             histories.append(history)
-            with open('{}/output/step1_metrics.json'.format(experiment_path), 'w') as file:
+            with open('{}/step1_metrics.json'.format(metrics_path), 'w') as file:
                 json.dump(histories,file)
 
 
 def main(argv):
-    experiment_path = './{}'.format(int(time.time()))
-    mutation_config_path = "./light_config.json"
-
+    mutation_config_path = "./configurations/light_config_node1.json"
 
     try:
-        opts, args = getopt.getopt(argv, "hx:c:", [
-            "xp_path=", "config_path="])
+        opts, args = getopt.getopt(argv, "hc:", ["config_path="])
     except getopt.GetoptError:
         pass
     print("arguments {}".format(opts))
     for opt, arg in opts:
         if opt == '-h':
             print(
-                'step1.py -x <experience_path> -c <config_path>')
+                'step1.py -c <config_path>')
             sys.exit()
-        elif opt in ("-x", "--xp"):
-            experiment_path = arg
         elif opt in ("-c", "--config_path"):
             mutation_config_path = arg
 
-    run(experiment_path,mutation_config_path)
+    run(mutation_config_path)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

@@ -1,16 +1,17 @@
 {
   "evolution_parameters": {
     "model_name": "keras",
-    "training_epochs": 1,
+    "training_epochs": 10,
     "dataset": "cifar",
     "attacks": [
       "pgd"
     ],
     "mutation_ratio": 0.1,
     "nb_mutations": 1,
-    "nb_mutants": 10,
+    "nb_mutants": 100,
     "robustness_set_size": 1000,
-    "random_seed": 1
+    "random_seed": 0,
+    "mutable_node": 1
   },
   "mutable_parameters": {
     "MutableBlock": {
