@@ -45,7 +45,6 @@ def generate_mutants(fm_model, node_name,nb_mutants=1, nb_mutations=1,mutation_r
 def copy_weights(target_model, src_layers=None, freeze_layers=False):
 
     map_layers_target = [(_get_layer_id(e.name),e) for e in target_model.layers]
-
     names = list(src_layers.keys())
 
     for (name,layer) in map_layers_target:
@@ -60,6 +59,26 @@ def copy_weights(target_model, src_layers=None, freeze_layers=False):
 
     return target_model
 
+def save_weights(layers, save_path, target_model=None):
+
+    if target_model is not None:
+        map_layers_target = [(_get_layer_id(e.name), e) for e in target_model.layers]
+        names = list(layers.keys())
+
+        for (name, layer) in map_layers_target:
+            if name in names:
+                try:
+                    np.save("{}_{}".format(save_path, name), layer.get_weights())
+                except Exception as err:
+                    print("error {} saving weight of layer {}".format(err, name))
+
+    else:
+        for e,v in layers.items():
+            try:
+                np.save("{}_{}".format(save_path,e), v)
+            except Exception as err:
+                print("error {} saving weight of layer {}".format(err, e))
+
 def run(mutation_config_path="./light_config.json"):
 
     config = MutableParameters.load_config(mutation_config_path)
@@ -72,6 +91,9 @@ def run(mutation_config_path="./light_config.json"):
     training_epochs= config.get("training_epochs")
     dataset = config.get("dataset")
 
+    data_augmentation = config.get("data_augmentation", False)
+    batch_size = config.get("batch_size", 128)
+
     attacks = config.get("attacks")
     mutation_ratio = config.get("mutation_ratio")
     nb_mutations = config.get("nb_mutations")
@@ -80,9 +102,11 @@ def run(mutation_config_path="./light_config.json"):
     mutable_node = config.get("mutable_node", 1)
 
     experiment_path = "{}/{}".format(config.get("experiment_path",'.'), int(time.time()))
-    model_path = 'output/{}/models'.format(experiment_path)
-    metrics_path = 'output/{}/metrics'.format(experiment_path)
+    model_path = 'output/models/{}'.format(experiment_path)
+    weights_path = 'output/weight/{}'.format(experiment_path)
+    metrics_path = 'output/metrics/{}'.format(experiment_path)
     os.makedirs(model_path, exist_ok=True)
+    os.makedirs(weights_path, exist_ok=True)
     os.makedirs(metrics_path, exist_ok=True)
 
     random_seed = config.get("random_seed",None)
@@ -90,13 +114,17 @@ def run(mutation_config_path="./light_config.json"):
         random.seed(random_seed)
         np.random.seed(random_seed)
 
-    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, dataset, no_train=True)
+    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, batch_size=batch_size,
+                                                                                   dataset=dataset, data_augmentation=data_augmentation,save_path="{}/{}".format(model_path,model_name))
     original_model = tensorflow_gen.model.model
 
     node_name = Node.node_list[mutable_node]
     node_name = _get_layer_id(node_name)
     all_layers = [(e.name,e) for e in original_model.layers]
     layers_to_copy = [(_get_layer_id(e),v.get_weights()) for (e,v) in all_layers if e.find(node_name) == -1]
+
+    layer_save_path = "{}/{}".format(weights_path, model_name)
+    save_weights(dict(all_layers), layer_save_path)
 
     mutants = generate_mutants(tensorflow_gen.model, node_name, nb_mutants=nb_mutants, nb_mutations=nb_mutations, mutation_ratio=mutation_ratio)
 
@@ -107,9 +135,11 @@ def run(mutation_config_path="./light_config.json"):
         tensorflow_gen = TensorflowGenerator(mutant, training_epochs, dataset, no_train=True, clear_memory=True)
 
         if tensorflow_gen.valid:
-            copy_weights(tensorflow_gen.model.model, dict(layers_to_copy), True)
-            history, training_time, score, keras_model = TensorflowGenerator.train(tensorflow_gen.model, training_epochs, batch_size=128,
-                                                                                   dataset=dataset, data_augmentation=False,save_path="{}/{}".format(model_path,mutant.name))
+            layer_save_path = "{}/{}".format(weights_path, mutant.name)
+            save_weights(dict(all_layers), layer_save_path,tensorflow_gen.model.model)
+            #copy_weights(tensorflow_gen.model.model, dict(layers_to_copy), True)
+            history, training_time, score, keras_model = TensorflowGenerator.train(tensorflow_gen.model, training_epochs, batch_size=batch_size,
+                                                                                   dataset=dataset, data_augmentation=data_augmentation,save_path="{}/{}".format(model_path,mutant.name))
 
             robustness_time = TensorflowGenerator.eval_robustness(tensorflow_gen.model, attacks, robustness_set_size)
             robustness = {"robustness_score":tensorflow_gen.model.robustness_score}
@@ -137,6 +167,7 @@ def main(argv):
         elif opt in ("-c", "--config_path"):
             mutation_config_path = arg
 
+    TensorflowGenerator.model_graph_export = False
     run(mutation_config_path)
 
 if __name__ == "__main__":
