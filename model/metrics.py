@@ -54,7 +54,7 @@ def get_crafter(classifier, attack, params=None):
     return crafter
 
 
-def empirical_robustness(classifier, x, attack_name, attack_params=None):
+def empirical_robustness(classifier, x, attack_name, attack_params=None,session=None):
     """Compute the Empirical Robustness of a classifier object over the sample `x` for a given adversarial crafting
     method `attack`. This is equivalent to computing the minimal perturbation that the attacker must introduce for a
     successful attack. Paper link: https://arxiv.org/abs/1511.04599
@@ -72,7 +72,13 @@ def empirical_robustness(classifier, x, attack_name, attack_params=None):
     """
     crafter = get_crafter(classifier, attack_name, attack_params)
     crafter.set_params(**{'minimal': True})
-    adv_x = crafter.generate(x)
+
+    if session is None:
+        adv_x = crafter.generate(x)
+    else:
+        from tensorflow import keras
+        keras.backend.set_session(session)
+        adv_x = crafter.generate(x)
 
     # Predict the labels for adversarial examples
     y = classifier.predict(x)

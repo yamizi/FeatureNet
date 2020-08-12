@@ -167,7 +167,7 @@ class TensorflowGenerator(object):
         TensorflowGenerator.eval_metrics[metric] = func
         
     @staticmethod
-    def eval_attack_robustness(keras_model, attack_name, norm, robustness_set_size=0):
+    def eval_attack_robustness(keras_model, attack_name, norm, robustness_set_size=0, session=None):
         print("Evaluating model robustness using {}".format(attack_name))
 
         attack_params = {"norm":norm}
@@ -185,7 +185,7 @@ class TensorflowGenerator(object):
             adv_set = TensorflowGenerator.X_test[0:min(len(TensorflowGenerator.X_test), robustness_set_size)]
             y_set = TensorflowGenerator.Y_test[0:min(len(TensorflowGenerator.Y_test), robustness_set_size)]
             
-        attack_robustness, adv_x = metrics.empirical_robustness(KerasClassifier(model=keras_model, clip_values=(0, 255)),adv_set,attack_name, attack_params)
+        attack_robustness, adv_x = metrics.empirical_robustness(KerasClassifier(model=keras_model, clip_values=(0, 255)),adv_set,attack_name, attack_params,session=session)
 
         score_real = keras_model.evaluate(adv_set, y_set, verbose=0)
         score_adv = keras_model.evaluate(adv_x, y_set, verbose=0)
