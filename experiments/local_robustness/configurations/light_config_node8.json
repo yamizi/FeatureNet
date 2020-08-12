@@ -1,0 +1,118 @@
+{
+  "evolution_parameters": {
+    "model_name": "keras",
+    "training_epochs": 10,
+    "dataset": "cifar",
+    "attacks": [
+      "pgd"
+    ],
+    "mutation_ratio": 0.1,
+    "nb_mutations": 1,
+    "nb_mutants": 25,
+    "robustness_set_size": 1000,
+    "random_seed": 0,
+    "mutable_node": 8,
+    "experiment_path": "local_node8_noAugment",
+    "data_augmentation": false,
+    "batch_size": 128
+  },
+  "mutable_parameters": {
+    "MutableBlock": {
+      "mutation_operators": [
+        [
+          "mutate_cell",
+          1
+        ]
+      ]
+    },
+    "MutableCell": {
+      "mutation_operators": [
+        [
+          "mutate_input1",
+          1
+        ]
+      ]
+    },
+    "MutableInput": {
+      "mutation_operators": [
+        [
+          "mutate_attributes",
+          1
+        ]
+      ],
+      "strides_values": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "kernel_values": [
+        [
+          1,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          7,
+          7
+        ]
+      ],
+      "pool_type_values": [
+        "max",
+        "average",
+        "global"
+      ],
+      "conv_type_values": [
+        "normal",
+        "separable",
+        "depthwise"
+      ],
+      "activation_values": [
+        "relu",
+        "sigmoid",
+        null
+      ],
+      "features_values": [
+        null,
+        8,
+        16,
+        32
+      ]
+    }
+  }
+}
