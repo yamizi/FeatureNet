@@ -100,7 +100,18 @@ class Node(object):
             element_type = ''.join([i for i in element_type if not i.isdigit()])
 
         return element_type.lower()
-    
+
+    @staticmethod
+    def reset_nodes():
+
+        Node.content = None
+        Node.parent = None
+        Node.parent_model = None
+        Node.layer_mapping = {}
+        Node.node_mapping = {}
+        Node.node_list = []
+        Node.increment = 0
+
     @property
     def parent_cell(self):
         return self._parent_cell

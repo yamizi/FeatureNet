@@ -69,6 +69,7 @@ def save_weights(layers, save_path, target_model=None):
             if name in names:
                 try:
                     np.save("{}_{}".format(save_path, name), layer.get_weights())
+                    print("success on saving weight of layer {}".format(name))
                 except Exception as err:
                     print("error [{}] on saving weight of layer {}".format(err, name))
 
@@ -76,12 +77,18 @@ def save_weights(layers, save_path, target_model=None):
         for e,v in layers.items():
             try:
                 np.save("{}_{}".format(save_path,e), v)
+                print("success on saving weight of layer {}".format(e))
             except Exception as err:
                 print("error [{}] on saving weight of layer {}".format(err, e))
 
-def run(mutation_config_path="./light_config.json"):
+def run(mutation_config_path="./light_config.json", config=None):
+    TensorflowGenerator.model_graph_export = False
+    Node.reset_nodes()
 
-    config = MutableParameters.load_config(mutation_config_path)
+    if config is None:
+        config = MutableParameters.load_config(mutation_config_path)
+    else:
+        MutableParameters.set_config(config["mutable_parameters"])
 
     if not config or not config.get("evolution_parameters"):
         return
@@ -100,6 +107,7 @@ def run(mutation_config_path="./light_config.json"):
     nb_mutants = config.get("nb_mutants")
     robustness_set_size = config.get("robustness_set_size")
     mutable_node = config.get("mutable_node", 1)
+    save_models = config.get("save_models", False)
 
     experiment_path = "{}/{}".format(config.get("experiment_path",'.'), int(time.time()))
     model_path = 'output/models/{}'.format(experiment_path)
@@ -114,8 +122,14 @@ def run(mutation_config_path="./light_config.json"):
         random.seed(random_seed)
         np.random.seed(random_seed)
 
-    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, batch_size=batch_size,
-                                                                                   dataset=dataset, data_augmentation=data_augmentation,save_path="{}/{}_{}".format(model_path,model_name,dataset))
+
+    if save_models:
+        save_path = "{}/{}_{}".format(model_path, model_name, dataset)
+    else:
+        save_path = None
+
+    tensorflow_gen = TensorflowGenerator(model_name, training_epochs, batch_size=batch_size, no_train=True,
+                                                                                   dataset=dataset, data_augmentation=data_augmentation,save_path=save_path)
     original_model = tensorflow_gen.model.model
 
     node_name = Node.node_list[mutable_node]
@@ -150,7 +164,8 @@ def run(mutation_config_path="./light_config.json"):
             print("mutant {}".format(i), history)
             histories.append(history)
             with open('{}/step1_metrics.json'.format(metrics_path), 'w') as file:
-                json.dump(histories,file)
+                success = json.dump(histories,file)
+                print("success on saving weight of model {} : {}".format(metrics_path, success))
 
 
 def main(argv):
@@ -169,7 +184,6 @@ def main(argv):
         elif opt in ("-c", "--config_path"):
             mutation_config_path = arg
 
-    TensorflowGenerator.model_graph_export = False
     run(mutation_config_path)
 
 if __name__ == "__main__":
